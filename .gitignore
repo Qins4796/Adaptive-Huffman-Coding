@@ -1,0 +1,4 @@
+build/*
+!build/README.txt
+!test/support/README.txt
+setuser.bat
