@@ -1,11 +1,19 @@
 #include "unity.h"
 #include "AdaptiveHuffman.h"
+#include "InitNode.h"
+#include "ErrorCode.h"
 #include <stdio.h>
+#include <CException.h>
 
-void setUp(void){}
+Node nodeA;
+
+void setUp(void){
+  resetNode(&nodeA, 1);
+}
 void tearDown(void){}
 
 void test_adaptiveHuffmanTreeInit_to_create_an_empty_tree(void){
+  setNode(&nodeA,NULL,NULL,1);
   Node *node;
   
   node = adaptiveHuffmanTreeInit();
