@@ -31,7 +31,7 @@ void test_adaptiveHuffmanTreeInit_to_create_an_empty_tree(void){
   
   free(node);
 }
-// void test_printf_after(void){printf("ASDASD");}
+void test_printf_after(void){printf("ASDASD");}
 /**
  *          root
  *           |
