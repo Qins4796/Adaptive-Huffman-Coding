@@ -6,20 +6,22 @@
 #include <CException.h>
 #include "CustomAssertion.h"
 
-HuffmanNode nodeA, EmptyRoot;
+HuffmanNode nodeA, EmptyRoot, SymbolNode ,NewNode;
 
 void setUp(void){
-  resetNode(&nodeA, 1);
+  resetNode(&nodeA, -1);
   resetNode(&EmptyRoot, -1);
+  resetNode(&SymbolNode, -1);
+  resetNode(&NewNode, -1);
 }
 void tearDown(void){}
 // void test_printf_before(void){printf("ASDASD");}
 void test_adaptiveHuffmanTreeInit_to_create_an_empty_tree(void){
-  setNode(&nodeA,NULL,NULL,1,256);
+  setNode(&nodeA,NULL,NULL,-1,256);
   HuffmanNode *node;
-  
+
   node = adaptiveHuffmanTreeInit();
-  
+
   TEST_ASSERT_NOT_NULL(node);
   TEST_ASSERT_NULL(node->leftChild);
   TEST_ASSERT_NULL(node->rightChild);
@@ -28,10 +30,10 @@ void test_adaptiveHuffmanTreeInit_to_create_an_empty_tree(void){
   TEST_ASSERT_EQUAL(-1,node->symbol);
   TEST_ASSERT_EQUAL(0,node->freq);
   TEST_ASSERT_EQUAL(-1,node->order);
-  
+
   free(node);
 }
-void test_printf_after(void){printf("ASDASD");}
+// void test_printf_after(void){printf("ASDASD");}
 /**
  *          root
  *           |
@@ -41,7 +43,6 @@ void test_printf_after(void){printf("ASDASD");}
  *  NEWnode      (A , 1) : symbol, freq
  */
 void test_adaptiveHuffmanTreeBuild_should_build_a_tree_by_adding_1_symbol(void){
-  
   setNode(&EmptyRoot,NULL,NULL,-1,256);
   HuffmanNode *root = &EmptyRoot , *returnedNode;
   int A = 1;
@@ -59,8 +60,38 @@ void test_adaptiveHuffmanTreeBuild_should_build_a_tree_by_adding_1_symbol(void){
 
   TEST_ASSERT_EQUAL_PTR(1, root->freq);
   TEST_ASSERT_EQUAL_PTR(256, root->order);
-  
+
   TEST_ASSERT_EQUAL_NODE(&EmptyRoot,root->leftChild,root->rightChild,-1,1,256,root);
   TEST_ASSERT_EQUAL_NODE(&EmptyRoot,NULL,NULL,1,1,255,root->rightChild);
   TEST_ASSERT_EQUAL_NODE(&EmptyRoot,NULL,NULL,-1,0,254,root->leftChild);
+}
+/**
+ *          root                       root
+ *           |                          |
+ *           V                          V
+ *       EmptyRoot        =>        EmptyRoot
+ *      /         \                /         \
+ *  NEWnode     SymbolNode  SymbolNode      NEWnode     //swapped 2 node
+ *  freq 0        freq 1      freq 1        freq 0
+ *  symb -1       symb A      symb A        symb -1
+ *  ord 254       ord 255     ord 254       ord 255     //order not swapped
+ */
+void test_swapNode_for_just_swapping_between_2_node(void){
+  setNode(&EmptyRoot,NULL,NULL,-1,256);
+  HuffmanNode *root = &EmptyRoot;
+
+  int A = 1;
+  adaptiveHuffmanTreeBuild(root,A);
+
+  TEST_ASSERT_EQUAL_NODE(&EmptyRoot,root->leftChild,root->rightChild,-1,1,256,root);
+
+  swapNode(root->leftChild,root->rightChild);
+
+  TEST_ASSERT_EQUAL_PTR(A,root->leftChild->symbol);
+  TEST_ASSERT_EQUAL_PTR(-1,root->rightChild->symbol);
+  TEST_ASSERT_EQUAL_PTR(0,root->rightChild->freq);
+  TEST_ASSERT_EQUAL_PTR(1,root->leftChild->freq);
+
+  TEST_ASSERT_EQUAL_PTR(255, root->rightChild->order);
+  TEST_ASSERT_EQUAL_PTR(254, root->leftChild->order);
 }

@@ -39,6 +39,37 @@ HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , int inSymbol){
   
   return ParentNEW;
 }
+/**
+*   Just for swapping between node
+*   The order of node should not swap (after swap, swap back)
+*/
+HuffmanNode swapNode(HuffmanNode *node, HuffmanNode *nodeToSwap){
+  HuffmanNode *tempNodeParent = node->parent;
+  HuffmanNode *nodeParentLeft = node->parent->leftChild;
+  HuffmanNode *nodeToSwapParentLeft = nodeToSwap->parent->leftChild;
+  int tempNodeOrder = node->order;
+  
+  if(nodeParentLeft == node){
+    node->parent->leftChild = nodeToSwap;
+  }
+  else{
+    node->parent->rightChild = nodeToSwap;
+  }
+  
+  if(nodeToSwapParentLeft == nodeToSwap){
+    nodeToSwap->parent->leftChild = node;
+  }
+  else{
+    nodeToSwap->parent->rightChild = node;
+  }
+  
+  node->parent = nodeToSwap->parent;
+  nodeToSwap->parent = tempNodeParent;
+  
+  //order should not swap
+  node->order = nodeToSwap->order;
+  nodeToSwap->order = tempNodeOrder;
+}
 
 // void huffmanCompress(InStream *in, OutStream *out){}
 // void huffmanDecompress(OutStream *out, InStream *in){}

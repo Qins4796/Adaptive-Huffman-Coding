@@ -21,6 +21,8 @@ struct HuffmanNode{
 HuffmanNode *adaptiveHuffmanTreeInit();
 HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , int inSymbol);
 
+HuffmanNode swapNode(HuffmanNode *node, HuffmanNode *nodeToSwap);
+
 // void huffmanCompress(FILE *in, FILE *out);
 // void huffmanDecompress(FILE *out, FILE *in);
 
