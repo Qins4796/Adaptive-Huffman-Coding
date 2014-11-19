@@ -6,9 +6,9 @@ void setNode(HuffmanNode *target, HuffmanNode *leftChild, HuffmanNode *rightChil
 	target->rightChild = rightChild;
 	target->freq = freq;
 }
-void resetNode(HuffmanNode *target,int data){
+void resetNode(HuffmanNode *target,int symbol){
 	target->leftChild = NULL;
 	target->rightChild = NULL;
 	target->freq = 0;
-	target->data = data;
+	target->symbol = symbol;
 }
