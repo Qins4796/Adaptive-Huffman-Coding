@@ -26,3 +26,10 @@ void test_adaptiveHuffmanTreeInit_to_create_an_empty_tree(void){
   TEST_ASSERT_EQUAL(-1,node->data);
   TEST_ASSERT_EQUAL(0,node->freq);
 }
+void test_adaptiveHuffmanTreeBuild_should_build_a_tree(void){
+  setNode(&nodeA,NULL,NULL,1);
+  Node *node, *root = NULL;
+  
+  node = adaptiveHuffmanTreeBuild(root,&nodeA);
+  
+}
