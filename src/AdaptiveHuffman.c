@@ -1,6 +1,6 @@
+#include <stdio.h>
 #include "AdaptiveHuffman.h"
 #include <malloc.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 HuffmanNode *adaptiveHuffmanTreeInit(){
@@ -18,9 +18,10 @@ HuffmanNode *adaptiveHuffmanTreeInit(){
 }
 
 HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , int inSymbol){
+
   HuffmanNode *symbolNode = adaptiveHuffmanTreeInit();
   HuffmanNode *NEWnode = adaptiveHuffmanTreeInit();
-
+  
   // ParentNEW->rightChild initialization (Symbol node)
   symbolNode->parent = ParentNEW;
   symbolNode->freq = 1;
@@ -36,7 +37,7 @@ HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , int inSymbol){
   ParentNEW->rightChild = symbolNode;
   ParentNEW->freq = 1;
   
-  return NEWnode;
+  return ParentNEW;
 }
 
 // void huffmanCompress(InStream *in, OutStream *out){}
