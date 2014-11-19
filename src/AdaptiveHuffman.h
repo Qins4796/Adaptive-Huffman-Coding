@@ -4,17 +4,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Node Node;
+typedef struct HuffmanNode HuffmanNode;
 
-struct Node{
-  Node *leftChild;
-  Node *rightChild;
-  int data;
+struct HuffmanNode{
+  HuffmanNode *parent;
+  HuffmanNode *leftChild;
+  HuffmanNode *rightChild;
+  int symbol;
   int freq;
+  int order;
 };
 
-Node *adaptiveHuffmanTreeInit();
-Node *adaptiveHuffmanTreeBuild(Node *root, Node *symbol);
+//Global Variable
+// HuffmanNode *ParentNEW;
+
+HuffmanNode *adaptiveHuffmanTreeInit();
+HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , int inSymbol);
 
 // void huffmanCompress(FILE *in, FILE *out);
 // void huffmanDecompress(FILE *out, FILE *in);

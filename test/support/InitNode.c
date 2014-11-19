@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include "InitNode.h"
 
-void setNode(Node *target, Node *leftChild, Node *rightChild, int freq){
+void setNode(HuffmanNode *target, HuffmanNode *leftChild, HuffmanNode *rightChild, int freq){
 	target->leftChild = leftChild;
 	target->rightChild = rightChild;
 	target->freq = freq;
 }
-void resetNode(Node *target,int data){
+void resetNode(HuffmanNode *target,int data){
 	target->leftChild = NULL;
 	target->rightChild = NULL;
 	target->freq = 0;

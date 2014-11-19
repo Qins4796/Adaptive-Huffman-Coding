@@ -1,30 +1,42 @@
 #include "AdaptiveHuffman.h"
 #include <malloc.h>
 #include <stdio.h>
-// #include <stdlib.h>
+#include <stdlib.h>
 
-Node *adaptiveHuffmanTreeInit(){
-  Node *node = (Node *)malloc(sizeof(Node));
+HuffmanNode *adaptiveHuffmanTreeInit(){
+
+  HuffmanNode *node = (HuffmanNode *)malloc(sizeof(HuffmanNode));
   
+  node->parent = NULL;
   node->leftChild = NULL;
   node->rightChild = NULL;
-  node->data = -1;
+  node->symbol = -1;
   node->freq = 0;
+  node->order = -1;
   
   return node;
-
 }
 
-Node *adaptiveHuffmanTreeBuild(Node *root, Node *symbol){
-  Node *node = root, *NEW = NULL;
+HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , int inSymbol){
+  HuffmanNode *symbolNode = adaptiveHuffmanTreeInit();
+  HuffmanNode *NEWnode = adaptiveHuffmanTreeInit();
+
+  // ParentNEW->rightChild initialization (Symbol node)
+  symbolNode->parent = ParentNEW;
+  symbolNode->freq = 1;
+  symbolNode->symbol = inSymbol;
+  symbolNode->order = ParentNEW->order - 1;
   
-  if(root = NULL){
-    node = symbol;
-    node->leftChild = NEW;
-    node->rightChild->data = symbol->data;
-    node->rightChild->freq += 1;
-  return node;
-  }
+  // ParentNEW->leftChild initialization (NEW node)
+  NEWnode->parent = ParentNEW;
+  NEWnode->freq = 0;
+  NEWnode->order = ParentNEW->order -2;
+  
+  ParentNEW->leftChild = NEWnode;
+  ParentNEW->rightChild = symbolNode;
+  ParentNEW->freq = 1;
+  
+  return NEWnode;
 }
 
 // void huffmanCompress(InStream *in, OutStream *out){}

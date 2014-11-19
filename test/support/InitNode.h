@@ -3,7 +3,7 @@
 
 #include "AdaptiveHuffman.h"
 
-void setNode(Node *target, Node *leftChild, Node *rightChild, int freq);
-void resetNode(Node *target,int data);
+void setNode(HuffmanNode *target, HuffmanNode *leftChild, HuffmanNode *rightChild, int freq);
+void resetNode(HuffmanNode *target,int data);
 
 #endif // __InitNode_H__
