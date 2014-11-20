@@ -1,5 +1,5 @@
-require 'ceedling/plugin'
-require 'ceedling/defaults'
+require 'plugin'
+require 'defaults'
 
 class StdoutPrettyTestsReport < Plugin
   

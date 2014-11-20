@@ -5,8 +5,37 @@
 ========================================== */
 
 #include "unity.h"
+#include "cmock.h"
 
-#include "cmock_internals.h"
+//define CMOCK_MEM_DYNAMIC to grab memory as needed with malloc
+//when you do that, CMOCK_MEM_SIZE is used for incremental size instead of total
+#ifdef CMOCK_MEM_STATIC
+#undef CMOCK_MEM_DYNAMIC
+#endif
+
+#ifdef CMOCK_MEM_DYNAMIC
+#include <stdlib.h>
+#endif
+
+//this is used internally during pointer arithmetic. make sure this type is the same size as the target's pointer type
+#ifndef CMOCK_MEM_PTR_AS_INT
+#define CMOCK_MEM_PTR_AS_INT unsigned long
+#endif
+
+//0 for no alignment, 1 for 16-bit, 2 for 32-bit, 3 for 64-bit
+#ifndef CMOCK_MEM_ALIGN
+#define CMOCK_MEM_ALIGN (2)
+#endif
+
+//amount of memory to allow cmock to use in its internal heap
+#ifndef CMOCK_MEM_SIZE
+#define CMOCK_MEM_SIZE (32768)
+#endif
+
+//automatically calculated defs for easier reading
+#define CMOCK_MEM_ALIGN_SIZE  (1u << CMOCK_MEM_ALIGN)
+#define CMOCK_MEM_ALIGN_MASK  (CMOCK_MEM_ALIGN_SIZE - 1)
+#define CMOCK_MEM_INDEX_SIZE  ((sizeof(CMOCK_MEM_INDEX_TYPE) > CMOCK_MEM_ALIGN_SIZE) ? sizeof(CMOCK_MEM_INDEX_TYPE) : CMOCK_MEM_ALIGN_SIZE)
 
 //private variables
 #ifdef CMOCK_MEM_DYNAMIC
@@ -18,7 +47,6 @@ static unsigned char          CMock_Guts_Buffer[CMOCK_MEM_SIZE + CMOCK_MEM_ALIGN
 static CMOCK_MEM_INDEX_TYPE   CMock_Guts_BufferSize = CMOCK_MEM_SIZE + CMOCK_MEM_ALIGN_SIZE;
 static CMOCK_MEM_INDEX_TYPE   CMock_Guts_FreePtr;
 #endif
-
 //-------------------------------------------------------
 // CMock_Guts_MemNew
 //-------------------------------------------------------
@@ -38,7 +66,7 @@ CMOCK_MEM_INDEX_TYPE CMock_Guts_MemNew(CMOCK_MEM_INDEX_TYPE size)
   {
 #ifdef CMOCK_MEM_DYNAMIC
     CMock_Guts_BufferSize += CMOCK_MEM_SIZE + size;
-    CMock_Guts_Buffer = realloc(CMock_Guts_Buffer, (size_t)CMock_Guts_BufferSize);
+    CMock_Guts_Buffer = realloc(CMock_Guts_Buffer, CMock_Guts_BufferSize);
     if (CMock_Guts_Buffer == NULL)
 #endif //yes that if will continue to the return below if TRUE
       return CMOCK_GUTS_NONE;
@@ -78,7 +106,7 @@ CMOCK_MEM_INDEX_TYPE CMock_Guts_MemChain(CMOCK_MEM_INDEX_TYPE root_index, CMOCK_
     {
       return CMOCK_GUTS_NONE;
     }
-
+    
     root = (void*)(&CMock_Guts_Buffer[root_index]);
     obj  = (void*)(&CMock_Guts_Buffer[obj_index]);
 
@@ -91,7 +119,7 @@ CMOCK_MEM_INDEX_TYPE CMock_Guts_MemChain(CMOCK_MEM_INDEX_TYPE root_index, CMOCK_
       if (index > 0)
         next = (void*)(&CMock_Guts_Buffer[index]);
     } while (index > 0);
-    *(CMOCK_MEM_INDEX_TYPE*)((CMOCK_MEM_PTR_AS_INT)next - CMOCK_MEM_INDEX_SIZE) = (CMOCK_MEM_INDEX_TYPE)((CMOCK_MEM_PTR_AS_INT)obj - (CMOCK_MEM_PTR_AS_INT)CMock_Guts_Buffer);
+    *(CMOCK_MEM_INDEX_TYPE*)((CMOCK_MEM_PTR_AS_INT)next - CMOCK_MEM_INDEX_SIZE) = ((CMOCK_MEM_PTR_AS_INT)obj - (CMOCK_MEM_PTR_AS_INT)CMock_Guts_Buffer);
     return root_index;
   }
 }
@@ -116,24 +144,6 @@ CMOCK_MEM_INDEX_TYPE CMock_Guts_MemNext(CMOCK_MEM_INDEX_TYPE previous_item_index
     return index;
   else
     return CMOCK_GUTS_NONE;
-}
-
-//-------------------------------------------------------
-// CMock_Guts_MemEndOfChain
-//-------------------------------------------------------
-CMOCK_MEM_INDEX_TYPE CMock_Guts_MemEndOfChain(CMOCK_MEM_INDEX_TYPE root_index)
-{
-  CMOCK_MEM_INDEX_TYPE index = root_index;
-  CMOCK_MEM_INDEX_TYPE next_index;
-
-  for (next_index = root_index;
-       next_index != CMOCK_GUTS_NONE;
-       next_index = CMock_Guts_MemNext(index))
-  {
-    index = next_index;
-  }
-
-  return index;
 }
 
 //-------------------------------------------------------
@@ -174,19 +184,3 @@ void CMock_Guts_MemFreeAll(void)
 {
   CMock_Guts_FreePtr = CMOCK_MEM_ALIGN_SIZE; //skip the very beginning
 }
-
-//-------------------------------------------------------
-// CMock_Guts_MemFreeFinal
-//-------------------------------------------------------
-void CMock_Guts_MemFreeFinal(void)
-{
-  CMock_Guts_FreePtr = CMOCK_MEM_ALIGN_SIZE;
-#ifdef CMOCK_MEM_DYNAMIC
-  if (CMock_Guts_Buffer)
-  {
-    free(CMock_Guts_Buffer);
-    CMock_Guts_Buffer = NULL;
-  }
-#endif
-}
-

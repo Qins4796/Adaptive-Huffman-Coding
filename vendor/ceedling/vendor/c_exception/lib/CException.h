@@ -62,7 +62,7 @@ extern volatile CEXCEPTION_FRAME_T CExceptionFrames[];
         CExceptionFrames[MY_ID].pFrame = (jmp_buf*)(&NewFrame);     \
         CExceptionFrames[MY_ID].Exception = CEXCEPTION_NONE;        \
         if (setjmp(NewFrame) == 0) {                                \
-            if (1)
+            if (&PrevFrame) 
 
 //Catch (see C file for explanation)
 #define Catch(e)                                                    \
