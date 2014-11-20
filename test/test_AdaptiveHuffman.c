@@ -1,10 +1,10 @@
 #include "AdaptiveHuffman.h"
 #include <stdio.h>
 #include "unity.h"
+#include "CustomAssertion.h"
 #include "InitNode.h"
 #include "ErrorCode.h"
 #include "CException.h"
-#include "CustomAssertion.h"
 
 HuffmanNode nodeA, EmptyRoot, SymbolNode ,NewNode;
 
@@ -15,7 +15,6 @@ void setUp(void){
   resetNode(&NewNode, -1);
 }
 void tearDown(void){}
-// void test_printf_before(void){printf("ASDASD");}
 
 void test_adaptiveHuffmanTreeInit_to_create_an_empty_tree(void){
   setNode(&nodeA,NULL,NULL,-1,256);
@@ -31,10 +30,11 @@ void test_adaptiveHuffmanTreeInit_to_create_an_empty_tree(void){
   TEST_ASSERT_EQUAL(-1,node->symbol);
   TEST_ASSERT_EQUAL(0,node->freq);
   TEST_ASSERT_EQUAL(-1,node->order);
-
+  
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,-1,node);
+  TEST_ASSERT_EQUAL_PARENT(NULL,NULL,NULL,node);
   free(node);
 }
-// void test_printf_after(void){printf("ASDASD");}
 /**
  *          root
  *           |
@@ -65,6 +65,15 @@ void test_adaptiveHuffmanTreeBuild_should_build_a_tree_by_adding_1_symbol(void){
   TEST_ASSERT_EQUAL_NODE(&EmptyRoot,root->leftChild,root->rightChild,-1,1,256,root);
   TEST_ASSERT_EQUAL_NODE(&EmptyRoot,NULL,NULL,1,1,255,root->rightChild);
   TEST_ASSERT_EQUAL_NODE(&EmptyRoot,NULL,NULL,-1,0,254,root->leftChild);
+  
+  TEST_ASSERT_EQUAL_PARENT(NULL,root->leftChild,root->rightChild,root);
+  TEST_ASSERT_EQUAL_PARENT(root,NULL,NULL,root->leftChild);
+  TEST_ASSERT_EQUAL_PARENT(root,NULL,NULL,root->rightChild);
+  
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL(1,1,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
+  free(root);
 }
 /**
  *          root                       root
@@ -95,4 +104,12 @@ void test_swapNode_for_just_swapping_between_2_node(void){
 
   TEST_ASSERT_EQUAL_PTR(255, root->rightChild->order);
   TEST_ASSERT_EQUAL_PTR(254, root->leftChild->order);
+  
+  TEST_ASSERT_EQUAL_PARENT(NULL,root->leftChild,root->rightChild,root);
+  TEST_ASSERT_EQUAL_PARENT(root,NULL,NULL,root->leftChild);
+  TEST_ASSERT_EQUAL_PARENT(root,NULL,NULL,root->rightChild);
+  
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,255,root->rightChild); //swapped
+  TEST_ASSERT_EQUAL_SYMBOL(1,1,254,root->leftChild);   //swapped 
 }

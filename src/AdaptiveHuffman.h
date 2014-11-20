@@ -15,9 +15,6 @@ struct HuffmanNode{
   int order;
 };
 
-//Global Variable
-// HuffmanNode *ParentNEW;
-
 HuffmanNode *adaptiveHuffmanTreeInit();
 HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , int inSymbol);
 

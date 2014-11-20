@@ -5,7 +5,7 @@
 
 HuffmanNode *adaptiveHuffmanTreeInit(){
 
-  HuffmanNode *node = malloc(sizeof(HuffmanNode));
+  HuffmanNode *node = (HuffmanNode *)malloc(sizeof(HuffmanNode));
   
   node->parent = NULL;
   node->leftChild = NULL;
