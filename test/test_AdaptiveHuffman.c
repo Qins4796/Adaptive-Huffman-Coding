@@ -12,7 +12,9 @@
 * http://www.ece.mcmaster.ca/~shirani/multi12/huffman.pdf
 */
 
-HuffmanNode nodeA, EmptyRoot, SymbolNode ,NewNode, SymbolA , SymbolB, EmptyRoot1, EmptyRoot2;
+HuffmanNode nodeA, EmptyRoot, SymbolNode ,NewNode, EmptyRoot1, EmptyRoot2;
+HuffmanNode SymbolA, SymbolB, SymbolC, SymbolD, SymbolE;
+HuffmanNode InterNode1, InterNode2, InterNode3, InterNode4, InterNode5;
 
 void setUp(void){
   resetNode(&nodeA, -1);
@@ -22,6 +24,14 @@ void setUp(void){
   resetNode(&EmptyRoot2, -1);
   resetNode(&SymbolA, -1);
   resetNode(&SymbolB, -1);
+  resetNode(&SymbolC, -1);
+  resetNode(&SymbolD, -1);
+  resetNode(&SymbolE, -1);
+  resetNode(&InterNode1, -1);
+  resetNode(&InterNode2, -1);
+  resetNode(&InterNode3, -1);
+  resetNode(&InterNode4, -1);
+  resetNode(&InterNode5, -1);
 }
 void tearDown(void){}
 
@@ -286,6 +296,49 @@ void test_swapNode_to_swap_only_the_nodeA_and_the_nodeB_no_balancing_just_swap(v
   freeNode(root);
 }
 /**
+ *                  root
+ *                   |
+ *                   V
+ *                  (6)
+ *                /    \              order from right to left larger, top to bottom
+ *             A/2     (4)            # (number) = internal node frequency
+ *                    /   \           # symbol / number = Symbol and its frequency
+ *                  (2)   B/2
+ *                /    \
+ *              NEW    C/2
+ *
+ *   # SymbolA and SymbolC should swap but their order are not
+ */
+void test_swapNode_should_swap_the_node_between_C_and_A(void){
+  setHuffmanNode(&InterNode1, NULL, &SymbolA, &InterNode2,-1,6,256);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolB,-1,4,255);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,10,2,254);
+  setHuffmanNode(&SymbolB, &InterNode2, NULL, NULL,15,2,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &NewNode, &SymbolC,-1,2,252);
+  setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,2,251);
+  setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
+  HuffmanNode *root = &InterNode1;
+
+  swapNode(&SymbolA,&SymbolC);
+
+  TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolC,&InterNode2,&InterNode1);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,&InterNode3,&SymbolB,&InterNode2);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolA);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,NULL,NULL,&SymbolB);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,&NewNode,&SymbolA,&InterNode3);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode3,NULL,NULL,&SymbolC);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode3,NULL,NULL,&NewNode);
+
+  TEST_ASSERT_EQUAL_SYMBOL(-1,6,256,&InterNode1);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,4,255,&InterNode2);
+  TEST_ASSERT_EQUAL_SYMBOL(20,2,254,&SymbolC);
+  TEST_ASSERT_EQUAL_SYMBOL(15,2,253,&SymbolB);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,252,&InterNode3);
+  TEST_ASSERT_EQUAL_SYMBOL(10,2,251,&SymbolA);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,&NewNode);
+  freeNode(root);
+}
+/**
  *          root
  *           |
  *           V
@@ -431,6 +484,240 @@ void test_findMaxOrder_to_find_the_same_freq_node_with_max_order_node_in_the_tre
   returnedNode = findMaxOrder(root,root->leftChild->rightChild->freq);
 
   TEST_ASSERT_EQUAL_PTR(&SymbolA,returnedNode);
+  freeNode(root);
+  freeNode(returnedNode);
+}
+/**
+ *                  root
+ *                   |
+ *                   V
+ *                  (4)
+ *                /    \              order from right to left larger, top to bottom
+ *              (2)    A/2            # (number) = internal node frequency
+ *            /    \                  # symbol / number = Symbol and its frequency
+ *          (1)    B/1
+ *        /    \
+ *      NEW    C/1
+ *
+ */
+void test_findMaxOrder_should_return_the_max_order_of_SymbolB_with_the_same_frequency_of_symbolC(void){
+  setHuffmanNode(&InterNode1, NULL, &InterNode2, &SymbolA,-1,4,256);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,-1,2,255);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolB,10,2,254);
+  setHuffmanNode(&SymbolB, &InterNode2, NULL, NULL,15,1,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &NewNode, &SymbolC,-1,1,252);
+  setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,1,251);
+  setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
+  HuffmanNode *root = &InterNode1;
+  HuffmanNode *returnedNode = NULL;
+
+  returnedNode = findMaxOrder(root,SymbolC.freq);
+
+  TEST_ASSERT_EQUAL_PTR(&SymbolB,returnedNode);
+
+  freeNode(root);
+  freeNode(returnedNode);
+}
+/**
+ *                  root
+ *                   |
+ *                   V
+ *                  (4)
+ *                /    \              order from right to left larger, top to bottom
+ *              (2)    A/2            # (number) = internal node frequency
+ *            /    \                  # symbol / number = Symbol and its frequency
+ *          (1)    B/1
+ *        /    \
+ *      NEW    C/1
+ *
+ */
+void test_findMaxOrder_should_return_the_max_order_of_InterNode2_with_the_same_frequency_of_SymbolA(void){
+  setHuffmanNode(&InterNode1, NULL, &InterNode2, &SymbolA,-1,4,256);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,-1,2,255);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolB,10,2,254);
+  setHuffmanNode(&SymbolB, &InterNode2, NULL, NULL,15,1,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &NewNode, &SymbolC,-1,1,252);
+  setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,1,251);
+  setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
+  HuffmanNode *root = &InterNode1;
+  HuffmanNode *returnedNode = NULL;
+
+  returnedNode = findMaxOrder(root,InterNode2.freq);
+
+  TEST_ASSERT_EQUAL_PTR(&SymbolA,returnedNode);
+
+  freeNode(root);
+  freeNode(returnedNode);
+}
+/**
+ *                  root
+ *                   |
+ *                   V
+ *                  (6)
+ *                /    \              order from right to left larger, top to bottom
+ *             A/2     (4)            # (number) = internal node frequency
+ *                    /   \           # symbol / number = Symbol and its frequency
+ *                  (2)   B/2
+ *                /    \
+ *              NEW    C/2
+ *
+ *   # SymbolC is ignored because its order is smaller than the actual node, find the max not the min
+ */
+void test_findMaxOrder_should_return_SymbolA_with_the_search_node_of_SymbolB_between_the_same_frequency_node(void){
+  setHuffmanNode(&InterNode1, NULL, &SymbolA, &InterNode2,-1,6,256);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolB,-1,4,255);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,10,2,254);
+  setHuffmanNode(&SymbolB, &InterNode2, NULL, NULL,15,2,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &NewNode, &SymbolC,-1,2,252);
+  setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,2,251);
+  setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
+  HuffmanNode *root = &InterNode1;
+  HuffmanNode *returnedNode = NULL;
+
+  returnedNode = findMaxOrder(root,SymbolB.freq);
+
+  TEST_ASSERT_EQUAL_PTR(&SymbolA,returnedNode);
+
+  freeNode(root);
+  freeNode(returnedNode);
+}
+/**
+ *                  root
+ *                   |
+ *                   V
+ *                  (6)
+ *                /    \              order from right to left larger, top to bottom
+ *             A/2     (4)            # (number) = internal node frequency
+ *                    /   \           # symbol / number = Symbol and its frequency
+ *                  (2)   B/2
+ *                /    \
+ *              NEW    C/2
+ *
+ *   # SymbolA has the highest order number compare to SymbolB and SymbolC, thus return SymbolA
+ */
+void test_findMaxOrder_should_also_return_SymbolA_with_the_search_node_of_SymbolC_between_the_same_frequency_node(void){
+  setHuffmanNode(&InterNode1, NULL, &SymbolA, &InterNode2,-1,6,256);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolB,-1,4,255);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,10,2,254);
+  setHuffmanNode(&SymbolB, &InterNode2, NULL, NULL,15,2,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &NewNode, &SymbolC,-1,2,252);
+  setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,2,251);
+  setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
+  HuffmanNode *root = &InterNode1;
+  HuffmanNode *returnedNode = NULL;
+
+  returnedNode = findMaxOrder(root,SymbolC.freq);
+
+  TEST_ASSERT_EQUAL_PTR(&SymbolA,returnedNode);
+
+  freeNode(root);
+  freeNode(returnedNode);
+}
+/**
+ *                  root
+ *                   |
+ *                   V
+ *                 (16)
+ *                /    \              order from right to left larger, top to bottom
+ *             A/8     (8)            # (number) = internal node frequency
+ *                    /   \           # symbol / number = Symbol and its frequency
+ *                  (4)   B/4
+ *                /    \
+ *              (2)    C/2
+ *            /    \
+ *          NEW    D/2
+ *
+ *   # SymbolC has the highest order number compare to SymbolD, thus return SymbolC
+ */
+void test_findMaxOrder_should_also_return_SymbolC_with_the_same_frequency_node_of_SymbolD(void){
+  setHuffmanNode(&InterNode1, NULL, &SymbolA, &InterNode2,-1,16,256);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolB,-1,8,255);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,10,8,254);
+  setHuffmanNode(&SymbolB, &InterNode2, NULL, NULL,15,4,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &InterNode4, &SymbolC,-1,4,252);
+  setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,2,251);
+  setHuffmanNode(&InterNode4, &InterNode3, &NewNode, &SymbolD,-1,2,250);
+  setHuffmanNode(&SymbolD, &InterNode4, NULL, NULL,30,2,249);
+  setHuffmanNode(&NewNode, &InterNode4, NULL, NULL,-1,0,248);
+  HuffmanNode *root = &InterNode1;
+  HuffmanNode *returnedNode = NULL;
+
+  returnedNode = findMaxOrder(root,SymbolD.freq);
+
+  TEST_ASSERT_EQUAL_PTR(&SymbolC,returnedNode);
+
+  freeNode(root);
+  freeNode(returnedNode);
+}
+/**
+ *                  root
+ *                   |
+ *                   V
+ *                 (16)
+ *                /    \              order from right to left larger, top to bottom
+ *             A/8     (8)            # (number) = internal node frequency
+ *                    /   \           # symbol / number = Symbol and its frequency
+ *                  (4)   B/4
+ *                /    \
+ *              (2)    C/2
+ *            /    \
+ *          NEW    D/2
+ *
+ *   # SymbolB has the highest order number compare to InterNode3, thus return SymbolB
+ */
+void test_findMaxOrder_should_return_the_largest_order_of_symbolB(void){
+  setHuffmanNode(&InterNode1, NULL, &SymbolA, &InterNode2,-1,16,256);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolB,-1,8,255);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,10,8,254);
+  setHuffmanNode(&SymbolB, &InterNode2, NULL, NULL,15,4,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &InterNode4, &SymbolC,-1,4,252);
+  setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,2,251);
+  setHuffmanNode(&InterNode4, &InterNode3, &NewNode, &SymbolD,-1,2,250);
+  setHuffmanNode(&SymbolD, &InterNode4, NULL, NULL,30,2,249);
+  setHuffmanNode(&NewNode, &InterNode4, NULL, NULL,-1,0,248);
+  HuffmanNode *root = &InterNode1;
+  HuffmanNode *returnedNode = NULL;
+
+  returnedNode = findMaxOrder(root,InterNode3.freq);
+
+  TEST_ASSERT_EQUAL_PTR(&SymbolB,returnedNode);
+
+  freeNode(root);
+  freeNode(returnedNode);
+}
+/**
+ *                  root
+ *                   |
+ *                   V
+ *                 (16)
+ *                /    \              order from right to left larger, top to bottom
+ *             A/8     (8)            # (number) = internal node frequency
+ *                    /   \           # symbol / number = Symbol and its frequency
+ *                  (4)   B/4
+ *                /    \
+ *              (2)    C/2
+ *            /    \
+ *          NEW    D/2
+ *
+ *   # SymbolB has the highest order number thus it return itself SymbolB
+ */
+void test_findMaxOrder_should_return_it_self_if_the_order_of_symbolB_is_the_largest(void){
+  setHuffmanNode(&InterNode1, NULL, &SymbolA, &InterNode2,-1,16,256);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolB,-1,8,255);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,10,8,254);
+  setHuffmanNode(&SymbolB, &InterNode2, NULL, NULL,15,4,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &InterNode4, &SymbolC,-1,4,252);
+  setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,2,251);
+  setHuffmanNode(&InterNode4, &InterNode3, &NewNode, &SymbolD,-1,2,250);
+  setHuffmanNode(&SymbolD, &InterNode4, NULL, NULL,30,2,249);
+  setHuffmanNode(&NewNode, &InterNode4, NULL, NULL,-1,0,248);
+  HuffmanNode *root = &InterNode1;
+  HuffmanNode *returnedNode = NULL;
+
+  returnedNode = findMaxOrder(root,SymbolB.freq);
+
+  TEST_ASSERT_EQUAL_PTR(&SymbolB,returnedNode);
+
   freeNode(root);
   freeNode(returnedNode);
 }

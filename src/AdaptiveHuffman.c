@@ -171,5 +171,6 @@ HuffmanNode *findMaxOrder(HuffmanNode *node, int freq){
   return maxOrder;
 }
 
+
 // void huffmanCompress(InStream *in, OutStream *out){}
 // void huffmanDecompress(OutStream *out, InStream *in){}
