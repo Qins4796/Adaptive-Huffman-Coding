@@ -67,7 +67,7 @@ void test_adaptiveHuffmanTreeBuild_should_build_a_tree_by_adding_1_symbol(void){
   HuffmanNode *root = &EmptyRoot , *returnedNode;
   int A = 1;
   returnedNode = adaptiveHuffmanTreeBuild(root,A);
-  TEST_ASSERT_EQUAL_PTR(&EmptyRoot, returnedNode);
+  TEST_ASSERT_EQUAL_PTR(root->leftChild, returnedNode);
   TEST_ASSERT_EQUAL_PTR(&EmptyRoot, root);
   TEST_ASSERT_EQUAL_PTR(&EmptyRoot, root->rightChild->parent);
   TEST_ASSERT_EQUAL_PTR(A,root->rightChild->symbol);
@@ -720,4 +720,208 @@ void test_findMaxOrder_should_return_it_self_if_the_order_of_symbolB_is_the_larg
 
   freeNode(root);
   freeNode(returnedNode);
+}
+/**                         Increment C
+ *                  root                    root
+ *                   |                       |
+ *                   V                       V
+ *                  (8)                     (9)         # (9) = internal node 1
+ *                /    \                  /    \ 
+ *              (4)    A/4       =>     A/4    (5)      # (5) = internal node 2
+ *            /    \                         /    \            
+ *          (1)    B/3                     (2)    B/3   # (2) = internal node 3
+ *        /    \                         /    \ 
+ *      NEW    C/1                     NEW    C/2
+ *
+ *    # SymbolC frequency incremented and its parent also
+ *    # Not the root and go to its parent, and check for same frequency
+ *    # SymbolA has the higher order compare to the node, thus swapped and increment its frequency
+ */
+void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by_swapping_SymbolA_with_the_internal_node(void){
+  setHuffmanNode(&InterNode1, NULL, &InterNode2, &SymbolA,-1,8,256);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,10,4,255);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolB,-1,4,254);
+  setHuffmanNode(&SymbolB, &InterNode2, NULL, NULL,15,3,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &NewNode, &SymbolC,-1,1,252);
+  setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,1,251);
+  setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
+  root = &InterNode1;
+  
+  huffmanUpdateAndRestructure(&SymbolC);
+  
+  TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolA,&InterNode2,&InterNode1);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,&InterNode3,&SymbolB,&InterNode2);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolA);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,NULL,NULL,&SymbolB);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,&NewNode,&SymbolC,&InterNode3);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode3,NULL,NULL,&SymbolC);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode4,NULL,NULL,&NewNode);
+
+  TEST_ASSERT_EQUAL_SYMBOL(-1,9,256,&InterNode1);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,5,255,&InterNode2);
+  TEST_ASSERT_EQUAL_SYMBOL(10,4,254,&SymbolA);
+  TEST_ASSERT_EQUAL_SYMBOL(15,3,253,&SymbolB);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,252,&InterNode3);
+  TEST_ASSERT_EQUAL_SYMBOL(20,2,251,&SymbolC);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,&NewNode);
+  
+  freeNode(root);
+}
+
+/**                       Increment C
+ *                root                    root
+ *                 |                       |
+ *                 V                       V
+ *               (10)                    (11)                  # (11) = internal node 1
+ *              /    \                  /    \
+ *            A/4    (6)        =>    A/4    (7)               # (7) = internal node 2
+ *                 /    \                  /    \ 
+ *               (3)    B/3              (3)    C/4            # (3) = internal node 3
+ *             /    \                  /    \
+ *           NEW    C/3              NEW    B/3 
+ *
+ *    # Before increment check for same frequency node
+ *    # B and C have the same frequency
+ *    # both node are swapped and increment together with their parent
+ */
+void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by_swapping_SymbolB_and_SymbolC_and_increment(void){
+  setHuffmanNode(&InterNode1, NULL, &SymbolA, &InterNode2,-1,10,256);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolB,-1,6,255);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,10,4,254);
+  setHuffmanNode(&SymbolB, &InterNode2, NULL, NULL,15,3,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &NewNode, &SymbolC,-1,3,252);
+  setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,3,251);
+  setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
+  root = &InterNode1;
+  
+  huffmanUpdateAndRestructure(&SymbolC);
+  
+  TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolA,&InterNode2,&InterNode1);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,&InterNode3,&SymbolC,&InterNode2);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolA);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,NULL,NULL,&SymbolB);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,&NewNode,&SymbolB,&InterNode3);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode3,NULL,NULL,&SymbolC);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode4,NULL,NULL,&NewNode);
+
+  TEST_ASSERT_EQUAL_SYMBOL(-1,11,256,&InterNode1);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,7,255,&InterNode2);
+  TEST_ASSERT_EQUAL_SYMBOL(10,4,254,&SymbolA);
+  TEST_ASSERT_EQUAL_SYMBOL(20,4,253,&SymbolC);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,3,252,&InterNode3);
+  TEST_ASSERT_EQUAL_SYMBOL(15,3,251,&SymbolB);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,&NewNode);
+  
+  freeNode(root);
+}
+/**                         Increment C
+ *                root                    root
+ *                 |                       |
+ *                 V                       V
+ *               (11)                    (12)                  # (12) = internal node 1
+ *              /    \                  /    \
+ *            A/4    (7)        =>    C/5    (7)               # (7) = internal node 2
+ *                 /    \                  /    \ 
+ *               (3)    C/4              (3)    A/4            # (3) = internal node 3
+ *             /    \                  /    \
+ *           NEW    B/3              NEW    B/3 
+ *
+ *    # Go to nodeC Before increment check for same frequency node
+ *    # A and C have the same frequency
+ *    # both node are swapped and increment together with their parent
+ */
+void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by_swapping_SymbolA_and_SymbolC_and_increment(void){
+  setHuffmanNode(&InterNode1, NULL, &SymbolA, &InterNode2,-1,11,256);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolC,-1,7,255);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,10,4,254);
+  setHuffmanNode(&SymbolC, &InterNode2, NULL, NULL,15,4,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &NewNode, &SymbolB,-1,3,252);
+  setHuffmanNode(&SymbolB, &InterNode3, NULL, NULL,20,3,251);
+  setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
+  root = &InterNode1;
+  
+  huffmanUpdateAndRestructure(&SymbolC);
+  
+  TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolC,&InterNode2,&InterNode1);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,&InterNode3,&SymbolA,&InterNode2);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolA);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,NULL,NULL,&SymbolB);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,&NewNode,&SymbolB,&InterNode3);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode3,NULL,NULL,&SymbolC);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode4,NULL,NULL,&NewNode);
+
+  TEST_ASSERT_EQUAL_SYMBOL(-1,12,256,&InterNode1);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,7,255,&InterNode2);
+  TEST_ASSERT_EQUAL_SYMBOL(15,5,254,&SymbolC);
+  TEST_ASSERT_EQUAL_SYMBOL(10,4,253,&SymbolA);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,3,252,&InterNode3);
+  TEST_ASSERT_EQUAL_SYMBOL(20,3,251,&SymbolB);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,&NewNode);
+  
+  freeNode(root);
+}
+
+/**                             Increment D
+ *                  root                               root
+ *                   |                                  |
+ *                   V                                  V
+ *                 (16)                               (17)            # (17) = internal node 1
+ *                /    \                             /    \          
+ *             A/8     (8)                        A/8     (9)         # (9) = internal node 2
+ *                    /   \          =>                  /   \     
+ *                  (4)   B/4                         B/4    (5)      # (5) = internal node 3
+ *                /    \                                    /   \
+ *              (2)    C/2                               (2)    D/3   # (2) = internal node 4
+ *            /    \                                    /   \
+ *          NEW    D/2                               NEW    C/2
+ *
+ *   # SymbolD and SymbolC swapped and increment its frequency
+ *   # Before internalNode3 increment check with same frequency and swapped with SymbolB
+ *   # then internalNode3 incremented to 5 and its parent also increment
+ */
+void test_huffmanUpdateAndRestructure_should_update_and_resturcture_the_tree(void){
+  setHuffmanNode(&InterNode1, NULL, &SymbolA, &InterNode2,-1,16,256);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolB,-1,8,255);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,10,8,254);
+  setHuffmanNode(&SymbolB, &InterNode2, NULL, NULL,15,4,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &InterNode4, &SymbolC,-1,4,252);
+  setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,2,251);
+  setHuffmanNode(&InterNode4, &InterNode3, &NewNode, &SymbolD,-1,2,250);
+  setHuffmanNode(&SymbolD, &InterNode4, NULL, NULL,30,2,249);
+  setHuffmanNode(&NewNode, &InterNode4, NULL, NULL,-1,0,248);
+  root = &InterNode1;
+  
+  huffmanUpdateAndRestructure(&SymbolD); //Add symbolD frequency +1
+  
+  // printf("InterNode1 %x\n",&InterNode1);
+  // printf("InterNode2 %x\n",&InterNode2);
+  // printf("InterNode3 %x\n",&InterNode3);
+  // printf("InterNode4 %x\n",&InterNode4);
+  // printf("SymbolA %x\n",&SymbolA);
+  // printf("SymbolB %x\n",&SymbolB);
+  // printf("SymbolC %x\n",&SymbolC);
+  // printf("SymbolD %x\n",&SymbolD);
+  // printf("NewNode %x\n",&NewNode);
+  
+  TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolA,&InterNode2,&InterNode1);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,&SymbolB,&InterNode3,&InterNode2);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolA);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,NULL,NULL,&SymbolB);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,&InterNode4,&SymbolD,&InterNode3);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode3,NULL,NULL,&SymbolC);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode4,&NewNode,&SymbolC,&InterNode4);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode4,NULL,NULL,&SymbolD);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode4,NULL,NULL,&NewNode);
+
+  TEST_ASSERT_EQUAL_SYMBOL(-1,17,256,&InterNode1);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,9,255,&InterNode2);
+  TEST_ASSERT_EQUAL_SYMBOL(10,8,254,&SymbolA);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,5,253,&InterNode3);
+  TEST_ASSERT_EQUAL_SYMBOL(15,4,252,&SymbolB);
+  TEST_ASSERT_EQUAL_SYMBOL(30,3,251,&SymbolD);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,250,&InterNode4);
+  TEST_ASSERT_EQUAL_SYMBOL(20,2,249,&SymbolC);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,&NewNode);
+  
+  freeNode(root);
 }

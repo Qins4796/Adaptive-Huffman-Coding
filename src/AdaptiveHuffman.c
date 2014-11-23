@@ -21,6 +21,7 @@ HuffmanNode *adaptiveHuffmanTreeInit(){
 
   return node;
 }
+
 /** Name   :  clear all the node's data to empty
  *  Input  :  *node that need to be clear
  *			
@@ -37,6 +38,7 @@ void freeNode(HuffmanNode *node){
     node = NULL;
   }
 }
+
 /** Name   :  free all the node in the Huffman tree
  *  Input  :  *node that need to be free
  *			
@@ -72,6 +74,7 @@ void freeTree(HuffmanNode *node){
     }
   }
 }
+
 /** Name   :  Build a basic tree of a Huffman tree
  *  Input  :  the symbol to be input
  *			
@@ -98,7 +101,7 @@ HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , int inSymbol){
   ParentNEW->rightChild = symbolNode;
   ParentNEW->freq = 1;
 
-  return ParentNEW;
+  return NEWnode;
 }
 
 /** Name   :  Just to swap the node between 2 node without swapping the order
@@ -171,6 +174,24 @@ HuffmanNode *findMaxOrder(HuffmanNode *node, int freq){
   return maxOrder;
 }
 
+/** Name   :  Update and Restructure the Huffman tree
+ *  Input  :  Huffman node tree to be update
+ *			   
+ *  Output :  updated Huffman tree after swapping and reordering
+ **/
+void huffmanUpdateAndRestructure(HuffmanNode *node){
+  // printf("root %x\n",root->leftChild);
+  HuffmanNode *maxOrderNode;
+  while(node != NULL){
+    maxOrderNode = findMaxOrder(root,node->freq); //find the max order with same freq node
+    
+    if(maxOrderNode!= NULL && maxOrderNode != node && maxOrderNode != node->parent && maxOrderNode != root){
+      swapNode(maxOrderNode,node);  //swap the 2 node for max order
+    }
+    node->freq +=1; //increment node frequency
+    node = node->parent; //go to parent
+  }
+}
 
 // void huffmanCompress(InStream *in, OutStream *out){}
 // void huffmanDecompress(OutStream *out, InStream *in){}
