@@ -165,7 +165,7 @@ void test_swapNode_to_swap_the_node_in_tree_with_the_frequency_of_2(void){
  *              (EmptyRoot1)                   (EmptyRoot1)
  *              /          \                   /          \
  *       (EmptyRoot2)     (SymbolA)  => (EmptyRoot2)      (SymbolA)
- *         freq  1         freq  2        freq  1         freq  2 
+ *         freq  1         freq  2        freq  1         freq  2
  *         symb -1         symb  A        symb -1         symb  A
  *         ord 254         ord 255        ord 254         ord 255
  *        /       \                      /       \
@@ -209,7 +209,7 @@ void test_swapNode_to_swap_only_the_node_in_tree_with_the_leaf_node(void){
  *              (EmptyRoot1)                   (EmptyRoot1)
  *              /          \                   /          \
  *       (EmptyRoot2)     (SymbolA)  =>  (SymbolA)      (EmptyRoot2)
- *         freq  1         freq  2        freq  2         freq  1 
+ *         freq  1         freq  2        freq  2         freq  1
  *         symb -1         symb  A        symb  A        symb  -1
  *         ord 254         ord 255        ord 254         ord 255
  *        /       \                      /       \
@@ -252,7 +252,7 @@ void test_swapNode_to_swap_only_the_node_in_tree_with_the_middle_node(void){
  *              (EmptyRoot1)                   (EmptyRoot1)
  *              /          \                   /          \
  *       (EmptyRoot2)     (SymbolA)  => (EmptyRoot2)      (SymbolB)
- *         freq  1         freq  2        freq  1         freq  1 
+ *         freq  1         freq  2        freq  1         freq  1
  *         symb -1         symb  A        symb -1         symb  B
  *         ord 254         ord 255        ord 254         ord 255
  *        /       \                      /       \
@@ -284,4 +284,153 @@ void test_swapNode_to_swap_only_the_nodeA_and_the_nodeB_no_balancing_just_swap(v
   TEST_ASSERT_EQUAL_SYMBOL(10,2,253,&SymbolA);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,&NewNode);
   freeNode(root);
+}
+/**
+ *          root
+ *           |
+ *           V
+ *       EmptyRoot
+ *        (NULL)
+ */
+void test_findMaxOrder_should_return_null_if_the_tree_is_empty(void){
+  HuffmanNode *root = NULL;
+   HuffmanNode *returnedNode = NULL;
+
+  returnedNode = findMaxOrder(root,0);
+
+  TEST_ASSERT_NULL(returnedNode);
+  TEST_ASSERT_EQUAL_PTR(NULL,returnedNode);
+  freeNode(root);
+  freeNode(returnedNode);
+}
+
+/**
+ *          root
+ *           |
+ *           V
+ *       EmptyRoot
+ *      /         \
+ *  NEWnode     SymbolNode
+ *  freq 0        freq 2
+ *  symb -1       symb A
+ *  ord 254       ord 255
+ */
+void test_findMaxOrder_should_return_it_self_if_there_are_no_other_max_order_node(void){
+  setHuffmanNode(&EmptyRoot, NULL, &NewNode, &SymbolNode,-1,2,256);
+  setHuffmanNode(&SymbolNode, &EmptyRoot, NULL, NULL,10,2,255);
+  setHuffmanNode(&NewNode, &EmptyRoot, NULL, NULL,-1,0,254);
+  HuffmanNode *root = &EmptyRoot;
+  HuffmanNode *returnedNode = NULL;
+
+  returnedNode = findMaxOrder(root,root->leftChild->freq);
+
+  TEST_ASSERT_EQUAL_PTR(&NewNode,returnedNode);
+  freeNode(root);
+  freeNode(returnedNode);
+}
+/**
+ *          root
+ *           |
+ *           V
+ *       EmptyRoot : freq 4
+ *      /         \
+ *  NEWnode     SymbolNode
+ *  freq 2        freq 2
+ *  symb -1       symb A
+ *  ord 254       ord 255
+ *
+ * # assume there is sibling below the NEWnode and its frequency is 2
+ */
+void test_findMaxOrder_should_return_the_max_order_node_in_the_same_frequency_node(void){
+  setHuffmanNode(&EmptyRoot, NULL, &NewNode, &SymbolNode,-1,4,256);
+  setHuffmanNode(&SymbolNode, &EmptyRoot, NULL, NULL,10,2,255);
+  setHuffmanNode(&NewNode, &EmptyRoot, NULL, NULL,-1,2,254);
+  HuffmanNode *root = &EmptyRoot;
+  HuffmanNode *returnedNode = NULL;
+
+  returnedNode = findMaxOrder(root,root->leftChild->freq);
+
+  TEST_ASSERT_EQUAL_PTR(&SymbolNode,returnedNode);
+  freeNode(root);
+  freeNode(returnedNode);
+}
+/**
+ *                  root
+ *                   |
+ *                   V
+ *                freq  2
+ *                symb -1
+ *                ord 256
+ *              (EmptyRoot1)
+ *              /          \
+ *       (EmptyRoot2)     (SymbolA)
+ *         freq  1         freq  1
+ *         symb -1         symb  A
+ *         ord 254         ord 255
+ *        /       \
+ *   (NEWnode)   (SymbolB)
+ *    freq  0     freq  1
+ *    symb -1     symb  B
+ *    ord 252     ord 253
+ *
+ *  # both interNode2 and symbolA has the same frequency, but
+ *  # symbol A has the higher order compare to the interNode2 node, thus return symbolA
+ */
+void test_findMaxOrder_to_find_the_same_freq_node_with_max_order_node_in_the_tree(void){
+  setHuffmanNode(&EmptyRoot1, NULL, &EmptyRoot2, &SymbolA,-1,2,256);
+  setHuffmanNode(&SymbolA, &EmptyRoot1, NULL, NULL,10,1,255);
+  setHuffmanNode(&EmptyRoot2, &EmptyRoot1, &NewNode, &SymbolB,-1,1,254);
+  setHuffmanNode(&SymbolB, &EmptyRoot2, NULL, NULL,15,1,253);
+  setHuffmanNode(&NewNode, &EmptyRoot2, NULL, NULL,-1,0,252);
+  HuffmanNode *root = &EmptyRoot1;
+  HuffmanNode *returnedNode = NULL;
+
+  // printf("emptyroot1 %x\n",&EmptyRoot1);
+  // printf("emptyroot2 %x\n",&EmptyRoot2);
+  // printf("SymbolA %x\n",&SymbolA);
+  // printf("SymbolB %x\n",&SymbolB);
+  // printf("NewNode %x\n",&NewNode);
+
+  returnedNode = findMaxOrder(root,root->leftChild->freq);
+
+  TEST_ASSERT_EQUAL_PTR(&SymbolA,returnedNode);
+  freeNode(root);
+  freeNode(returnedNode);
+}
+/**
+ *                  root
+ *                   |
+ *                   V
+ *                freq  4
+ *                symb -1
+ *                ord 256
+ *              (EmptyRoot1)
+ *              /          \
+ *       (EmptyRoot2)     (SymbolA)
+ *         freq  2         freq  2
+ *         symb -1         symb  A
+ *         ord 254         ord 255
+ *        /       \
+ *   (NEWnode)   (SymbolB)
+ *    freq  0     freq  2
+ *    symb -1     symb  B
+ *    ord 252     ord 253
+ *
+ *  # both SymbolB and symbolA has the same frequency, but
+ *  # symbol A has the higher order compare to the SymbolB node, thus return symbolA
+ */
+void test_findMaxOrder_to_find_the_same_freq_node_with_max_order_node_in_the_tree_case2_with_symbolB(void){
+  setHuffmanNode(&EmptyRoot1, NULL, &EmptyRoot2, &SymbolA,-1,4,256);
+  setHuffmanNode(&SymbolA, &EmptyRoot1, NULL, NULL,10,2,255);
+  setHuffmanNode(&EmptyRoot2, &EmptyRoot1, &NewNode, &SymbolB,-1,2,254);
+  setHuffmanNode(&SymbolB, &EmptyRoot2, NULL, NULL,15,2,253);
+  setHuffmanNode(&NewNode, &EmptyRoot2, NULL, NULL,-1,0,252);
+  HuffmanNode *root = &EmptyRoot1;
+  HuffmanNode *returnedNode = NULL;
+
+  returnedNode = findMaxOrder(root,root->leftChild->rightChild->freq);
+
+  TEST_ASSERT_EQUAL_PTR(&SymbolA,returnedNode);
+  freeNode(root);
+  freeNode(returnedNode);
 }

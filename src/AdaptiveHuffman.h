@@ -18,8 +18,8 @@ struct HuffmanNode{
 HuffmanNode *adaptiveHuffmanTreeInit();
 HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , int inSymbol);
 void freeNode(HuffmanNode *node);
-HuffmanNode swapNode(HuffmanNode *node, HuffmanNode *nodeToSwap);
-
+HuffmanNode *swapNode(HuffmanNode *node, HuffmanNode *nodeToSwap);
+HuffmanNode *findMaxOrder(HuffmanNode *node, int freq);
 // void huffmanCompress(FILE *in, FILE *out);
 // void huffmanDecompress(FILE *out, FILE *in);
 
