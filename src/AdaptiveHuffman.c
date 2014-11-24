@@ -81,7 +81,7 @@ void freeTree(HuffmanNode *node){
  *  Output :  spawn a Huffman tree with NEW node at the rightChild
  *            and the symbol to the leftChild with frequency and indexing
  **/
-HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , int inSymbol){
+HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , uint32 inSymbol){
 
   HuffmanNode *symbolNode = adaptiveHuffmanTreeInit();
   HuffmanNode *NEWnode = adaptiveHuffmanTreeInit();
@@ -143,7 +143,7 @@ HuffmanNode *swapNode(HuffmanNode *node, HuffmanNode *nodeToSwap){
  *			   
  *  Output :  return the maximum order of the node of the same frequency
  **/
-HuffmanNode *findMaxOrder(HuffmanNode *node, int freq){
+HuffmanNode *findMaxOrder(HuffmanNode *node, uint32 freq){
   HuffmanNode *maxOrder = NULL, *maxSiblingOrder = NULL;
   HuffmanNode *maxRightChild = NULL,*maxLeftChild = NULL;
 

@@ -25,8 +25,8 @@ void assertNodeParent(HuffmanNode *parent,
                       HuffmanNode *actualNode, 
                       int lineNumber){
 
+	UNITY_TEST_ASSERT_EQUAL_PTR(parent, actualNode->parent, lineNumber, "Wrong parent node");
 	UNITY_TEST_ASSERT_EQUAL_PTR(leftChild, actualNode->leftChild, lineNumber, "Wrong leftChild node");
-	UNITY_TEST_ASSERT_EQUAL_PTR(rightChild, actualNode->rightChild, lineNumber, "Wrong rightChild node");
 	UNITY_TEST_ASSERT_EQUAL_PTR(rightChild, actualNode->rightChild, lineNumber, "Wrong rightChild node");
 }
 

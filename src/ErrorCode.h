@@ -4,7 +4,8 @@
 typedef enum{
   ERROR_NO_ERROR,
   ERROR_EQUAL_NODE,
-  ERROR_NO_NODE
+  ERROR_NO_NODE,
+  ERR_FILE_ERROR_OPEN
 }ErrorCode;
 
 
