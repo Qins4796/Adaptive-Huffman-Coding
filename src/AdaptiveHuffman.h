@@ -11,7 +11,7 @@ struct HuffmanNode{
   HuffmanNode *parent;
   HuffmanNode *leftChild;
   HuffmanNode *rightChild;
-  uint32 symbol;
+  int32 symbol;
   uint32 freq;
   uint32 order;
 };
