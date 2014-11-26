@@ -13,7 +13,7 @@ struct HuffmanNode{
   HuffmanNode *rightChild;
   int32 symbol;
   uint32 freq;
-  uint32 order;
+  int32 order;
 };
 
 HuffmanNode *root;
@@ -25,6 +25,7 @@ void freeNode(HuffmanNode *node);
 HuffmanNode *swapNode(HuffmanNode *node, HuffmanNode *nodeToSwap);
 HuffmanNode *findMaxOrder(HuffmanNode *node, uint32 freq);
 void huffmanUpdateAndRestructure(HuffmanNode *node);
+
 // void huffmanCompress(FILE *in, FILE *out);
 // void huffmanDecompress(FILE *out, FILE *in);
 
