@@ -1,4 +1,4 @@
 language: c
 compiler:
   - gcc
-script: rake test:all
+script: rake clobber test:all
