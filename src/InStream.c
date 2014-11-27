@@ -22,3 +22,7 @@ void closeFileInStream(InStream *in){
   fclose(in->file);
   free(in);
 }
+
+int streamReadBit(InStream *in, int bit){
+  
+}

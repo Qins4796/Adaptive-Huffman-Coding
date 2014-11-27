@@ -29,13 +29,7 @@ HuffmanNode *adaptiveHuffmanTreeInit(){
  **/
 void freeNode(HuffmanNode *node){
   if(node){
-    node->parent = NULL;
-    node->leftChild = NULL;
-    node->rightChild = NULL;
-    node->symbol = -1;
-    node->freq = 0;
-    node->order = -1;
-    node = NULL;
+    free(node);
   }
 }
 
@@ -193,5 +187,16 @@ void huffmanUpdateAndRestructure(HuffmanNode *node){
   }
 }
 
+uint32 findHuffmanTreePath(HuffmanNode *node){
+  if(node->leftChild){
+    findHuffmanTreePath(node->leftChild);
+    return 0;
+  }
+  else if(node->rightChild){
+    findHuffmanTreePath(node->rightChild);
+    return 1;
+  }
+  else ;;
+}
 // void huffmanCompress(InStream *in, OutStream *out){}
 // void huffmanDecompress(OutStream *out, InStream *in){}

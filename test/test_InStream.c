@@ -9,7 +9,7 @@
 void setUp(void){}
 void tearDown(void){}
 
-void test_openFileInStream_should_throw_if_file_not_found(void){
+void test_openFileInStream_should_throw_error_if_file_not_found(void){
 	CEXCEPTION_T err;
   InStream *in;
 
@@ -55,7 +55,6 @@ void test_openFileInStream_should_open_the_file_and_read_the_symbol_with_decimal
 	CEXCEPTION_T err;
   InStream *in;
   int result;
-
   Try{
     in = openFileInStream("test/Data/testOpenSym.txt","r");
     result = fgetc(in->file);
@@ -64,5 +63,5 @@ void test_openFileInStream_should_open_the_file_and_read_the_symbol_with_decimal
   Catch(err){
     TEST_ASSERT_EQUAL(ERR_FILE_ERROR_OPEN,err);
   }
-    TEST_ASSERT_EQUAL(229,result);
+    TEST_ASSERT_EQUAL(36,result);
 }

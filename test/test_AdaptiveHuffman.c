@@ -976,6 +976,7 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_with_the
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,&InterNode4);
   TEST_ASSERT_EQUAL_SYMBOL(30,1,249,&SymbolD);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,&NewNode);
+  freeNode(root);
 }
 /**                         Increment C
  *                root                            root                       root
@@ -1026,6 +1027,8 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_and_incr
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,&InterNode4);
   TEST_ASSERT_EQUAL_SYMBOL(30,1,249,&SymbolD);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,&NewNode);
+  
+  freeNode(root);
 }
 /**                         Increment C
  *                root                        root
@@ -1079,4 +1082,6 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_back_wit
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,&InterNode4);
   TEST_ASSERT_EQUAL_SYMBOL(30,1,249,&SymbolD);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,&NewNode);
+  
+  freeNode(root);
 }
