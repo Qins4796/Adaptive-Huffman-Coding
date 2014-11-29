@@ -7,3 +7,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <Utils.h>
+
+void huffmanCompress(InStream *in, OutStream *out){
+
+}

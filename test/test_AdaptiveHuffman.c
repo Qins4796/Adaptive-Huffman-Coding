@@ -726,11 +726,11 @@ void test_findMaxOrder_should_return_it_self_if_the_order_of_symbolB_is_the_larg
  *                   |                       |
  *                   V                       V
  *                  (8)                     (9)         # (9) = internal node 1
- *                /    \                  /    \ 
+ *                /    \                  /    \
  *              (4)    A/4       =>     A/4    (5)      # (5) = internal node 2
- *            /    \                         /    \            
+ *            /    \                         /    \
  *          (1)    B/3                     (2)    B/3   # (2) = internal node 3
- *        /    \                         /    \ 
+ *        /    \                         /    \
  *      NEW    C/1                     NEW    C/2
  *
  *    # SymbolC frequency incremented and its parent also
@@ -746,9 +746,9 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
   setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,1,251);
   setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
   root = &InterNode1;
-  
+
   huffmanUpdateAndRestructure(&SymbolC);
-  
+
   TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolA,&InterNode2,&InterNode1);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,&InterNode3,&SymbolB,&InterNode2);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolA);
@@ -764,7 +764,7 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
   TEST_ASSERT_EQUAL_SYMBOL(-1,2,252,&InterNode3);
   TEST_ASSERT_EQUAL_SYMBOL(20,2,251,&SymbolC);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,&NewNode);
-  
+
   freeNode(root);
 }
 
@@ -775,10 +775,10 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
  *               (10)                    (11)                  # (11) = internal node 1
  *              /    \                  /    \
  *            A/4    (6)        =>    A/4    (7)               # (7) = internal node 2
- *                 /    \                  /    \ 
+ *                 /    \                  /    \
  *               (3)    B/3              (3)    C/4            # (3) = internal node 3
  *             /    \                  /    \
- *           NEW    C/3              NEW    B/3 
+ *           NEW    C/3              NEW    B/3
  *
  *    # Before increment check for same frequency node
  *    # B and C have the same frequency
@@ -793,9 +793,9 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
   setHuffmanNode(&SymbolC, &InterNode3, NULL, NULL,20,3,251);
   setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
   root = &InterNode1;
-  
+
   huffmanUpdateAndRestructure(&SymbolC);
-  
+
   TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolA,&InterNode2,&InterNode1);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,&InterNode3,&SymbolC,&InterNode2);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolA);
@@ -811,7 +811,7 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
   TEST_ASSERT_EQUAL_SYMBOL(-1,3,252,&InterNode3);
   TEST_ASSERT_EQUAL_SYMBOL(15,3,251,&SymbolB);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,&NewNode);
-  
+
   freeNode(root);
 }
 /**                         Increment C
@@ -821,10 +821,10 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
  *               (11)                    (12)                  # (12) = internal node 1
  *              /    \                  /    \
  *            A/4    (7)        =>    C/5    (7)               # (7) = internal node 2
- *                 /    \                  /    \ 
+ *                 /    \                  /    \
  *               (3)    C/4              (3)    A/4            # (3) = internal node 3
  *             /    \                  /    \
- *           NEW    B/3              NEW    B/3 
+ *           NEW    B/3              NEW    B/3
  *
  *    # Go to nodeC Before increment check for same frequency node
  *    # A and C have the same frequency
@@ -839,9 +839,9 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
   setHuffmanNode(&SymbolB, &InterNode3, NULL, NULL,20,3,251);
   setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
   root = &InterNode1;
-  
+
   huffmanUpdateAndRestructure(&SymbolC);
-  
+
   TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolC,&InterNode2,&InterNode1);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,&InterNode3,&SymbolA,&InterNode2);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolC);
@@ -857,7 +857,7 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
   TEST_ASSERT_EQUAL_SYMBOL(-1,3,252,&InterNode3);
   TEST_ASSERT_EQUAL_SYMBOL(20,3,251,&SymbolB);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,&NewNode);
-  
+
   freeNode(root);
 }
 
@@ -866,9 +866,9 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
  *                   |                                  |
  *                   V                                  V
  *                 (16)                               (17)            # (17) = internal node 1
- *                /    \                             /    \          
+ *                /    \                             /    \
  *             A/8     (8)                        A/8     (9)         # (9) = internal node 2
- *                    /   \          =>                  /   \     
+ *                    /   \          =>                  /   \
  *                  (4)   B/4                         B/4    (5)      # (5) = internal node 3
  *                /    \                                    /   \
  *              (2)    C/2                               (2)    D/3   # (2) = internal node 4
@@ -890,9 +890,9 @@ void test_huffmanUpdateAndRestructure_should_update_and_resturcture_the_tree(voi
   setHuffmanNode(&SymbolD, &InterNode4, NULL, NULL,30,2,249);
   setHuffmanNode(&NewNode, &InterNode4, NULL, NULL,-1,0,248);
   root = &InterNode1;
-  
+
   huffmanUpdateAndRestructure(&SymbolD); //Add symbolD frequency +1
-  
+
   // printf("InterNode1 %x\n",&InterNode1);
   // printf("InterNode2 %x\n",&InterNode2);
   // printf("InterNode3 %x\n",&InterNode3);
@@ -902,7 +902,7 @@ void test_huffmanUpdateAndRestructure_should_update_and_resturcture_the_tree(voi
   // printf("SymbolC %x\n",&SymbolC);
   // printf("SymbolD %x\n",&SymbolD);
   // printf("NewNode %x\n",&NewNode);
-  
+
   TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolA,&InterNode2,&InterNode1);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,&SymbolB,&InterNode3,&InterNode2);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolA);
@@ -922,7 +922,7 @@ void test_huffmanUpdateAndRestructure_should_update_and_resturcture_the_tree(voi
   TEST_ASSERT_EQUAL_SYMBOL(-1,2,250,&InterNode4);
   TEST_ASSERT_EQUAL_SYMBOL(20,2,249,&SymbolC);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,&NewNode);
-  
+
   freeNode(root);
 }
 /**                             Increment C
@@ -930,14 +930,14 @@ void test_huffmanUpdateAndRestructure_should_update_and_resturcture_the_tree(voi
  *                   |                                   |
  *                   V                                   V
  *                 (12)                                 (13)             # (13) = internal node 1
- *                /    \                             /       \          
+ *                /    \                             /       \
  *             A/4     (8)                         (5)        (8)        # (8) = internal node 2
  *                    /   \          =>           /   \      /   \
  *                  (4)   B/4                   (1)   C/4  A/4  B/4      # (5) = internal node 3
  *                /    \                       /   \
  *              (1)    C/3                  NEW    D/1                   # (1) = internal node 4
- *            /    \                                    
- *          NEW    D/1                               
+ *            /    \
+ *          NEW    D/1
  *
  *   # Go to Node C then increment, and go to parent
  *   # internal node 3 check for highest order, and swap with Symbol A
@@ -954,9 +954,9 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_with_the
   setHuffmanNode(&SymbolD, &InterNode4, NULL, NULL,30,1,249);
   setHuffmanNode(&NewNode, &InterNode4, NULL, NULL,-1,0,248);
   root = &InterNode1;
-  
+
   huffmanUpdateAndRestructure(&SymbolC); //update symbolC frequency +1
-  
+
   TEST_ASSERT_EQUAL_PARENT(NULL,&InterNode3,&InterNode2,&InterNode1);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,&SymbolA,&SymbolB,&InterNode2);
   TEST_ASSERT_EQUAL_PARENT(&InterNode2,NULL,NULL,&SymbolA);
@@ -966,7 +966,7 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_with_the
   TEST_ASSERT_EQUAL_PARENT(&InterNode3,&NewNode,&SymbolD,&InterNode4);
   TEST_ASSERT_EQUAL_PARENT(&InterNode4,NULL,NULL,&SymbolD);
   TEST_ASSERT_EQUAL_PARENT(&InterNode4,NULL,NULL,&NewNode);
-  
+
   TEST_ASSERT_EQUAL_SYMBOL(-1,13,256,&InterNode1);
   TEST_ASSERT_EQUAL_SYMBOL(-1,8,255,&InterNode2);
   TEST_ASSERT_EQUAL_SYMBOL(-1,5,254,&InterNode3);
@@ -989,7 +989,7 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_with_the
  *       (1)   C/4  A/4  B/4            (1)    -  A/4     -        (1)   B/4  A/4   C/5       # (5) = internal node 3
  *      /   \                         /   \   B/4 <------> C/4    /   \
  *   NEW    D/1                     NEW    D/1      swap       NEW    D/1                     # (1) = internal node 4
- *  
+ *
  *   # Go to Node C check for same frequency node,
  *   # node C, A, B, have the same node, but B has the highest order, then swap with B
  *   # after swap increment its node and its parents node
@@ -1005,9 +1005,9 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_and_incr
   setHuffmanNode(&SymbolD, &InterNode4, NULL, NULL,30,1,249);
   setHuffmanNode(&NewNode, &InterNode4, NULL, NULL,-1,0,248);
   root = &InterNode1;
-  
+
   huffmanUpdateAndRestructure(&SymbolC); //update symbolC frequency +1
-  
+
   TEST_ASSERT_EQUAL_PARENT(NULL,&InterNode3,&InterNode2,&InterNode1);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,&SymbolA,&SymbolC,&InterNode2);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,&InterNode4,&SymbolB,&InterNode3);
@@ -1017,7 +1017,7 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_and_incr
   TEST_ASSERT_EQUAL_PARENT(&InterNode2,NULL,NULL,&SymbolC);
   TEST_ASSERT_EQUAL_PARENT(&InterNode4,NULL,NULL,&SymbolD);
   TEST_ASSERT_EQUAL_PARENT(&InterNode4,NULL,NULL,&NewNode);
-  
+
   TEST_ASSERT_EQUAL_SYMBOL(-1,14,256,&InterNode1);
   TEST_ASSERT_EQUAL_SYMBOL(-1,9,255,&InterNode2);
   TEST_ASSERT_EQUAL_SYMBOL(-1,5,254,&InterNode3);
@@ -1027,7 +1027,7 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_and_incr
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,&InterNode4);
   TEST_ASSERT_EQUAL_SYMBOL(30,1,249,&SymbolD);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,&NewNode);
-  
+
   freeNode(root);
 }
 /**                         Increment C
@@ -1035,7 +1035,7 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_and_incr
  *                 |                           |
  *                 V                           V
  *                (14)                       (15)                   # (15) = internal node 1
- *             /       \                    /    \  
+ *             /       \                    /    \
  *           (5)       (9)        =>      C/6    (9)                # (9) = internal node 2
  *         /   \      /   \                     /   \
  *       (1)   B/4  A/4   C/5                 A/4   (5)             # (5) = internal node 3
@@ -1043,9 +1043,9 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_and_incr
  *   NEW    D/1                                  (1)   B/4          # (1) = internal node 4
  *                                              /   \
  *                                           NEW    D/1
- *   
+ *
  *   # Go to Node C check for same frequency node,
- *   # node C and internalNode3 have the same frequency, 
+ *   # node C and internalNode3 have the same frequency,
  *   # but internalNode3 has the highest order, then swap with C node
  *   # after swap increment C node and its parents node
  */
@@ -1060,9 +1060,9 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_back_wit
   setHuffmanNode(&SymbolD, &InterNode4, NULL, NULL,30,1,249);
   setHuffmanNode(&NewNode, &InterNode4, NULL, NULL,-1,0,248);
   root = &InterNode1;
-  
+
   huffmanUpdateAndRestructure(&SymbolC); //update symbolC frequency +1
-  
+
   TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolC,&InterNode2,&InterNode1);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,&SymbolA,&InterNode3,&InterNode2);
   TEST_ASSERT_EQUAL_PARENT(&InterNode2,&InterNode4,&SymbolB,&InterNode3);
@@ -1072,7 +1072,7 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_back_wit
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolC);
   TEST_ASSERT_EQUAL_PARENT(&InterNode4,NULL,NULL,&SymbolD);
   TEST_ASSERT_EQUAL_PARENT(&InterNode4,NULL,NULL,&NewNode);
-  
+
   TEST_ASSERT_EQUAL_SYMBOL(-1,15,256,&InterNode1);
   TEST_ASSERT_EQUAL_SYMBOL(-1,9,255,&InterNode2);
   TEST_ASSERT_EQUAL_SYMBOL(20,6,254,&SymbolC);
@@ -1082,6 +1082,68 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_back_wit
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,&InterNode4);
   TEST_ASSERT_EQUAL_SYMBOL(30,1,249,&SymbolD);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,&NewNode);
-  
+
+  freeNode(root);
+}
+/**                         Increment C
+ *                root                        root
+ *                 |                           |
+ *                 V                           V
+ *                (14)                       (15)                   # (15) = internal node 1
+ *             /       \                    /    \
+ *           (5)       (9)        =>      C/6    (9)                # (9) = internal node 2
+ *         /   \      /   \                     /   \
+ *       (1)   B/4  A/4   C/5                 A/4   (5)             # (5) = internal node 3
+ *      /   \                                      /   \
+ *   NEW    D/1                                  (1)   B/4          # (1) = internal node 4
+ *                                              /   \
+ *                                           NEW    D/1
+ *
+ *   # Go to Node C check for same frequency node,
+ *   # node C and internalNode3 have the same frequency,
+ *   # but internalNode3 has the highest order, then swap with C node
+ *   # after swap increment C node and its parents node
+ */
+void test_findHuffmanTreePathLeafToRoot_should_return_the_total_path_of_the_tree(void){
+  setHuffmanNode(&InterNode1, NULL, &InterNode3, &InterNode2,-1,14,256);
+  setHuffmanNode(&InterNode2, &InterNode1, &SymbolA, &SymbolC,-1,9,255);
+  setHuffmanNode(&InterNode3, &InterNode1, &InterNode4, &SymbolB,-1,5,254);
+  setHuffmanNode(&SymbolC, &InterNode2, NULL, NULL,20,5,253);
+  setHuffmanNode(&SymbolA, &InterNode2, NULL, NULL,10,4,252);
+  setHuffmanNode(&SymbolB, &InterNode3, NULL, NULL,15,4,251);
+  setHuffmanNode(&InterNode4, &InterNode3, &NewNode, &SymbolD,-1,1,250);
+  setHuffmanNode(&SymbolD, &InterNode4, NULL, NULL,30,1,249);
+  setHuffmanNode(&NewNode, &InterNode4, NULL, NULL,-1,0,248);
+  root = &InterNode1;
+  uint32 result;
+
+  result = findHuffmanTreePathLeafToRoot(&NewNode);
+  TEST_ASSERT_EQUAL(3,result);
+  result = findHuffmanTreePathLeafToRoot(&SymbolD);
+  TEST_ASSERT_EQUAL(3,result);
+  result = findHuffmanTreePathLeafToRoot(&SymbolB);
+  TEST_ASSERT_EQUAL(2,result);
+  result = findHuffmanTreePathLeafToRoot(&SymbolA);
+  TEST_ASSERT_EQUAL(2,result);
+  result = findHuffmanTreePathLeafToRoot(&SymbolC);
+  TEST_ASSERT_EQUAL(2,result);
+  result = findHuffmanTreePathLeafToRoot(root);
+  TEST_ASSERT_EQUAL(0,result);
+
+  huffmanUpdateAndRestructure(&SymbolC); //update symbolC frequency +1
+
+  result = findHuffmanTreePathLeafToRoot(&NewNode);
+  TEST_ASSERT_EQUAL(4,result);
+  result = findHuffmanTreePathLeafToRoot(&SymbolD);
+  TEST_ASSERT_EQUAL(4,result);
+  result = findHuffmanTreePathLeafToRoot(&SymbolB);
+  TEST_ASSERT_EQUAL(3,result);
+  result = findHuffmanTreePathLeafToRoot(&SymbolA);
+  TEST_ASSERT_EQUAL(2,result);
+  result = findHuffmanTreePathLeafToRoot(&SymbolC);
+  TEST_ASSERT_EQUAL(1,result);
+  result = findHuffmanTreePathLeafToRoot(root);
+  TEST_ASSERT_EQUAL(0,result);
+
   freeNode(root);
 }

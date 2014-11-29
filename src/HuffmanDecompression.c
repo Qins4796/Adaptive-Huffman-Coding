@@ -7,3 +7,8 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <Utils.h>
+
+
+void huffmanDecompress(OutStream *out, InStream *in){
+
+}

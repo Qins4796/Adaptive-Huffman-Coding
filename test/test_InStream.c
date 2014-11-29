@@ -14,7 +14,8 @@ void test_openFileInStream_should_throw_error_if_file_not_found(void){
   InStream *in;
 
   Try{
-    in = openFileInStream("test/Data/testOpenFail.txt","r");
+    in = openFileInStream("test/Data/testOpenFail.txt","rb");
+    TEST_ASSERT_NULL(in);
     TEST_FAIL_MESSAGE("Error, Failed to Open File");
   }
   Catch(err){
@@ -27,8 +28,11 @@ void test_openFileInStream_should_open_the_file_and_read_the_data(void){
   char buffer[BUFFER_SIZE];
 
   Try{
-    in = openFileInStream("test/Data/testOpen.txt","r");
+    in = openFileInStream("test/Data/testOpen.txt","rb");
     fgets(buffer,BUFFER_SIZE,in->file);
+    TEST_ASSERT_NOT_NULL(in);
+    TEST_ASSERT_NOT_NULL(in->file);
+    TEST_ASSERT_EQUAL("test/Data/testOpen.txt",in->filename);
     closeFileInStream(in);
   }
   Catch(err){
@@ -42,8 +46,11 @@ void test_openFileInStream_should_open_the_file_and_read_the_string(void){
   char buffer[BUFFER_SIZE];
 
   Try{
-    in = openFileInStream("test/Data/testOpen2.txt","r");
+    in = openFileInStream("test/Data/testOpen2.txt","rb");
     fgets(buffer,BUFFER_SIZE,in->file);
+    TEST_ASSERT_NOT_NULL(in);
+    TEST_ASSERT_NOT_NULL(in->file);
+    TEST_ASSERT_EQUAL("test/Data/testOpen2.txt",in->filename);
     closeFileInStream(in);
   }
   Catch(err){
@@ -56,8 +63,11 @@ void test_openFileInStream_should_open_the_file_and_read_the_symbol_with_decimal
   InStream *in;
   int result;
   Try{
-    in = openFileInStream("test/Data/testOpenSym.txt","r");
+    in = openFileInStream("test/Data/testOpenSym.txt","rb");
     result = fgetc(in->file);
+    TEST_ASSERT_NOT_NULL(in);
+    TEST_ASSERT_NOT_NULL(in->file);
+    TEST_ASSERT_EQUAL("test/Data/testOpenSym.txt",in->filename);
     closeFileInStream(in);
   }
   Catch(err){
