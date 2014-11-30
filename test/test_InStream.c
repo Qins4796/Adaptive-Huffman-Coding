@@ -75,3 +75,131 @@ void test_openFileInStream_should_open_the_file_and_read_the_symbol_with_decimal
   }
     TEST_ASSERT_EQUAL(36,result);
 }
+void test_streamReadBit_should_return_the_bit_of_data_from_bit0_to_bit7_for_single_data(void){
+  InStream *in;
+  int32 result;
+  in = openFileInStream("test/Data/test_InStream.txt","rb");
+  
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(1,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(1,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(1,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  
+  closeFileInStream(in);
+}
+void test_streamReadBits_should_return_the_byte_of_single_character(void){
+  InStream *in;
+  int32 result;
+  in = openFileInStream("test/Data/test_InStream.txt","rb");
+  
+  result = streamReadBits(in->file);
+  TEST_ASSERT_EQUAL(88,result);
+  TEST_ASSERT_EQUAL(0b01011000,result);
+  TEST_ASSERT_EQUAL('X',result);
+  
+  closeFileInStream(in);
+}
+void test_streamReadBit_should_return_the_bit_of_data_from_bit0_to_bit7_with_multiple_data(void){
+  InStream *in;
+  int32 result;
+  in = openFileInStream("test/Data/test_InStream_multi.txt","rb");
+  
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(1,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(1,result);
+  
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(1,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(1,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(1,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(0,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(1,result);
+  result = streamReadBit(in->file);
+  TEST_ASSERT_EQUAL(1,result);
+  
+  closeFileInStream(in);
+}
+void test_streamReadBits_should_return_the_byte_of_multiple_character(void){
+  InStream *in;
+  int32 result;
+  in = openFileInStream("test/Data/test_InStream_multi.txt","rb");
+  
+  result = streamReadBits(in->file);
+  TEST_ASSERT_EQUAL(65,result);
+  TEST_ASSERT_EQUAL(0b01000001,result);
+  TEST_ASSERT_EQUAL('A',result);
+  
+  result = streamReadBits(in->file);
+  TEST_ASSERT_EQUAL(66,result);
+  TEST_ASSERT_EQUAL(0b01000010,result);
+  TEST_ASSERT_EQUAL('B',result);
+  
+  result = streamReadBits(in->file);
+  TEST_ASSERT_EQUAL(67,result);
+  TEST_ASSERT_EQUAL(0b01000011,result);
+  TEST_ASSERT_EQUAL('C',result);
+  
+  closeFileInStream(in);
+}
+void test_streamReadBits_should_return_the_byte_of_symbol_character(void){
+  InStream *in;
+  int32 result;
+  in = openFileInStream("test/Data/!test_InStream.txt","rb");
+  
+  result = streamReadBits(in->file);
+  TEST_ASSERT_EQUAL(229,result);
+  TEST_ASSERT_EQUAL(0b11100101,result);
+  TEST_ASSERT_EQUAL_HEX16(0xE5,result);
+
+  closeFileInStream(in);
+}

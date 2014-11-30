@@ -4,6 +4,10 @@
 #include "CException.h"
 #include <malloc.h>
 
+unsigned char outputBuffer= 0; // byte buffer for output
+int outputBufferPos = 7; // position in byte buffer
+
+
 OutStream *openFileOutStream(char *fileName, char *mode){
   OutStream *in = calloc(1,sizeof(OutStream));
   
@@ -13,8 +17,8 @@ OutStream *openFileOutStream(char *fileName, char *mode){
     Throw(ERR_FILE_ERROR_OPEN);
   }
   in->filename = fileName;
-  in->byte = 0;
-  in->index = 0;
+  in->byteIndex = 0;
+  in->bitIndex = 0;
   
   return in;
 }
