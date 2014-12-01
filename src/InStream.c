@@ -26,6 +26,7 @@ void closeFileInStream(InStream *in){
   free(in);
 }
 uint32 streamReadBit(InStream* in){
+
   uint8 charRead, bitToReturn;
   FILE *fileIn = (FILE *)in;
   if (bitIndex == -1){ // -1 for enter case for first time
@@ -51,6 +52,7 @@ uint32 streamReadBit(InStream* in){
 }
 
 uint32 streamReadBits(InStream *in){
+
   uint32 byteToReturn = 0, nextBit = 0;
   int32 i;
   for (i=7 ; i>=0 ; i--){
