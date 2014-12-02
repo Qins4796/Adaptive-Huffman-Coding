@@ -7,6 +7,11 @@
 uint8 byteIndexOut;
 uint32 bitIndexOut = 7;
 
+/** Name   :  Open OutStream File from txt or bin
+ *  Input  :  file path, and file mode : read or write , binary?
+ *
+ *  Output :  return the data in the file
+ **/
 OutStream *openFileOutStream(char *fileName, char *mode){
   OutStream *in = calloc(1,sizeof(OutStream));
 
@@ -21,15 +26,22 @@ OutStream *openFileOutStream(char *fileName, char *mode){
 
   return in;
 }
+
+/** Name   :  Close OutStream file and free malloc
+ *  Input  :  file to be close and free
+ *
+ *  Output :  freed file
+ **/
 void closeFileOutStream(OutStream *in){
   fclose(in->file);
   free(in);
 }
-// uint32 streamReadBit(InStream* in){
 
-  // uint8 charRead, bitToReturn;
-  // FILE *fileIn = (FILE *)in;
-  
+/** Name   :  stream Write Bit by bit to the file (put)
+ *  Input  :  file path to be write
+ *
+ *  Output :  the output bit of 1 or 0
+ **/
 uint32 streamWriteBit(OutStream *out, uint32 value){
   
   FILE *fileOut = (FILE *)out;
@@ -53,6 +65,11 @@ uint32 streamWriteBit(OutStream *out, uint32 value){
 return (uint32)byteIndexOut;
 }
 
+/** Name   :  stream Write Bits , 8bit, character
+ *  Input  :  file path to be write
+ *
+ *  Output :  written byte of character on the file
+ **/
 uint32 streamWriteBits(OutStream *out, uint8 character){
   int32 i;
   for (i=7 ; i>=0; i--){

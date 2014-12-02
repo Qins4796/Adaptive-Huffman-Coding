@@ -7,6 +7,11 @@
 uint8 byteIndex;
 uint32 bitIndex = -1;
 
+/** Name   :  Open InStream File from txt or bin
+ *  Input  :  file path, and file mode : read or write , binary?
+ *
+ *  Output :  return the data in the file
+ **/
 InStream *openFileInStream(char *fileName, char *mode){
   InStream *in = (InStream *)calloc(1,sizeof(InStream));
 
@@ -21,10 +26,22 @@ InStream *openFileInStream(char *fileName, char *mode){
 
   return in;
 }
+
+/** Name   :  Close InStream file and free malloc
+ *  Input  :  file to be close and free
+ *
+ *  Output :  freed file
+ **/
 void closeFileInStream(InStream *in){
   fclose(in->file);
   free(in);
 }
+
+/** Name   :  stream Read Bit by bit from the file (get)
+ *  Input  :  file path to be reeded
+ *
+ *  Output :  the output bit of 1 or 0
+ **/
 uint32 streamReadBit(InStream* in){
 
   uint8 charRead, bitToReturn;
@@ -51,6 +68,11 @@ uint32 streamReadBit(InStream* in){
   return bitToReturn;
 }
 
+/** Name   :  stream Read Bits , 8bit
+ *  Input  :  file path to be reeded
+ *
+ *  Output :  the output of 8 bit char, byte read
+ **/
 uint32 streamReadBits(InStream *in){
 
   uint32 byteToReturn = 0, nextBit = 0;

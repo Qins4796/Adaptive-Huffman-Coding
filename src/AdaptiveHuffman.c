@@ -65,25 +65,25 @@ void freeNode(HuffmanNode *node){
     freeNode(node->rightChild);
 
     if(node->parent){
-    node->parent = NULL;
-    free(node->parent);
+      node->parent = NULL;
+      free(node->parent);
     }
     if(node->leftChild){
-    node->leftChild = NULL;
-    free(node->leftChild);
+      node->leftChild = NULL;
+      free(node->leftChild);
     }
     if(node->rightChild){
-    node->rightChild = NULL;
-    free(node->rightChild);
+      node->rightChild = NULL;
+      free(node->rightChild);
     }
     if(node->symbol){
-    node->symbol = -1;
+      node->symbol = -1;
     }
     if(node->freq){
-    node->freq = 0;
+      node->freq = 0;
     }
     if(node->order){
-    node->order = -1;
+      node->order = -1;
     }
     node = NULL;
   }

@@ -31,7 +31,4 @@ HuffmanNode *findMaxOrder(HuffmanNode *node, uint32 freq);
 void huffmanUpdateAndRestructure(HuffmanNode *node);
 uint32 findHuffmanTreePathLeafToRoot(HuffmanNode *node);
 
-// void huffmanCompress(FILE *in, FILE *out);
-// void huffmanDecompress(FILE *out, FILE *in);
-
 #endif // AdaptiveHuffman_H

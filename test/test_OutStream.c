@@ -76,7 +76,7 @@ void test_openFileInStream_should_open_the_file_and_read_the_symbol_with_decimal
   }
     TEST_ASSERT_EQUAL(36,result);
 }
-void test_streamWriteBit_should_write_bit_by_bit_into_the_output_file(void){
+void test_streamWriteBit_should_write_bit_by_bit_into_the_output_file_and_read_it_back_using_streamReadBit(void){
   CEXCEPTION_T err;
   OutStream *out;
   InStream *in;
@@ -138,7 +138,7 @@ void test_streamWriteBit_should_write_bit_by_bit_into_the_output_file(void){
     TEST_ASSERT_EQUAL_STRING("E",buffer);
 }
 
-void test_streamWriteBits_should_write_the_character_byte_into_the_file_and_read_back(void){
+void test_streamWriteBits_should_write_the_character_byte_into_the_file_and_read_it_back_using_fgets(void){
   CEXCEPTION_T err;
   OutStream *out;
   InStream *in;
@@ -170,7 +170,7 @@ void test_streamWriteBits_should_write_the_character_byte_into_the_file_and_read
     TEST_ASSERT_EQUAL_STRING("A",buffer);
 }
 
-void test_streamWriteBit_should_write_multiple_char_bit_by_bit_into_the_output_file(void){
+void test_streamWriteBit_should_write_multiple_char_bit_by_bit_into_the_output_file_and_read_it_back_using_fgets(void){
   CEXCEPTION_T err;
   OutStream *out;
   InStream *in;
@@ -222,7 +222,7 @@ void test_streamWriteBit_should_write_multiple_char_bit_by_bit_into_the_output_f
     TEST_ASSERT_EQUAL_STRING("CAD",buffer);
 }
 
-void test_streamWriteBits_should_write_multiple_character_byte_into_the_file_and_read_back(void){
+void test_streamWriteBits_should_write_multiple_character_byte_into_the_file_and_read_it_back_using_fgets_for_checking(void){
   CEXCEPTION_T err;
   OutStream *out;
   InStream *in;
