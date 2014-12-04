@@ -26,8 +26,14 @@ void huffmanCompress(InStream *in, OutStream *out){
   int Symb;
   
   while(!feof(in->file)){
-  
+    
   break;
   }
   
 }
+
+// read symbol
+// 1st time? > build NEW and symbol and update tree
+// seen b4 > add and update tree symbol
+
+// while( bitIndex !=7) streamWriteBit(file, 0);

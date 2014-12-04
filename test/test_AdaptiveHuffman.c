@@ -16,6 +16,14 @@ HuffmanNode nodeA, EmptyRoot, SymbolNode ,NewNode, EmptyRoot1, EmptyRoot2;
 HuffmanNode SymbolA, SymbolB, SymbolC, SymbolD, SymbolE;
 HuffmanNode InterNode1, InterNode2, InterNode3, InterNode4, InterNode5;
 
+#define leftNode(x) (x)->leftChild
+#define rightNode(x) (x)->rightChild
+#define leftLeftNode(x) (x)->leftChild->leftChild
+#define leftRightNode(x) (x)->leftChild->rightChild
+#define rightLeftNode(x) (x)->rightChild->leftChild
+#define rightRightNode(x) (x)->rightChild->rightChild
+#define rightLeftLeftNode(x) (x)->rightChild->leftChild->leftChild
+
 void setUp(void){
   resetNode(&nodeA, -1);
   resetNode(&EmptyRoot, -1);
@@ -94,6 +102,101 @@ void test_adaptiveHuffmanTreeBuild_should_build_a_tree_by_adding_1_symbol(void){
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
   freeNode(root);
 }
+
+/**
+ *                root                          root
+ *                 |                              |
+ *                 V                              V
+ *                root                           (2)
+ *             /       \                       /     \
+ *       NewNode       Symbol     =>         (1)     C/1
+ *                                         /    \
+ *                                   NewNode    A/1
+ *
+ */
+void test_adaptiveHuffmanTreeBuild_should_build_a_new_nodeA_exist_on_the_rightChild_of_oldNewNode(void){
+  setHuffmanNode(&InterNode1, NULL, &NewNode, &SymbolC,-1,1,256);
+  setHuffmanNode(&SymbolC, &InterNode1, NULL, NULL,'C',1,255);
+  setHuffmanNode(&NewNode, &InterNode1, NULL, NULL,-1,0,254);
+  root = &InterNode1;
+  HuffmanNode *returnedNode;
+
+  returnedNode = adaptiveHuffmanTreeBuild(&NewNode,0b01000001); // Symbol 'A' in binary
+  huffmanUpdateAndRestructure(root); // Update NewNode->parent  (which is the Root)
+
+  TEST_ASSERT_EQUAL_PARENT(NULL,leftNode(root),&SymbolC,&InterNode1);
+  TEST_ASSERT_EQUAL_PARENT(root,leftLeftNode(root),leftRightNode(root),leftNode(root));
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolC);
+  TEST_ASSERT_EQUAL_PARENT(leftNode(root),NULL,NULL,leftRightNode(root));//A
+  TEST_ASSERT_EQUAL_PARENT(leftNode(root),NULL,NULL,leftLeftNode(root));//NEW
+
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('C',1,255,&SymbolC);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,leftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('A',1,253,leftRightNode(root)); // A exist
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,leftLeftNode(root));
+
+  freeNode(root);
+}
+
+/**
+ *                 root                          root                    root
+ *                  |                              |                      |
+ *                  V                              V                      V
+ *                 (2)                            (3)                    (3)
+ *               /     \                        /     \                /     \
+ *            (1)      C/1        =>         (2)      C/1     =>     C/1     (2)
+ *          /    \                         /    \                           /    \
+ *     NewNode   A/1                    (1)     A/1                      (1)     A/1
+ *                                    /    \                            /    \
+ *                               NewNode   B/1                     NewNode   B/1
+ */
+void test_adaptiveHuffmanTreeBuild_after_add_symbol_A_and_add_another_symbol_B_should_update_the_tree(void){
+  setHuffmanNode(&InterNode1, NULL, &NewNode, &SymbolC,-1,1,256);
+  setHuffmanNode(&SymbolC, &InterNode1, NULL, NULL,'C',1,255);
+  setHuffmanNode(&NewNode, &InterNode1, NULL, NULL,-1,0,254);
+  root = &InterNode1;
+  HuffmanNode *returnedNode;
+
+  returnedNode = adaptiveHuffmanTreeBuild(&NewNode,0b01000001); // Symbol 'A' in binary
+  huffmanUpdateAndRestructure(root); // Update NewNode->parent
+  //Before Add 'B'
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('C',1,255,&SymbolC);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,leftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('A',1,253,leftRightNode(root)); // A exist
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,leftLeftNode(root));
+  
+  returnedNode = adaptiveHuffmanTreeBuild(leftLeftNode(root),0b01000010); // Symbol 'B' in binary
+  // After Add 'B', Before Update Tree
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('C',1,255,&SymbolC); // symbol C
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,leftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('A',1,253,leftRightNode(root)); // symbol A 
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,leftLeftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('B',1,251,leftLeftNode(root)->rightChild); // symbol B exist after add
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,leftLeftNode(root)->leftChild);
+  
+  huffmanUpdateAndRestructure(leftNode(root)); // Update NewNode->parent
+  // After add 'B' and updated the Tree
+  
+  TEST_ASSERT_EQUAL_SYMBOL(-1,3,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,255,rightNode(root)); // swapped with C
+  TEST_ASSERT_EQUAL_SYMBOL('C',1,254,leftNode(root)); // swapped ( but order remain)
+  TEST_ASSERT_EQUAL_SYMBOL('A',1,253,rightRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,rightLeftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('B',1,251,rightLeftNode(root)->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,rightLeftNode(root)->leftChild);
+  
+  TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolC,rightNode(root),&InterNode1);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolC);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,rightLeftNode(root),rightRightNode(root),rightNode(root));
+  TEST_ASSERT_EQUAL_PARENT(rightNode(root),NULL,NULL,rightRightNode(root));
+  TEST_ASSERT_EQUAL_PARENT(rightNode(root),rightLeftNode(root)->leftChild,rightLeftNode(root)->rightChild,rightLeftNode(root));
+  
+  freeNode(root);
+}
+
 /**
  *          root                       root
  *           |                          |
@@ -132,7 +235,8 @@ void test_swapNode_for_just_swapping_between_2_node(void){
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,255,root->rightChild); //swapped
   TEST_ASSERT_EQUAL_SYMBOL(1,1,254,root->leftChild);   //swapped
   freeNode(root);
-  }
+}
+
 /**
  *          root                       root
  *           |                          |

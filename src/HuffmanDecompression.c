@@ -22,3 +22,10 @@
 void huffmanDecompress(OutStream *out, InStream *in){
   
 }
+
+// 1 symbol = stream read bits, if EOF break
+// create node and output bit
+// updat tree
+
+// 2 read bit by bit, if 0 go left else 1 go right
+// if EOF output 
