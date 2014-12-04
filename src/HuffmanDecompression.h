@@ -5,6 +5,6 @@
 #include "OutStream.h"
 #include "AdaptiveHuffman.h"
 
-void huffmanDecompress(OutStream *out, InStream *in);
+void huffmanDecompress(InStream *in , OutStream *out);
 
 #endif // HuffmanDecompression_H

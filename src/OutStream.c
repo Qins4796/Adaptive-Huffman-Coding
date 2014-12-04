@@ -4,8 +4,7 @@
 #include "CException.h"
 #include <malloc.h>
 
-uint8 byteIndexOut;
-uint32 bitIndexOut = 7;
+OutStream streamOut = {.bitIndex = 7, .byteIndex = 0};
 
 /** Name   :  Open OutStream File from txt or bin
  *  Input  :  file path, and file mode : read or write , binary?
@@ -46,23 +45,23 @@ uint32 streamWriteBit(OutStream *out, uint32 value){
   
   FILE *fileOut = (FILE *)out;
   if(!value){
-    byteIndexOut = byteIndexOut & (~(1 << bitIndexOut));
+    streamOut.byteIndex = streamOut.byteIndex & (~(1 << streamOut.bitIndex));
   }
   else if(value){
-    byteIndexOut = byteIndexOut | (1 << bitIndexOut);
+    streamOut.byteIndex = streamOut.byteIndex | (1 << streamOut.bitIndex);
   }
   else{return (uint32)NULL;}
 
-  bitIndexOut--; //decrement for 7 to 0 to put into byteIndexOut
+  streamOut.bitIndex--; //decrement for 7 to 0 to put into byteIndexOut
 
-  if (bitIndexOut == -1){
-    fwrite(&byteIndexOut, sizeof(byteIndexOut), 1, fileOut);
+  if (streamOut.bitIndex == -1){
+    fwrite(&streamOut.byteIndex, sizeof(streamOut.byteIndex), 1, fileOut);
     // size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream);
 
-    bitIndexOut = 7; //reset to 7 for next 8 bit
-    byteIndexOut = 0; //reset to 0 for next byte
+    streamOut.bitIndex = 7; //reset to 7 for next 8 bit
+    streamOut.byteIndex = 0; //reset to 0 for next byte
   }
-return (uint32)byteIndexOut;
+return (uint32)streamOut.byteIndex;
 }
 
 /** Name   :  stream Write Bits , 8bit, character

@@ -4,8 +4,7 @@
 #include <stdio.h>
 #include <malloc.h>
 
-uint8 byteIndex;
-uint32 bitIndex = -1;
+InStream streamIn = {.bitIndex = -1, .byteIndex = 0};
 
 /** Name   :  Open InStream File from txt or bin
  *  Input  :  file path, and file mode : read or write , binary?
@@ -46,7 +45,7 @@ uint32 streamReadBit(InStream* in){
 
   uint8 charRead, bitToReturn;
   FILE *fileIn = (FILE *)in;
-  if (bitIndex == -1){ // -1 for enter case for first time
+  if (streamIn.bitIndex == -1){ // -1 for enter case for first time
     if(!feof(fileIn)){ // if not EOF
       fread(&charRead, sizeof(charRead), 1, fileIn);
       //size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
@@ -57,13 +56,13 @@ uint32 streamReadBit(InStream* in){
     }
     // printf(" nextByte\n");
     // printf("charRead %d\n",charRead);
-    byteIndex = (unsigned char )charRead;
-    bitIndex = 7;
+    streamIn.byteIndex = (unsigned char )charRead;
+    streamIn.bitIndex = 7;
   }
   // printf("bitIndex %d\n",bitIndex);
   // bitIndex 7 >> return then decrement (loop until -1)
-  bitToReturn = (byteIndex >> bitIndex) & 1;
-  bitIndex--;
+  bitToReturn = (streamIn.byteIndex >> streamIn.bitIndex) & 1;
+  streamIn.bitIndex--;
   // bitIndex keep decrement until -1 and stop
   return bitToReturn;
 }

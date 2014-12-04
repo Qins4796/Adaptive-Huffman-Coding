@@ -19,8 +19,13 @@
  *           YES : Read next byte, if EOF > END , else put and update
 */
 
-void huffmanDecompress(OutStream *out, InStream *in){
+void huffmanDecompress(InStream *in , OutStream *out){
+  int Symb;
+  Symb = streamReadBits(in->file);
+  // fread(&Symb, sizeof(Symb), 1, in->file);
   
+  // streamWriteBits(out->file,Symb);
+  fwrite(&Symb, sizeof(Symb), 1, out->file);
 }
 
 // 1 symbol = stream read bits, if EOF break

@@ -26,7 +26,22 @@ void huffmanCompress(InStream *in, OutStream *out){
   int Symb;
   
   while(!feof(in->file)){
+    // Symb = streamReadBits(in->file);
+    fread(&Symb, sizeof(Symb), 1, in->file);
+    printf("symbol: %c",Symb);
     
+    
+    HuffmanNode *test = adaptiveHuffmanTreeInit();
+    test->order = 256;
+    // if(!root){
+      // if()
+      // else
+    // }
+    
+    adaptiveHuffmanTreeBuild(test,Symb);
+    huffmanUpdateAndRestructure(test);
+    
+    streamWriteBits(out->file,Symb);
   break;
   }
   
