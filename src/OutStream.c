@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "OutStream.h"
 #include "ErrorCode.h"
+#include "AdaptiveHuffman.h"
 #include "CException.h"
 #include <malloc.h>
 
@@ -74,5 +75,5 @@ uint32 streamWriteBits(OutStream *out, uint8 character){
   for (i=7 ; i>=0; i--){
     streamWriteBit(out, (character >> i) & 1);
   }
-  // return (uint32)out->file;
+  return 1;
 }

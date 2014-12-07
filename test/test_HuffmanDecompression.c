@@ -17,4 +17,7 @@ void test_huffmanDecompress(void){
   out = openFileOutStream("test/Data/test_DeCompressed.txt","wb");
   
   huffmanDecompress(in,out);
+  
+  closeFileInStream(in);
+  closeFileOutStream(out);
 }

@@ -13,6 +13,8 @@ struct OutStream{
   uint32 bitIndex;
 };
 
+extern OutStream streamOut;
+
 OutStream *openFileOutStream(char *fileName, char *mode);
 void closeFileOutStream(OutStream *in);
 

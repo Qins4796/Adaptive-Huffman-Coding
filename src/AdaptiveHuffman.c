@@ -2,6 +2,10 @@
 #include "AdaptiveHuffman.h"
 #include <malloc.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
+HuffmanNode *symbolNode[Symbol];
+HuffmanNode *root;
 
 /** Name   :  Initialization of a Huffman tree with empty tree
  *  Input  :  None
@@ -47,7 +51,13 @@ HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , uint32 inSymbol){
   ParentNEW->leftChild = NEWnode;
   ParentNEW->rightChild = symbolNode;
   ParentNEW->freq = 1;
-
+  
+  // symbolNode[inSymbol].symbol = inSymbol;
+  
+  // symbolNode[ParentNEW->order] = ParentNEW;
+  // symbolNode[symbolNode->order] = symbolNode;
+  // symbolNode[NEWnode->order] = NEWnode;
+  
   NEWnode = ParentNEW->leftChild;
 
   return NEWnode;
@@ -184,4 +194,16 @@ uint32 findHuffmanTreePathLeafToRoot(HuffmanNode *node){
     node = node->parent;
   }
   return bits;
+}
+
+//return 1 if not in the array, return 0 if in array
+int symbolSearch(HuffmanNode **leafSearch, int c){
+  int i;
+  for (i = 0; i < Symbol; i++){
+    if (leafSearch[i] == NULL)
+      return 1; //1st time seen the symbol
+    if (leafSearch[i]->symbol == c)
+      return 0; //Not the 1st time. already in array
+  }
+  return 1;
 }

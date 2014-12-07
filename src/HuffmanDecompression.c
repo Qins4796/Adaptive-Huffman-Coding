@@ -20,12 +20,26 @@
 */
 
 void huffmanDecompress(InStream *in , OutStream *out){
-  int Symb;
-  Symb = streamReadBits(in->file);
-  // fread(&Symb, sizeof(Symb), 1, in->file);
+  int Symb, bits, clear =0;
+  HuffmanNode *rootNode = adaptiveHuffmanTreeInit();
+  while(!feof(in->file)){
   
-  // streamWriteBits(out->file,Symb);
+  Symb = streamReadBits(in->file);
+
+  adaptiveHuffmanTreeBuild(rootNode,Symb);
+  huffmanUpdateAndRestructure(rootNode->parent);
+  
+  bits = streamReadBit(in->file);
+  if(bits = 0){
+    rootNode = rootNode->leftChild;
+  }
+  else if(bits = 1){
+    rootNode = rootNode->rightChild;
+  }
   fwrite(&Symb, sizeof(Symb), 1, out->file);
+  
+  // printf("symbol: %c\n",Symb);
+  }
 }
 
 // 1 symbol = stream read bits, if EOF break

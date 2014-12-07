@@ -291,3 +291,4 @@ void test_streamWriteBits_should_write_a_symbol(void){
   }
     TEST_ASSERT_EQUAL_STRING("&",buffer);
 }
+

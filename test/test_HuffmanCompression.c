@@ -22,15 +22,6 @@ void test_huffmanCompress(void){
   
   huffmanCompress(in,out);
   
-  // Try{
-    // fgets(buffer,BUFFER_SIZE,out->file);
-    // TEST_ASSERT_NOT_NULL(out);
-    // TEST_ASSERT_NOT_NULL(out->file);
-    // TEST_ASSERT_EQUAL("test/Data/test_Compressed.txt",out->filename);
-    // closeFileOutStream(out);
-  // }
-  // Catch(err){
-    // TEST_ASSERT_EQUAL(ERR_FILE_ERROR_OPEN,err);
-  // }
-    // TEST_ASSERT_EQUAL_STRING("S",buffer);
+  closeFileInStream(in);
+  closeFileOutStream(out);
 }

@@ -18,9 +18,9 @@ struct HuffmanNode{
   int32 order;
 };
 
-HuffmanNode *root;
+extern HuffmanNode *root;
 HuffmanNode *NEWnode;
-HuffmanNode *symbolNode[Symbol];
+extern HuffmanNode *symbolNode[Symbol];
 uint32 path;
 
 void freeNode(HuffmanNode *node);
