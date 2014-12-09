@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-HuffmanNode *symbolNode[Symbol];
+HuffmanNode *arraySymbol[Symbol];
 HuffmanNode *root;
 
 /** Name   :  Initialization of a Huffman tree with empty tree
@@ -34,35 +34,35 @@ HuffmanNode *adaptiveHuffmanTreeInit(){
  **/
 HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , uint32 inSymbol){
 
-  HuffmanNode *symbolNode = adaptiveHuffmanTreeInit();
+  HuffmanNode *symbolNodeAdd = adaptiveHuffmanTreeInit();
   HuffmanNode *NEWnode = adaptiveHuffmanTreeInit();
 
   // ParentNEW->rightChild initialization (Symbol node)
-  symbolNode->parent = ParentNEW;
-  symbolNode->freq = 1;
-  symbolNode->symbol = inSymbol;
-  symbolNode->order = ParentNEW->order - 1;
+  symbolNodeAdd->parent = ParentNEW;
+  symbolNodeAdd->freq = 1;
+  symbolNodeAdd->symbol = inSymbol;
+  symbolNodeAdd->order = ParentNEW->order - 1;
+  symbolNodeAdd->leftChild = NULL;
+  symbolNodeAdd->rightChild = NULL;
 
   // ParentNEW->leftChild initialization (NEW node)
   NEWnode->parent = ParentNEW;
   NEWnode->freq = 0;
+  NEWnode->symbol = -1;
   NEWnode->order = ParentNEW->order -2;
+  NEWnode->leftChild = NULL;
+  NEWnode->rightChild = NULL;
 
   ParentNEW->leftChild = NEWnode;
-  ParentNEW->rightChild = symbolNode;
+  ParentNEW->rightChild = symbolNodeAdd;
   ParentNEW->freq = 1;
   
-  // symbolNode[inSymbol].symbol = inSymbol;
-  
-  // symbolNode[ParentNEW->order] = ParentNEW;
-  // symbolNode[symbolNode->order] = symbolNode;
-  // symbolNode[NEWnode->order] = NEWnode;
-  
+  arraySymbol[inSymbol] = ParentNEW->rightChild;
+
   NEWnode = ParentNEW->leftChild;
 
   return NEWnode;
 }
-
 /** Name   :  clear and free all the node's data to empty
  *  Input  :  *node that need to be clear
  *
@@ -186,7 +186,7 @@ void huffmanUpdateAndRestructure(HuffmanNode *node){
     node = node->parent; //go to parent
   }
 }
-
+//after re writen compression might not using
 uint32 findHuffmanTreePathLeafToRoot(HuffmanNode *node){
   uint32 bits=0;
   while(node!=root){
@@ -195,15 +195,14 @@ uint32 findHuffmanTreePathLeafToRoot(HuffmanNode *node){
   }
   return bits;
 }
-
 //return 1 if not in the array, return 0 if in array
 int symbolSearch(HuffmanNode **leafSearch, int c){
   int i;
   for (i = 0; i < Symbol; i++){
+    if (leafSearch[i] != NULL && leafSearch[i]->symbol == c)
+      return 0; //Not the 1st time. already in array
     if (leafSearch[i] == NULL)
       return 1; //1st time seen the symbol
-    if (leafSearch[i]->symbol == c)
-      return 0; //Not the 1st time. already in array
   }
   return 1;
 }

@@ -1,13 +1,34 @@
 #include "unity.h"
+#include "AdaptiveHuffman.h"
 #include "OutStream.h"
 #include "InStream.h"
+#include "InitNode.h"
 #include "ErrorCode.h"
 #include "CException.h"
 #include <stdio.h>
 
 #define BUFFER_SIZE 128
+HuffmanNode nodeA, EmptyRoot, SymbolNode ,NewNode, EmptyRoot1, EmptyRoot2;
+HuffmanNode SymbolA, SymbolB, SymbolC, SymbolD, SymbolE;
+HuffmanNode InterNode1, InterNode2, InterNode3, InterNode4, InterNode5;
 
-void setUp(void){}
+void setUp(void){
+  resetNode(&nodeA, -1);
+  resetNode(&EmptyRoot, -1);
+  resetNode(&SymbolNode, -1);
+  resetNode(&EmptyRoot1, -1);
+  resetNode(&EmptyRoot2, -1);
+  resetNode(&SymbolA, -1);
+  resetNode(&SymbolB, -1);
+  resetNode(&SymbolC, -1);
+  resetNode(&SymbolD, -1);
+  resetNode(&SymbolE, -1);
+  resetNode(&InterNode1, -1);
+  resetNode(&InterNode2, -1);
+  resetNode(&InterNode3, -1);
+  resetNode(&InterNode4, -1);
+  resetNode(&InterNode5, -1);
+}
 void tearDown(void){}
 
 void test_openFileOutStream_should_throw_error_if_file_not_found(void){
@@ -123,7 +144,7 @@ void test_streamWriteBit_should_write_bit_by_bit_into_the_output_file_and_read_i
   TEST_ASSERT_EQUAL(1,result);
 
   closeFileInStream(in);
-  
+
   Try{
     out = openFileOutStream("test/Data/testWrite.txt","rb");
     fgets(buffer,BUFFER_SIZE,out->file);
@@ -147,7 +168,7 @@ void test_streamWriteBits_should_write_the_character_byte_into_the_file_and_read
 
   out = openFileOutStream("test/Data/testWriteByte.txt","wb");
   streamWriteBits(out->file, 'A');
-  
+
   closeFileOutStream(out);
 
   in = openFileInStream("test/Data/testWriteByte.txt","rb");
@@ -155,7 +176,7 @@ void test_streamWriteBits_should_write_the_character_byte_into_the_file_and_read
   TEST_ASSERT_EQUAL(65,result);
 
   closeFileInStream(in);
-  
+
   Try{
     out = openFileOutStream("test/Data/testWriteByte.txt","rb");
     fgets(buffer,BUFFER_SIZE,out->file);
@@ -205,9 +226,9 @@ void test_streamWriteBit_should_write_multiple_char_bit_by_bit_into_the_output_f
   streamWriteBit(out->file, 1);
   streamWriteBit(out->file, 0);
   streamWriteBit(out->file, 0);
-  
+
   closeFileOutStream(out);
-  
+
   Try{
     out = openFileOutStream("test/Data/testWrite2.txt","rb");
     fgets(buffer,BUFFER_SIZE,out->file);
@@ -235,7 +256,7 @@ void test_streamWriteBits_should_write_multiple_character_byte_into_the_file_and
   streamWriteBits(out->file, 'R');
   streamWriteBits(out->file, 'A');
   streamWriteBits(out->file, 'K');
-  
+
   closeFileOutStream(out);
 
   in = openFileInStream("test/Data/testWriteByte2.txt","rb");
@@ -251,7 +272,7 @@ void test_streamWriteBits_should_write_multiple_character_byte_into_the_file_and
   TEST_ASSERT_EQUAL('K',result);
 
   closeFileInStream(in);
-  
+
   Try{
     out = openFileOutStream("test/Data/testWriteByte2.txt","rb");
     fgets(buffer,BUFFER_SIZE,out->file);
@@ -275,9 +296,9 @@ void test_streamWriteBits_should_write_a_symbol(void){
 
   out = openFileOutStream("test/Data/!testWriteByte.txt","wb");
   streamWriteBits(out->file, '&');
-  
+
   closeFileOutStream(out);
-  
+
   Try{
     out = openFileOutStream("test/Data/!testWriteByte.txt","rb");
     fgets(buffer,BUFFER_SIZE,out->file);
@@ -290,5 +311,57 @@ void test_streamWriteBits_should_write_a_symbol(void){
     TEST_ASSERT_EQUAL(ERR_FILE_ERROR_OPEN,err);
   }
     TEST_ASSERT_EQUAL_STRING("&",buffer);
+}
+/**
+ *                root
+ *                 |
+ *                 V
+ *                (14)
+ *             /       \
+ *           (5)       (9)
+ *         /   \      /   \
+ *       (1)   B/4  A/4   C/5
+ *      /   \
+ *   NEW    D/1
+ *
+ *
+ *
+ */
+void test_streamWriteBitsNode(void){
+  CEXCEPTION_T err;
+  OutStream *out;
+  InStream *in;
+  int32 result = 0;
+  char buffer[BUFFER_SIZE];
+
+  out = openFileOutStream("test/Data/testWriteByteTest.txt","wb");
+
+  setHuffmanNode(&InterNode1, NULL, &InterNode3, &InterNode2,-1,14,256);
+  setHuffmanNode(&InterNode2, &InterNode1, &SymbolA, &SymbolC,-1,9,255);
+  setHuffmanNode(&InterNode3, &InterNode1, &InterNode4, &SymbolB,-1,5,254);
+  setHuffmanNode(&SymbolC, &InterNode2, NULL, NULL,20,5,253);
+  setHuffmanNode(&SymbolA, &InterNode2, NULL, NULL,10,4,252);
+  setHuffmanNode(&SymbolB, &InterNode3, NULL, NULL,15,4,251);
+  setHuffmanNode(&InterNode4, &InterNode3, &NewNode, &SymbolD,-1,1,250);
+  setHuffmanNode(&SymbolD, &InterNode4, NULL, NULL,30,1,249);
+  setHuffmanNode(&NewNode, &InterNode4, NULL, NULL,-1,0,248);
+  root = &InterNode1;
+
+  result = streamWriteBitsNode(out->file, root);
+  TEST_ASSERT_EQUAL(0,result);
+
+  result = streamWriteBitsNode(out->file, &SymbolA);
+  TEST_ASSERT_EQUAL(256,result); //0000000100000000
+
+  result = streamWriteBitsNode(out->file, &SymbolB);
+  TEST_ASSERT_EQUAL(272,result); //0000000100010000
+
+  result = streamWriteBitsNode(out->file, &SymbolC);
+  TEST_ASSERT_EQUAL(308,result); //0000000100110100
+
+  result = streamWriteBitsNode(out->file, &SymbolD);
+  TEST_ASSERT_EQUAL(284,result); //0000000100011100
+
+  closeFileOutStream(out);
 }
 

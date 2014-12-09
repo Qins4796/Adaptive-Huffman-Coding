@@ -19,9 +19,6 @@ struct HuffmanNode{
 };
 
 extern HuffmanNode *root;
-HuffmanNode *NEWnode;
-extern HuffmanNode *symbolNode[Symbol];
-uint32 path;
 
 void freeNode(HuffmanNode *node);
 HuffmanNode *adaptiveHuffmanTreeInit();

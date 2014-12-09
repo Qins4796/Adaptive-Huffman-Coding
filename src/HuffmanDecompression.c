@@ -1,13 +1,16 @@
 #include "HuffmanDecompression.h"
+#include "AdaptiveHuffman.h"
 #include "InStream.h"
 #include "OutStream.h"
-#include "AdaptiveHuffman.h"
 #include "ErrorCode.h"
 #include "CException.h"
 #include <stdio.h>
+#include <stdbool.h>
 #include <malloc.h>
 #include <Utils.h>
 
+HuffmanNode *symbolNode[Symbol];
+HuffmanNode *rootNode;
 /**
  *  
  *  START
@@ -18,33 +21,34 @@
  *           NO  : put char, compress and update tree
  *           YES : Read next byte, if EOF > END , else put and update
 */
-
 void huffmanDecompress(InStream *in , OutStream *out){
-  int Symb, bits, clear =0;
   HuffmanNode *rootNode = adaptiveHuffmanTreeInit();
-  while(!feof(in->file)){
+  HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
+  rootNode->order = Symbol;
+  uint8 Symb;
+  int i,bit = 0,rbit = 0,bits = 0;
   
-  Symb = streamReadBits(in->file);
-
-  adaptiveHuffmanTreeBuild(rootNode,Symb);
-  huffmanUpdateAndRestructure(rootNode->parent);
+  while(rbit <= bits){
+    if(rootNode == returnedNewNode){
+      Symb = streamReadBit(in->file);
+      rootNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
+      huffmanUpdateAndRestructure(rootNode);
+    }
+    else if(rootNode->leftChild==NULL &&rootNode->rightChild ==NULL){
+      streamWriteBits(out->file,rootNode->symbol);
+      huffmanUpdateAndRestructure(rootNode);
+    }
+    else{
+      bit = streamReadBit(in->file);
+      if(bit = 1){
+        rootNode = rootNode->rightChild;
+      }
+      else if(bit = 0){
+        rootNode = rootNode->leftChild;
+      }
+    }
+    rbit+=1;
+  }
   
-  bits = streamReadBit(in->file);
-  if(bits = 0){
-    rootNode = rootNode->leftChild;
-  }
-  else if(bits = 1){
-    rootNode = rootNode->rightChild;
-  }
-  fwrite(&Symb, sizeof(Symb), 1, out->file);
-  
-  // printf("symbol: %c\n",Symb);
-  }
 }
 
-// 1 symbol = stream read bits, if EOF break
-// create node and output bit
-// updat tree
-
-// 2 read bit by bit, if 0 go left else 1 go right
-// if EOF output 
