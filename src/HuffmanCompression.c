@@ -9,7 +9,7 @@
 #include <Utils.h>
 
 HuffmanNode *arraySymbol[Symbol];
-HuffmanNode *root;
+// HuffmanNode *root;
 /**
  *  
  *  START
@@ -27,7 +27,7 @@ void huffmanCompress(InStream *in, OutStream *out){
   HuffmanNode *rootNode = adaptiveHuffmanTreeInit();
   HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
   rootNode->order = Symbol;
-  uint8 Symb;
+  uint8 Symb = 0;
   int i;
   for(i = 0 ; i < Symbol ; i++){
     arraySymbol[i] == NULL;
@@ -55,6 +55,7 @@ void huffmanCompress(InStream *in, OutStream *out){
     freeNode(arraySymbol[i]);
   }
   freeNode(rootNode);
+  freeNode(returnedNewNode);
 }
 
 

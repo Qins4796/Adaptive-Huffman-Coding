@@ -36,6 +36,8 @@ void test_huffmanCompress_for_same_symbol(void){
   
   huffmanCompress(in,out);
   
+  printf("\n");
+  
   closeFileInStream(in);
   closeFileOutStream(out);
 }
@@ -43,13 +45,18 @@ void test_huffmanCompress_for_same_symbol(void){
  *             root
  *              |
  *              V
- *             (2)
- *           /    \
- *        (1)     X/1
- *      /    \
- * NEWnode   Y/1
+ *             (2)                  (9)
+ *           /    \               /    \
+ *        (1)     X/1     =>   (1)     Y/8      
+ *      /    \               /    \
+ * NEWnode   Y/1        NEWnode   X/1
+ *
+ *    >>>> X Y YYY YYYY
+ *    X then NewNode 0 = X 0
+ *    Y = 01011001  >> X 00101100 1
+ *    add 7 more Y  >> X 00101100 11111111 , 2c ff
  */
-void test_huffmanCompress_for_shorter_text(void){
+void xtest_huffmanCompress_for_shorter_text(void){
   CEXCEPTION_T err;
   InStream *in2;
   OutStream *out2;

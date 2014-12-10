@@ -22,15 +22,15 @@ void test_huffmanDecompress(void){
   closeFileOutStream(out);
 }
 
-// void test_huffmanDecompress_for_shorter_text(void){
-  // InStream *in;
-  // OutStream *out;
+void xtest_huffmanDecompress_for_shorter_text(void){
+  InStream *in;
+  OutStream *out;
 
-  // in = openFileInStream("test/Data/test_Compressed_short.txt","rb");
-  // out = openFileOutStream("test/Data/test_DeCompressed_short.txt","wb");
+  in = openFileInStream("test/Data/test_Compressed_short.txt","rb");
+  out = openFileOutStream("test/Data/test_DeCompressed_short.txt","wb");
   
-  // huffmanDecompress(in,out);
+  huffmanDecompress(in,out);
   
-  // closeFileInStream(in);
-  // closeFileOutStream(out);
-// }
+  closeFileInStream(in);
+  closeFileOutStream(out);
+}
