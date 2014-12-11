@@ -30,7 +30,7 @@ void huffmanCompress(InStream *in, OutStream *out){
   uint8 Symb = 0;
   int i;
   for(i = 0 ; i < Symbol ; i++){
-    arraySymbol[i] == NULL;
+    arraySymbol[i] = NULL;
   }
   while(!feof(in->file)){
     if (!(Symb = streamReadBits(in->file))){break;}
@@ -48,11 +48,9 @@ void huffmanCompress(InStream *in, OutStream *out){
       huffmanUpdateAndRestructure(arraySymbol[Symb]);
     }
   }
+  printf(" NEXT \n");
   for (i = 0 ; i < Symbol; i++){
-    if (arraySymbol[i] == NULL){
-      break;
-    }
-    freeNode(arraySymbol[i]);
+    arraySymbol[i] = NULL;
   }
   freeNode(rootNode);
   freeNode(returnedNewNode);
