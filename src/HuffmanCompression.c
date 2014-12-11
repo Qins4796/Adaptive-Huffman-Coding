@@ -10,6 +10,7 @@
 
 HuffmanNode *arraySymbol[Symbol];
 // HuffmanNode *root;
+OutStream streamOut;
 /**
  *  
  *  START
@@ -33,6 +34,7 @@ void huffmanCompress(InStream *in, OutStream *out){
     arraySymbol[i] = NULL;
   }
   while(!feof(in->file)){
+    returnedNewNode;
     if (!(Symb = streamReadBits(in->file))){break;}
     printf("symbol: %c",Symb);
     if(!arraySymbol[Symb]){
@@ -41,6 +43,7 @@ void huffmanCompress(InStream *in, OutStream *out){
       streamWriteBits(out->file,(unsigned char)Symb);
       returnedNewNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
       huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
+      // returnedNewNode = returnedNewNode;
     }
     else{
     printf(" SEEN \n");
@@ -48,6 +51,10 @@ void huffmanCompress(InStream *in, OutStream *out){
       huffmanUpdateAndRestructure(arraySymbol[Symb]);
     }
   }
+  while (streamOut.bitIndex != 7){ //fill remaining with 0
+    streamWriteBit(out->file , 0);
+  }
+  
   printf(" NEXT \n");
   for (i = 0 ; i < Symbol; i++){
     arraySymbol[i] = NULL;
