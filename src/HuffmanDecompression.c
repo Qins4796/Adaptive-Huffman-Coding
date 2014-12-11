@@ -10,7 +10,6 @@
 #include <Utils.h>
 
 HuffmanNode *symbolNode[Symbol];
-// HuffmanNode *rootNode;
 
 #define SymbolNode(x) (x)->parent->rightChild
 
@@ -48,9 +47,10 @@ void huffmanDecompress(InStream *in , OutStream *out){
       printf("IN ADD\n");
       Symb = 0;
       for(i = 0 ; i<sizeof(Symb); i++){
+        Symb = Symb << 1;  
         Symb = Symb | streamReadBit(in->file);
         printf("symbol1: %d\n",Symb);
-        Symb = Symb << 1;    
+        // Symb = Symb << 1;    
         printf("symbol2: %d\n",Symb);
       }
       Symb |= streamReadBit(in->file);

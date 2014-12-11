@@ -27,19 +27,46 @@ void tearDown(void){}
  */
 void test_huffmanCompress_for_same_symbol(void){
   CEXCEPTION_T err;
-  InStream *in, *inTest;
+  InStream *in, *inTest, *Compressed;
   OutStream *out;
-  int32 result = 0;
+  int32 result, i=0,j=0,k=0;
+  char buffer[BUFFER_SIZE]; 
 
   in = openFileInStream("test/Data/test_Compress.txt","rb");
   out = openFileOutStream("test/Data/test_Compressed.txt","wb");
   
   huffmanCompress(in,out);
   
-  printf("\n");
-  
   closeFileInStream(in);
   closeFileOutStream(out);
+  
+  inTest = openFileInStream("test/Data/test_DeCompressed.txt","rb");
+  Compressed = openFileInStream("test/Data/test_Compressed.txt","rb");
+
+  result = 0;
+  for(i = 0;i<8;i++){
+    result <<= 1;
+    result |= streamReadBit(Compressed->file);
+  }
+  TEST_ASSERT_EQUAL(0b01000001,result);     // 1st symbol no compress
+  
+  result = 0;
+  for(i = 0;i<8;i++){
+    result <<= 1;
+    result |= streamReadBit(Compressed->file);
+  }
+  TEST_ASSERT_EQUAL(0b11111111,result);    // Compressed another 8 A
+  
+  Try{
+    fgets(buffer,BUFFER_SIZE,inTest->file);
+  }
+  Catch(err){
+    TEST_ASSERT_EQUAL(ERR_FILE_ERROR_OPEN,err);
+  }
+    TEST_ASSERT_EQUAL_STRING("AAAAAAAAA",buffer); //Total Decompressed 9A
+  
+  closeFileInStream(inTest);
+  closeFileInStream(Compressed);
 }
 /**
  *             root
