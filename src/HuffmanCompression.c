@@ -29,7 +29,7 @@ void huffmanCompress(InStream *in, OutStream *out){
   HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
   rootNode->order = Symbol;
   uint8 Symb = 0;
-  int i;
+  uint32 i,bits;
   for(i = 0 ; i < Symbol ; i++){
     arraySymbol[i] = NULL;
   }
@@ -39,7 +39,10 @@ void huffmanCompress(InStream *in, OutStream *out){
     printf("symbol: %c",Symb);
     if(!arraySymbol[Symb]){
       printf(" 1stTIME \n");
-      streamWriteBitsNode(out->file,returnedNewNode);
+      bits = streamWriteBitsNode(out->file,returnedNewNode);
+      // for(i = 0; i<=7 ;i++){
+        // Symb |= bits<<i; }
+      printf(" bits: %d\n",bits);
       streamWriteBits(out->file,(unsigned char)Symb);
       returnedNewNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
       huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
