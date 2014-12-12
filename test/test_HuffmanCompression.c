@@ -11,6 +11,15 @@
 void setUp(void){}
 void tearDown(void){}
 
+int findReadBitbyBit(InStream *in){
+  int i = 0, result = 0;
+  for(i = 0;i<8;i++){
+    result <<= 1;
+    result |= streamReadBit(in->file);
+  }
+  return result;
+}
+
 /**
  *          root
  *           |
@@ -42,19 +51,11 @@ void test_huffmanCompress_for_same_symbol(void){
 
   inTest = openFileInStream("test/Data/test_DeCompressed.txt","rb");
   Compressed = openFileInStream("test/Data/test_Compressed.txt","rb");
-
-  result = 0;
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
-  TEST_ASSERT_EQUAL(0b01000001,result);     // 1st symbol no compress
-
-  result = 0;
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
+  
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b01000001,result);
+  
+  result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b11111111,result);    // Compressed another 8 A
 
   Try{
@@ -83,9 +84,11 @@ void test_huffmanCompress_for_same_symbol(void){
  *    Y = 0101 1001  >> Thus NEWnode + Y = '0' + 0101 1001,
  *    Current code = 0101 1000 + '0' + 0101 1001
  *    add 7 more Y  >> the tree is updated by Y swapped with X, thus straight send 1 for each Y
- *    Current code = 0101 1000 + '0' + 0101 1001 + 1111111
+ *    Current code = 0101 1000 + '0' + 0101 1001 + 01 01 01 01 01 01 01
  *
- *  Compressed code :0101 1000 0010 1100 1111 1111
+ *  Compressed code :0101 1000 0010 1100 1010 1010 1010 1010
+ *                   01011000 '0' 01011001 01 01 01 01 01 01 01 0
+ *  Code in tree:       X     new    Y     Y  Y  Y  Y  Y  Y  Y  fill remain with 0
  */
 void test_huffmanCompress_for_shorter_text(void){
   CEXCEPTION_T err;
@@ -103,25 +106,18 @@ void test_huffmanCompress_for_shorter_text(void){
 
   Compressed = openFileInStream("test/Data/test_Compressed_short.txt","rb");
 
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
+  result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b01011000,result);    // 1st X
 
-  result = 0;
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
-  TEST_ASSERT_EQUAL(0b00101100,result);    // Compressed node '0' + 0101 100
-                                                           //  Y  = 0101 1001 , the last 1bit shifted to next byte
-  result = 0;
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
-  TEST_ASSERT_EQUAL(0b11111111,result);    // Compressed 1 + 1111111
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b00101100,result);    // Compressed node '0' + 0101 100 --1
+                                          //  Y  = 0101 1001 , the last 1bit shifted to next byte
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b10101010,result);    // Compressed 1 + 01 01 01 0
+  
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b10101010,result);    // Compressed 1 01 01 01 + remaining with 0
+  
   closeFileInStream(Compressed);
 }
 /**
@@ -142,9 +138,9 @@ void test_huffmanCompress_for_shorter_text(void){
  *  Send A , A no compress sent 01000001
  *  Add B, Send old NEWnode '0' + 01000010    Current code : 01000001 + '0' + 01000010
  *  Add C, Send 0 + 01000011
- *  Current code : 01000001 + '0' + 01000010 + 0 + 01000011
- *  0100 0001 0010 0001 0001 0000 1100 0000
- *
+ *  Current code : 01000001 + '0' + 01000010 + '00' + 01000011
+ *  0100 0001 0010 0001 0000 1000 0110 0000
+ *  
  */
 void test_huffmanCompress_for_different_Symbol_with_different_tree(void){
   CEXCEPTION_T err;
@@ -162,25 +158,18 @@ void test_huffmanCompress_for_different_Symbol_with_different_tree(void){
 
   Compressed = openFileInStream("test/Data/test_Compressed2.txt","rb");
 
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
+  result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b01000001,result);    // 1st A
 
-  result = 0;
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
+  result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b00100001,result);    // Compressed node '0' + 0100001 0
 
-  result = 0;
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
-  TEST_ASSERT_EQUAL(0b00010000,result);    // Compressed 0 + 01000011
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b00001000,result);    // Compressed 0 + 01000011
+  
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b01100000,result);    // Compressed 0 + 01000011
+  
   closeFileInStream(Compressed);
 }
 /**
@@ -199,9 +188,21 @@ void test_huffmanCompress_for_different_Symbol_with_different_tree(void){
  *  B = 01000010
  *  C = 01000011
  *
- *  0100 0001 1001 0000 1010 0100 0011 1000
- *  0100 0001 1001 0000 10'01' 00+01 0000 1110 1000 
-              1101 0000 10 11  01 00 0011 1000
+ *  0100 0001 1001 0000 10'01' 00+01 0000 1100 1000 
+ * 
+ *  Send Symbol A, 1st symbol no compression
+ *    -- CURRENT CODE : 01000001
+ *  second A already exist > thus send the location of A in Tree which is '1' rightChild with A/2
+ *    -- CURRENT CODE : 01000001 + 1
+ *  Then second B come in for 1st time >> Send OLD NEWnode 1st which is '0' followed by the symbol B/1
+ *    -- CURRENT CODE : 01000001 + 1 + '0' + 01000010
+ *  second B come in and B already exist > thus send the path of the symbol B which is '01'
+ *    -- CURRENT CODE : 01000001 + 1 + '0' + 01000010 + 01
+ *  a new Symbol of C come in, Send OLD NEWnode path which is '00' then followed by symbol C
+ *    -- CURRENT CODE : 01000001 + 1 + '0' + 01000010 + 01 + '00' + 01000011
+ *  Second symbol C comes and already seen, thus send the path of symbol C '001' before update
+ *    -- CURRENT CODE : 01000001 + 1 + '0' + 01000010 + 01 + '00' + 01000011 + 001
+ *
  */
 void test_huffmanCompress_for_different_Symbol_case_2(void){
   CEXCEPTION_T err;
@@ -219,32 +220,20 @@ void test_huffmanCompress_for_different_Symbol_case_2(void){
 
   Compressed = openFileInStream("test/Data/test_Compressed3.txt","rb");
 
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
+  result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b01000001,result);    // 1st A
 
-  result = 0;
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
-  // TEST_ASSERT_EQUAL(0b10010000,result);    // Compressed node 1 + 0 + 010000 -- 10
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b10010000,result);
 
-  result = 0;
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
-  // TEST_ASSERT_EQUAL(0b10100100,result);    // Compressed 10 +10 + 0100 -- 0011
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b10010001,result);
 
-  result = 0;
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
-  TEST_ASSERT_EQUAL(0b00111000,result);    // Compressed 0011 + 1 + 000 remaining
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b00001100,result);
+  
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b10000000,result);
   closeFileInStream(Compressed);
 }
 /**
@@ -262,9 +251,9 @@ void test_huffmanCompress_for_different_Symbol_case_2(void){
  *  A = 01000001
  *  R = 01010010
  *  D = 01000100
- // *  V = 01010110*
  *  0100 0001 1001 0100 1000 1000 1000 0000
- // *  0100 0001 1001 0100 1000 1000 1000 0101 0110 0000 (1more V)
+ *  0100 0001 1 + '0' 01010010 '00' 01000100  = Compressed code
+ *      A     A   new     R     new    D      = Code in Tree
  */
 void test_huffmanCompress_for_different_Symbol_case_3(void){
   CEXCEPTION_T err;
@@ -281,20 +270,19 @@ void test_huffmanCompress_for_different_Symbol_case_3(void){
   closeFileOutStream(out2);
 
   Compressed = openFileInStream("test/Data/test_Compressed4.bin","rb");
-
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
+  
+  result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b01000001,result);    // 1st A
 
-  result = 0;
-  for(i = 0;i<8;i++){
-    result <<= 1;
-    result |= streamReadBit(Compressed->file);
-  }
+  result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b10010100,result);    // Compressed node 1 + 0 + 010100 --10
-
+  
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b10000100,result);    // Compressed node 1 + 0 + 010100 --10
+  
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b01000000,result);    // Compressed node 1 + 0 + 010100 --10
+  
   closeFileInStream(Compressed);
 }
 // void test_huffmanCompress_for_longer_text(void){

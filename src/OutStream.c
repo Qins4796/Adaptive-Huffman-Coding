@@ -80,20 +80,24 @@ uint32 streamWriteBits(OutStream *out, uint8 character){
 
 int streamWriteBitsNode(OutStream *out, HuffmanNode* node){
   uint32 writeBytes = 0;
-
-  int i = 0;
+  uint32 writebits = 0;
+  int i = 0, path = 0;
   char bits[Symbol];
-
+  
   while (node->parent != NULL){
-    if (node->parent->leftChild == node)
+    if (node->parent->leftChild == node){
+      // printf("LEFT\n");
       bits[i++] = '0';
-    else if (node->parent->rightChild == node)
+      }
+    else if (node->parent->rightChild == node){
+      // printf("RIGHT\n");
       bits[i++] = '1';
+      }
     node = node->parent;
   }
-
-  while (--i >= 0) // pre decrement i 
+  while (--i >= 0){ // pre decrement i 
     writeBytes += streamWriteBit(out, bits[i] - '0');
-
+  }
+    
   return writeBytes;
 }
