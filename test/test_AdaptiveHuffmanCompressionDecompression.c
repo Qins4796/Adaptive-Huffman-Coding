@@ -17,7 +17,7 @@ void tearDown(void){}
 *   open test file by deleting 'x' in xtest
 */
 
-void xtest_adaptive_Huffman_Compression_Decompression(void){
+void test_adaptive_Huffman_Compression_Decompression(void){
   char *InFile = "test/bin/FILEin.txt";
   char *outFile = "test/bin/FILEout.txt";
   
@@ -39,7 +39,7 @@ void xtest_adaptive_Huffman_Compression_Decompression(void){
     }
   }
 }
-void xtest_adaptive_Huffman_Compression_Decompression_Longtext(void){
+void test_adaptive_Huffman_Compression_Decompression_Longtext(void){
   char *InFile = "test/bin/TextFile.txt";
   char *outFile = "test/bin/TextFileOut.txt";
   
@@ -83,25 +83,25 @@ void test_adaptive_Huffman_Compression_Decompression_for_README_txt(void){
     }
   }
 }
-void xtest_adaptive_Huffman_Compression_Decompression_for_dat_file(void){
+void test_adaptive_Huffman_Compression_Decompression_for_dat_file(void){
   char *InFile = "test/bin/media.dat";
   char *outFile = "test/bin/mediaOut.dat";
   
 	AdaptiveHuffmanCompressionDecompression(InFile,outFile);
 }
-void xtest_adaptive_Huffman_Compression_Decompression_for_object_file_should_fail(void){
+void test_adaptive_Huffman_Compression_Decompression_for_object_file_should_fail(void){
   char *InFile = "test/bin/StringObject.o";
   char *outFile = "test/bin/StringObjectOut.o";
   
 	AdaptiveHuffmanCompressionDecompression(InFile,outFile);
 }
-void xtest_adaptive_Huffman_Compression_Decompression_for_MIDI_file_should_fail(void){
+void test_adaptive_Huffman_Compression_Decompression_for_MIDI_file_should_fail(void){
   char *InFile = "test/bin/MIDI.mid";
   char *outFile = "test/bin/MIDIout.mid";
   
 	AdaptiveHuffmanCompressionDecompression(InFile,outFile);
 }
-void xtest_adaptive_Huffman_Compression_Decompression_for_png_file_should_fail(void){
+void test_adaptive_Huffman_Compression_Decompression_for_png_file_should_fail(void){
   char *InFile = "test/bin/screenshot.png";
   char *outFile = "test/bin/screenshotOut.png";
   

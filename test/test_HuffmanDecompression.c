@@ -12,6 +12,11 @@
 void setUp(void){}
 void tearDown(void){}
 
+/**
+*   close other file for testing -- xtest 
+*   open test file by deleting 'x' in xtest
+*/
+
 void test_huffmanDecompress_for_text_AAAAAAAAA(void){
   InStream *in, *ori, *decompress;
   OutStream *out;
@@ -55,7 +60,7 @@ void test_huffmanDecompress_for_text_AAAAAAAAA(void){
   closeFileInStream(decompress);
 }
 
-void xtest_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){
+void test_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){
   InStream *in2;
   OutStream *out2;
 
@@ -67,7 +72,7 @@ void xtest_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){
   closeFileInStream(in2);
   closeFileOutStream(out2);
 }
-void xtest_huffmanDecompress_for_different_Symbol_with_different_tree_with_text_ABC(void){
+void test_huffmanDecompress_for_different_Symbol_with_different_tree_with_text_ABC(void){
   InStream *in;
   OutStream *out;
 
@@ -79,7 +84,7 @@ void xtest_huffmanDecompress_for_different_Symbol_with_different_tree_with_text_
   closeFileInStream(in);
   closeFileOutStream(out);
 }
-void xtest_huffmanDecompress_for_different_Symbol_case_2_with_text_AABBCC(void){
+void test_huffmanDecompress_for_different_Symbol_case_2_with_text_AABBCC(void){
   InStream *in;
   OutStream *out;
 
@@ -91,7 +96,7 @@ void xtest_huffmanDecompress_for_different_Symbol_case_2_with_text_AABBCC(void){
   closeFileInStream(in);
   closeFileOutStream(out);
 }
-void xtest_huffmanDecompress_for_different_Symbol_case_3_with_text_AARD(void){
+void test_huffmanDecompress_for_different_Symbol_case_3_with_text_AARD(void){
   InStream *in;
   OutStream *out;
 
