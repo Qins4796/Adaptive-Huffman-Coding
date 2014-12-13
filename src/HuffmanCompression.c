@@ -9,7 +9,6 @@
 #include <Utils.h>
 
 HuffmanNode *arraySymbol[Symbol];
-// HuffmanNode *root;
 OutStream streamOut;
 /**
  *  
@@ -25,40 +24,43 @@ OutStream streamOut;
  *
 */
 void huffmanCompress(InStream *in, OutStream *out){
-  HuffmanNode *rootNode = adaptiveHuffmanTreeInit();
   HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
-  rootNode->order = Symbol;
   returnedNewNode->order = Symbol;
   uint8 Symb = 0;
-  uint32 i,bits;
+  uint32 i,bits=0,total=0;
   for(i = 0 ; i < Symbol ; i++){
     arraySymbol[i] = NULL;
   }
+  // printf("order : %d\n",returnedNewNode->order);
   while(!feof(in->file)){
     if (!(Symb = streamReadBits(in->file))){break;}
-    printf("symbol: %c",Symb);
+    // printf("symbol: %c",Symb);
+    total++;
     if(!arraySymbol[Symb]){
-      printf(" 1stTIME \n");
-      bits = streamWriteBitsNode(out->file,returnedNewNode);
-      streamWriteBits(out->file,(unsigned char)Symb);
+      // printf(" 1stTIME \n");
+      bits += streamWriteBitsNode(out->file,returnedNewNode);
+      bits += streamWriteBits(out->file,(unsigned char)Symb);
       returnedNewNode = adaptiveHuffmanTreeBuild(returnedNewNode,Symb);
       huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
+      // printf("order : %d\n",returnedNewNode->order);
     }
     else{
-    printf(" SEEN \n");
-      bits = streamWriteBitsNode(out->file,arraySymbol[Symb]);
+    // printf(" SEEN \n");
+      bits += streamWriteBitsNode(out->file,arraySymbol[Symb]);
       huffmanUpdateAndRestructure(arraySymbol[Symb]);
+      // printf("SYMorder : %d\n",arraySymbol[Symb]->order);
     }
   }
   while (streamOut.bitIndex != 7){ //fill remaining with 0
-    streamWriteBit(out->file , 0);
+    bits += streamWriteBit(out->file , 0);
   }
   
-  printf(" NEXT \n");
+  // printf(" NEXT \n");
+  // printf(" UnCompressed :%d\n",total);
+  // printf(" Compressed :%d\n",bits/Symbol);
   for (i = 0 ; i < Symbol; i++){
     arraySymbol[i] = NULL;
   }
-  freeNode(rootNode);
   freeNode(returnedNewNode);
 }
 

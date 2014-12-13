@@ -98,6 +98,5 @@ int streamWriteBitsNode(OutStream *out, HuffmanNode* node){
   while (--i >= 0){ // pre decrement i 
     writeBytes += streamWriteBit(out, bits[i] - '0');
   }
-    
   return writeBytes;
 }

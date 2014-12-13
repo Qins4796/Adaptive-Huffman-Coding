@@ -20,7 +20,7 @@ int findReadBitbyBit(InStream *in){
   return result;
 }
 
-/**
+/** file to compress data : AAAAAAAAA
  *          root
  *           |
  *           V
@@ -58,18 +58,18 @@ void test_huffmanCompress_for_same_symbol(void){
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b11111111,result);    // Compressed another 8 A
 
-  Try{
-    fgets(buffer,BUFFER_SIZE,inTest->file);
-  }
-  Catch(err){
-    TEST_ASSERT_EQUAL(ERR_FILE_ERROR_OPEN,err);
-  }
-    TEST_ASSERT_EQUAL_STRING("AAAAAAAAA",buffer); //Total Decompressed 9A
+  // Try{
+    // fgets(buffer,BUFFER_SIZE,inTest->file);
+  // }
+  // Catch(err){
+    // TEST_ASSERT_EQUAL(ERR_FILE_ERROR_OPEN,err);
+  // }
+    // TEST_ASSERT_EQUAL_STRING("AAAAAAAAA",buffer); //Total Decompressed 9A
 
   closeFileInStream(inTest);
   closeFileInStream(Compressed);
 }
-/**
+/** file to compress data : XYYYYYYYY
  *             root                 root
  *              |                    |
  *              V                    V
@@ -120,7 +120,7 @@ void test_huffmanCompress_for_shorter_text(void){
   
   closeFileInStream(Compressed);
 }
-/**
+/** file to compress data : ABC
  *                 root                          root                    root
  *                  |                              |                      |
  *                  V                              V                      V
@@ -172,7 +172,7 @@ void test_huffmanCompress_for_different_Symbol_with_different_tree(void){
   
   closeFileInStream(Compressed);
 }
-/**
+/** file to compress data : AABBCC
  *                 root                          root                    root
  *                  |                              |                      |
  *                  V                              V                      V
@@ -236,7 +236,7 @@ void test_huffmanCompress_for_different_Symbol_case_2(void){
   TEST_ASSERT_EQUAL(0b10000000,result);
   closeFileInStream(Compressed);
 }
-/**
+/** file to compress data : AARD
  *                 root                  root                           root
  *                  |                     |                              |
  *                  V                     V                              V

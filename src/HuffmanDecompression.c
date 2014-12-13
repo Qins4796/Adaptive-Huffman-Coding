@@ -25,63 +25,59 @@ HuffmanNode *symbolNode[Symbol];
 */
 void huffmanDecompress(InStream *in , OutStream *out){
   HuffmanNode *rootNode = adaptiveHuffmanTreeInit();
-  HuffmanNode *tempRoot = adaptiveHuffmanTreeInit();
+  HuffmanNode *leafNode = adaptiveHuffmanTreeInit();
   HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
   rootNode->order = Symbol;
   uint8 Symb = 0;
-  int i,bit = 0,rbit = 0,bits = 0;
-  Symb = streamReadBits(in->file);
+  int i,bit = 0,bits = 0;
   
-  while(!feof(in->file)){
-    streamReadBit(in->file);
-    bits +=1;
-  }
+  Symb = streamReadBits(in->file);
   returnedNewNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
-  // huffmanUpdateAndRestructure(returnedNewNode->parent);
-  // rootNode = returnedNewNode;
-  // printf("bits: %d\n",bits);
-  printf("symbol: %c\n",Symb);
-  // tempRoot = rootNode;
-  while(rbit <= bits){
-    if(rootNode == returnedNewNode){
-      printf("IN ADD\n");
-      Symb = 0;
-      for(i = 0 ; i<sizeof(Symb); i++){
-        Symb = Symb << 1;  
-        Symb = Symb | streamReadBit(in->file);
-        printf("symbol1: %d\n",Symb);
-        // Symb = Symb << 1;    
-        printf("symbol2: %d\n",Symb);
-      }
-      Symb |= streamReadBit(in->file);
-      rbit = rbit + Symb;
-      printf("symbol3: %d\n",Symb);
-      returnedNewNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
-      huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
-      // tempRoot = rootNode;
+  streamWriteBits(out->file,Symb);
+  // printf("symbol: %c\n",Symb);
+  leafNode = rootNode;
+  Symb = 0;
+  while(!feof(in->file)){
+    bit = streamReadBit(in->file);
+    // printf("%d",bit);
+    // bits +=1;
+    
+    if(bit){
+      // printf("ENTERED RIGHT\n");
+      leafNode = leafNode->rightChild;
+      // bits +=1;
     }
-    else if(rootNode->leftChild==NULL &&rootNode->rightChild ==NULL){
-      printf("LEAF Symb: %c\n",rootNode->symbol);
-      streamWriteBits(out->file,rootNode->symbol);
-      huffmanUpdateAndRestructure(rootNode);
+    else if(!bit){
+      // printf("ENTERED LEFT\n");
+      leafNode = leafNode->leftChild;
+      // bits +=1;
     }
-    else{
-      printf("IN LEFT RIGHT\n");
-      bit = streamReadBit(in->file);
-      if(bit = 1){
-        printf("ENTERED RIGHT\n");
-        rootNode = rootNode->rightChild;
+    
+    if(!leafNode->leftChild && !leafNode->rightChild){
+    // printf("IS LEAF\n");
+      if(leafNode->freq == 0){
+        Symb = streamReadBits(in->file);
+        // printf("Is NEW\n");
+        streamWriteBits(out->file,Symb);
+        // printf("symbol: %c\n",Symb);
+        returnedNewNode = adaptiveHuffmanTreeBuild(returnedNewNode,Symb);
+        huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
+        leafNode = rootNode;
       }
-      else if(bit = 0){
-        printf("ENTERED LEFT\n");
-        rootNode = rootNode->leftChild;
+      else if(leafNode->freq != 0 && leafNode->symbol !=-1){
+        // printf("IS SYM\n");
+        Symb = leafNode->symbol;
+        streamWriteBits(out->file,Symb);
+        // printf("symbol: %c\n",Symb);
+        huffmanUpdateAndRestructure(leafNode);
+        leafNode = rootNode;
       }
     }
-    rbit+=1;
-    // printf("rbit: %d\n",rbit);
   }
+  // printf(" bits: %d\n",bits);
+ 
   freeNode(rootNode);
   freeNode(returnedNewNode);
-  freeNode(tempRoot);
+  freeNode(leafNode);
 }
 
