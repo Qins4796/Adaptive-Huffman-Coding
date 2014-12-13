@@ -53,7 +53,6 @@ uint32 streamWriteBit(OutStream *out, uint32 value){
   else if(value){
     streamOut.byteIndex = streamOut.byteIndex | (1 << streamOut.bitIndex);
   }
-  else{return (uint32)NULL;}
 
   streamOut.bitIndex--; //decrement for 7 to 0 to put into byteIndexOut
 
