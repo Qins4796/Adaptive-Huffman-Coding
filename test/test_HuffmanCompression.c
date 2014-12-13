@@ -3,6 +3,7 @@
 #include "InStream.h"
 #include "OutStream.h"
 #include "AdaptiveHuffman.h"
+#include <stdio.h>
 #include "ErrorCode.h"
 #include "CException.h"
 

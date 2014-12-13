@@ -7,6 +7,8 @@
 #include "ErrorCode.h"
 #include "CException.h"
 
+#define BUFFER_SIZE 128
+
 void setUp(void){}
 void tearDown(void){}
 
@@ -14,6 +16,8 @@ void test_huffmanDecompress_for_text_AAAAAAAAA(void){
   InStream *in, *ori, *decompress;
   OutStream *out;
   int i, getOri, getDec;
+  char buffer[BUFFER_SIZE];
+  CEXCEPTION_T err;
   
   in = openFileInStream("test/Data/test_Compressed.txt","rb");
   out = openFileOutStream("test/Data/test_DeCompressed.txt","wb");
@@ -37,11 +41,21 @@ void test_huffmanDecompress_for_text_AAAAAAAAA(void){
     // }
   // }
   
+  // Try{
+    // out = openFileOutStream("test/Data/test_DeCompressed.txt","rb");
+    // fgets(buffer,BUFFER_SIZE,out->file);
+    // closeFileOutStream(out);
+  // }
+  // Catch(err){
+    // TEST_ASSERT_EQUAL(ERR_FILE_ERROR_OPEN,err);
+  // }
+    // TEST_ASSERT_EQUAL_STRING("AAAAAAAAA",buffer);
+    
   closeFileInStream(ori);
   closeFileInStream(decompress);
 }
 
-void test_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){
+void xtest_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){
   InStream *in2;
   OutStream *out2;
 
@@ -53,7 +67,7 @@ void test_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){
   closeFileInStream(in2);
   closeFileOutStream(out2);
 }
-void test_huffmanDecompress_for_different_Symbol_with_different_tree_with_text_ABC(void){
+void xtest_huffmanDecompress_for_different_Symbol_with_different_tree_with_text_ABC(void){
   InStream *in;
   OutStream *out;
 
@@ -65,7 +79,7 @@ void test_huffmanDecompress_for_different_Symbol_with_different_tree_with_text_A
   closeFileInStream(in);
   closeFileOutStream(out);
 }
-void test_huffmanDecompress_for_different_Symbol_case_2_with_text_AABBCC(void){
+void xtest_huffmanDecompress_for_different_Symbol_case_2_with_text_AABBCC(void){
   InStream *in;
   OutStream *out;
 
@@ -77,7 +91,7 @@ void test_huffmanDecompress_for_different_Symbol_case_2_with_text_AABBCC(void){
   closeFileInStream(in);
   closeFileOutStream(out);
 }
-void test_huffmanDecompress_for_different_Symbol_case_3_with_text_AARD(void){
+void xtest_huffmanDecompress_for_different_Symbol_case_3_with_text_AARD(void){
   InStream *in;
   OutStream *out;
 
