@@ -52,20 +52,12 @@ void test_huffmanCompress_for_same_symbol(void){
 
   inTest = openFileInStream("test/Data/test_DeCompressed.txt","rb");
   Compressed = openFileInStream("test/Data/test_Compressed.txt","rb");
-  
+
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b01000001,result);
-  
+
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b11111111,result);    // Compressed another 8 A
-
-  // Try{
-    // fgets(buffer,BUFFER_SIZE,inTest->file);
-  // }
-  // Catch(err){
-    // TEST_ASSERT_EQUAL(ERR_FILE_ERROR_OPEN,err);
-  // }
-    // TEST_ASSERT_EQUAL_STRING("AAAAAAAAA",buffer); //Total Decompressed 9A
 
   closeFileInStream(inTest);
   closeFileInStream(Compressed);
@@ -115,10 +107,10 @@ void test_huffmanCompress_for_shorter_text(void){
                                           //  Y  = 0101 1001 , the last 1bit shifted to next byte
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b10101010,result);    // Compressed 1 + 01 01 01 0
-  
+
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b10101010,result);    // Compressed 1 01 01 01 + remaining with 0
-  
+
   closeFileInStream(Compressed);
 }
 /** file to compress data : ABC
@@ -141,7 +133,7 @@ void test_huffmanCompress_for_shorter_text(void){
  *  Add C, Send 0 + 01000011
  *  Current code : 01000001 + '0' + 01000010 + '00' + 01000011
  *  0100 0001 0010 0001 0000 1000 0110 0000
- *  
+ *
  */
 void test_huffmanCompress_for_different_Symbol_with_different_tree(void){
   CEXCEPTION_T err;
@@ -167,10 +159,10 @@ void test_huffmanCompress_for_different_Symbol_with_different_tree(void){
 
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b00001000,result);    // Compressed 0 + 01000011
-  
+
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b01100000,result);    // Compressed 0 + 01000011
-  
+
   closeFileInStream(Compressed);
 }
 /** file to compress data : AABBCC
@@ -189,8 +181,8 @@ void test_huffmanCompress_for_different_Symbol_with_different_tree(void){
  *  B = 01000010
  *  C = 01000011
  *
- *  0100 0001 1001 0000 10'01' 00+01 0000 1100 1000 
- * 
+ *  0100 0001 1001 0000 10'01' 00+01 0000 1100 1000
+ *
  *  Send Symbol A, 1st symbol no compression
  *    -- CURRENT CODE : 01000001
  *  second A already exist > thus send the location of A in Tree which is '1' rightChild with A/2
@@ -232,7 +224,7 @@ void test_huffmanCompress_for_different_Symbol_case_2(void){
 
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b00001100,result);
-  
+
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b10000000,result);
   closeFileInStream(Compressed);
@@ -263,39 +255,39 @@ void test_huffmanCompress_for_different_Symbol_case_3(void){
   uint32 result = 0, i=0;
 
   in2 = openFileInStream("test/Data/test_Compress4.txt","rb");
-  out2 = openFileOutStream("test/Data/test_Compressed4.bin","wb");
+  out2 = openFileOutStream("test/Data/test_Compressed4.txt","wb");
 
   huffmanCompress(in2,out2);
 
   closeFileInStream(in2);
   closeFileOutStream(out2);
 
-  Compressed = openFileInStream("test/Data/test_Compressed4.bin","rb");
-  
+  Compressed = openFileInStream("test/Data/test_Compressed4.txt","rb");
+
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b01000001,result);    // 1st A
 
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b10010100,result);    // Compressed node 1 + 0 + 010100 --10
-  
+
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b10000100,result);    // Compressed node 1 + 0 + 010100 --10
-  
+
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b01000000,result);    // Compressed node 1 + 0 + 010100 --10
-  
+
   closeFileInStream(Compressed);
 }
-// void test_huffmanCompress_for_longer_text(void){
-  // CEXCEPTION_T err;
-  // InStream *in2;
-  // OutStream *out2;
+void test_huffmanCompress_for_longer_text(void){
+  CEXCEPTION_T err;
+  InStream *in2;
+  OutStream *out2;
 
-  // in2 = openFileInStream("test/Data/test_Compress_long.txt","rb");
-  // out2 = openFileOutStream("test/Data/test_Compress_long.txt","wb");
+  in2 = openFileInStream("test/Data/test_Compress_long.txt","rb");
+  out2 = openFileOutStream("test/Data/test_Compressed_long.txt","wb");
 
-  // huffmanCompress(in2,out2);
+  huffmanCompress(in2,out2);
 
-  // closeFileInStream(in2);
-  // closeFileOutStream(out2);
-// }
+  closeFileInStream(in2);
+  closeFileOutStream(out2);
+}

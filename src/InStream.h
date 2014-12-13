@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <Utils.h>
 
-#define masking(x) (x & 0x80)
-
 typedef struct InStream InStream;
 
 struct InStream{

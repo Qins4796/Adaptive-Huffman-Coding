@@ -33,6 +33,8 @@ OutStream *openFileOutStream(char *fileName, char *mode){
  *  Output :  freed file
  **/
 void closeFileOutStream(OutStream *in){
+  fflush(stdout);
+  fflush(in->file);
   fclose(in->file);
   free(in);
 }
@@ -57,7 +59,6 @@ uint32 streamWriteBit(OutStream *out, uint32 value){
 
   if (streamOut.bitIndex == -1){
     fwrite(&streamOut.byteIndex, sizeof(streamOut.byteIndex), 1, fileOut);
-    // size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream);
 
     streamOut.bitIndex = 7; //reset to 7 for next 8 bit
     streamOut.byteIndex = 0; //reset to 0 for next byte
@@ -77,20 +78,23 @@ uint32 streamWriteBits(OutStream *out, uint8 character){
   }
   return 1;
 }
-
-int streamWriteBitsNode(OutStream *out, HuffmanNode* node){
+/** Name   :  stream Write Bits Node
+ *  Input  :  Leaf of the Node, Symbol. From leaf To RootNode
+ *            1 = Go right, 0 = Go left
+ *
+ *  Output :  Output bit to the outputFile
+ **/
+uint32 streamWriteBitsNode(OutStream *out, HuffmanNode* node){
   uint32 writeBytes = 0;
   uint32 writebits = 0;
   int i = 0, path = 0;
-  char bits[Symbol];
+  int8 bits[Symbol];
   
   while (node->parent != NULL){
     if (node->parent->leftChild == node){
-      // printf("LEFT\n");
       bits[i++] = '0';
       }
     else if (node->parent->rightChild == node){
-      // printf("RIGHT\n");
       bits[i++] = '1';
       }
     node = node->parent;

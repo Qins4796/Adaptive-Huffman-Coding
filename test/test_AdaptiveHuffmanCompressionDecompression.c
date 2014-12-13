@@ -15,6 +15,7 @@ void tearDown(void){}
 /**
 *   close other file for testing -- xtest 
 *   open test file by deleting 'x' in xtest
+*   ERROR due to extra space-bar carry from previous test
 */
 
 void xtest_adaptive_Huffman_Compression_Decompression(void){

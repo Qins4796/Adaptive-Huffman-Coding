@@ -2,7 +2,6 @@
 #include "AdaptiveHuffman.h"
 #include <malloc.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 HuffmanNode *arraySymbol[Symbol];
 HuffmanNode *root;
@@ -109,7 +108,7 @@ HuffmanNode *swapNode(HuffmanNode *node, HuffmanNode *nodeToSwap){
   HuffmanNode *tempNodeParent = node->parent;
   HuffmanNode *nodeParentLeft = node->parent->leftChild;
   HuffmanNode *nodeToSwapParentLeft = nodeToSwap->parent->leftChild;
-  int tempNodeOrder = node->order;
+  uint32 tempNodeOrder = node->order;
 
   if(nodeParentLeft == node){
     node->parent->leftChild = nodeToSwap;
@@ -185,24 +184,4 @@ void huffmanUpdateAndRestructure(HuffmanNode *node){
     node->freq +=1; //increment node frequency
     node = node->parent; //go to parent
   }
-}
-//after re writen compression might not using
-uint32 findHuffmanTreePathLeafToRoot(HuffmanNode *node){
-  uint32 bits=0;
-  while(node!=root){
-    bits +=1;
-    node = node->parent;
-  }
-  return bits;
-}
-//return 1 if not in the array, return 0 if in array
-int symbolSearch(HuffmanNode **leafSearch, int c){
-  int i;
-  for (i = 0; i < Symbol; i++){
-    if (leafSearch[i] != NULL && leafSearch[i]->symbol == c)
-      return 0; //Not the 1st time. already in array
-    if (leafSearch[i] == NULL)
-      return 1; //1st time seen the symbol
-  }
-  return 1;
 }

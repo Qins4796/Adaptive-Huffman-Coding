@@ -32,6 +32,8 @@ InStream *openFileInStream(char *fileName, char *mode){
  *  Output :  freed file
  **/
 void closeFileInStream(InStream *in){
+  fflush(stdout);
+  fflush(in->file);
   fclose(in->file);
   free(in);
 }
@@ -48,18 +50,10 @@ uint32 streamReadBit(InStream* in){
   if (streamIn.bitIndex == -1){ // -1 for enter case for first time
     if(!feof(fileIn)){ // if not EOF
       fread(&charRead, sizeof(charRead), 1, fileIn);
-      //size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
-      //fileIn :file to read from
-      //&charRead : array to store
-      //1 : number of element size
-      //size :sizeof(size), total size
     }
-    // printf(" nextByte\n");
-    // printf("charRead %d\n",charRead);
     streamIn.byteIndex = (unsigned char )charRead;
     streamIn.bitIndex = 7;
   }
-  // printf("bitIndex %d\n",bitIndex);
   // bitIndex 7 >> return then decrement (loop until -1)
   bitToReturn = (streamIn.byteIndex >> streamIn.bitIndex) & 1;
   streamIn.bitIndex--;
@@ -73,21 +67,17 @@ uint32 streamReadBit(InStream* in){
  *  Output :  the output of 8 bit char, byte read
  **/
 uint32 streamReadBits(InStream *in){
-
   uint32 byteToReturn = 0, nextBit = 0;
   int32 i;
   for (i=7 ; i>=0 ; i--){
     nextBit = streamReadBit(in);
     if (nextBit == 0){
-      // printf("0");
       byteToReturn = byteToReturn & (~(1 << i)); 
     }
     else if (nextBit == 1){
-      // printf("1");
       byteToReturn = byteToReturn | (1 << i);
     }
     else{
-      // printf("EOF\n");
       return EOF;
     }
   }

@@ -324,8 +324,12 @@ void test_streamWriteBits_should_write_a_symbol(void){
  *      /   \
  *   NEW    D/1
  *
- *
- *
+ *    1001 1100 1
+ *    testWriteByteTest file was 9C = 1001 1100
+ *      path A = 10 
+ *      path B = 01 >>10+01
+ *      path C = 11 >>1001+11
+ *      path D = 001 >>1001 11+00 '1' next byte
  */
 void test_streamWriteBitsNode(void){
   CEXCEPTION_T err;
@@ -335,6 +339,7 @@ void test_streamWriteBitsNode(void){
   char buffer[BUFFER_SIZE];
 
   out = openFileOutStream("test/Data/testWriteByteTest.txt","wb");
+  in = openFileInStream("test/Data/testWriteByteTest.txt","rb");
 
   setHuffmanNode(&InterNode1, NULL, &InterNode3, &InterNode2,-1,14,256);
   setHuffmanNode(&InterNode2, &InterNode1, &SymbolA, &SymbolC,-1,9,255);
@@ -349,19 +354,20 @@ void test_streamWriteBitsNode(void){
 
   result = streamWriteBitsNode(out->file, root);
   TEST_ASSERT_EQUAL(0,result);
-
+  
   result = streamWriteBitsNode(out->file, &SymbolA);
   TEST_ASSERT_EQUAL(256,result); //0000000100000000
-
+  result = 0;
   result = streamWriteBitsNode(out->file, &SymbolB);
   TEST_ASSERT_EQUAL(272,result); //0000000100010000
-
+  result = 0;
   result = streamWriteBitsNode(out->file, &SymbolC);
   TEST_ASSERT_EQUAL(308,result); //0000000100110100
-
+  result = 0;
   result = streamWriteBitsNode(out->file, &SymbolD);
   TEST_ASSERT_EQUAL(284,result); //0000000100011100
-
+  
+  closeFileInStream(in);
   closeFileOutStream(out);
 }
 

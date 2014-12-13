@@ -10,8 +10,9 @@
 
 HuffmanNode *arraySymbol[Symbol];
 OutStream streamOut;
+
 /**
- *  
+ *  Coding flow
  *  START
  *   Symbol first time? seen?
  *   NO  : new symbol > newNode create, go back to parent
@@ -23,45 +24,53 @@ OutStream streamOut;
  *   YES : Done END
  *
 */
+/**
+ *  COMPRESSION
+ *  START Read in symbol
+ *   Symbol first time? seen?
+ *   NO  : Seen, Send path node code from root to the leaf of symbol
+         : --> Update Current node of symbol frequency
+ *   YES : 1st time, Send NEWnode path followed by the symbol byte
+ *       : Build the NEWnode and symbol with the OldNEWnode is their parent
+ *   
+ *   EOF? if not keep writing till EOF
+*/
+/** Name   :  Adaptive Huffman Compression
+ *  Input  :  File to be Compress
+ *
+ *  Output :  File Compressed
+ **/
 void huffmanCompress(InStream *in, OutStream *out){
   HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
   returnedNewNode->order = Symbol;
   uint8 Symb = 0;
-  uint32 i,bits=0,total=0;
+  uint32 i;
   for(i = 0 ; i < Symbol ; i++){
     arraySymbol[i] = NULL;
   }
-  // printf("order : %d\n",returnedNewNode->order);
   while(!feof(in->file)){
     if (!(Symb = streamReadBits(in->file))){break;}
-    // printf("symbol: %c",Symb);
-    total++;
     if(!arraySymbol[Symb]){
-      // printf(" 1stTIME \n");
-      bits += streamWriteBitsNode(out->file,returnedNewNode);
-      bits += streamWriteBits(out->file,(unsigned char)Symb);
+      streamWriteBitsNode(out->file,returnedNewNode);
+      streamWriteBits(out->file,(unsigned char)Symb);
       returnedNewNode = adaptiveHuffmanTreeBuild(returnedNewNode,Symb);
       huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
-      // printf("order : %d\n",returnedNewNode->order);
     }
     else{
-    // printf(" SEEN \n");
-      bits += streamWriteBitsNode(out->file,arraySymbol[Symb]);
+      streamWriteBitsNode(out->file,arraySymbol[Symb]);
       huffmanUpdateAndRestructure(arraySymbol[Symb]);
-      // printf("SYMorder : %d\n",arraySymbol[Symb]->order);
     }
   }
   while (streamOut.bitIndex != 7){ //fill remaining with 0
-    bits += streamWriteBit(out->file , 0);
+    streamWriteBit(out->file , 0);
+    fflush(out->file);
   }
-  
-  // printf(" NEXT \n");
-  // printf(" UnCompressed :%d\n",total);
-  // printf(" Compressed :%d\n",bits/Symbol);
   for (i = 0 ; i < Symbol; i++){
     arraySymbol[i] = NULL;
   }
   freeNode(returnedNewNode);
+  fflush(out->file);
+  fflush(in->file);
 }
 
 

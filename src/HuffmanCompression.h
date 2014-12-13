@@ -5,7 +5,6 @@
 #include "OutStream.h"
 #include "AdaptiveHuffman.h"
 
-// extern HuffmanNode *rootNode;
 extern HuffmanNode *arraySymbol[Symbol];
 
 void huffmanCompress(InStream *in, OutStream *out);
