@@ -32,11 +32,11 @@ OutStream *openFileOutStream(char *fileName, char *mode){
  *
  *  Output :  freed file
  **/
-void closeFileOutStream(OutStream *in){
+void closeFileOutStream(OutStream *out){
   fflush(stdout);
-  fflush(in->file);
-  fclose(in->file);
-  free(in);
+  fflush(out->file);
+  fclose(out->file);
+  free(out);
 }
 
 /** Name   :  stream Write Bit by bit to the file (put)
@@ -85,9 +85,8 @@ uint32 streamWriteBits(OutStream *out, uint8 character){
  **/
 uint32 streamWriteBitsNode(OutStream *out, HuffmanNode* node){
   uint32 writeBytes = 0;
-  uint32 writebits = 0;
-  int i = 0, path = 0;
-  int8 bits[Symbol];
+  int32 i = 0, path = 0;
+  uint32 bits[Symbol];
   
   while (node->parent != NULL){
     if (node->parent->leftChild == node){

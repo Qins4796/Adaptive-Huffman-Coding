@@ -4,6 +4,7 @@
 #include "InStream.h"
 #include "OutStream.h"
 #include "AdaptiveHuffman.h"
+#include "Utils.h"
 
 extern HuffmanNode *arraySymbol[Symbol];
 

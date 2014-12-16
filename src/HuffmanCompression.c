@@ -6,7 +6,7 @@
 #include "CException.h"
 #include <stdio.h>
 #include <malloc.h>
-#include <Utils.h>
+#include "Utils.h"
 
 HuffmanNode *arraySymbol[Symbol];
 OutStream streamOut;
@@ -43,7 +43,7 @@ OutStream streamOut;
 void huffmanCompress(InStream *in, OutStream *out){
   HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
   returnedNewNode->order = Symbol;
-  uint8 Symb = 0;
+  uint32 Symb = 0;
   uint32 i;
   for(i = 0 ; i < Symbol ; i++){
     arraySymbol[i] = NULL;

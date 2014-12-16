@@ -45,7 +45,8 @@ void closeFileInStream(InStream *in){
  **/
 uint32 streamReadBit(InStream* in){
 
-  uint8 charRead, bitToReturn;
+  uint8 charRead; 
+  uint32 bitToReturn;
   FILE *fileIn = (FILE *)in;
   if (streamIn.bitIndex == -1){ // -1 for enter case for first time
     if(!feof(fileIn)){ // if not EOF

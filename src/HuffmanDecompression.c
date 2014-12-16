@@ -7,7 +7,7 @@
 #include "CException.h"
 #include <stdio.h>
 #include <malloc.h>
-#include <Utils.h>
+#include "Utils.h"
 
 /**
  *  
@@ -29,17 +29,17 @@ void huffmanDecompress(InStream *in , OutStream *out){
   HuffmanNode *leafNode = adaptiveHuffmanTreeInit();
   HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
   rootNode->order = Symbol;
-  uint8 Symb = 0;
-  int i,bit = 0,bits = 0;
+  uint32 Symb = 0;
+  int32 i,bit = 0,bits = 0;
 
   Symb = streamReadBits(in->file);
   returnedNewNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
   streamWriteBits(out->file,Symb);
   leafNode = rootNode;
   Symb = 0;
+
   while(!feof(in->file)){
     bit = streamReadBit(in->file);
-    
     if(bit){
       leafNode = leafNode->rightChild;
       bits +=1;
@@ -69,7 +69,7 @@ void huffmanDecompress(InStream *in , OutStream *out){
       }
     }
   }
- 
+
   freeNode(rootNode);
   freeNode(returnedNewNode);
   freeNode(leafNode);

@@ -13,7 +13,7 @@ void setUp(void){}
 void tearDown(void){}
 
 int findReadBitbyBit(InStream *in){
-  int i = 0, result = 0;
+  int32 i = 0, result = 0;
   for(i = 0;i<8;i++){
     result <<= 1;
     result |= streamReadBit(in->file);
@@ -244,7 +244,7 @@ void test_huffmanCompress_for_different_Symbol_case_2(void){
  *  A = 01000001
  *  R = 01010010
  *  D = 01000100
- *  0100 0001 1001 0100 1000 1000 1000 0000
+ *  0100 0001 1001 0100 1000 0100 0100 0000
  *  0100 0001 1 + '0' 01010010 '00' 01000100  = Compressed code
  *      A     A   new     R     new    D      = Code in Tree
  */

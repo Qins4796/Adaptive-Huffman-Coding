@@ -2,7 +2,7 @@
 #define InStream_H
 
 #include <stdio.h>
-#include <Utils.h>
+#include "Utils.h"
 
 typedef struct InStream InStream;
 

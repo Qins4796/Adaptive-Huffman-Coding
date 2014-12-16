@@ -2,7 +2,7 @@
 #define AdaptiveHuffman_H
 
 #include <stdio.h>
-#include <Utils.h>
+#include "Utils.h"
 
 #define Symbol 256
 
@@ -12,9 +12,9 @@ struct HuffmanNode{
   HuffmanNode *parent;
   HuffmanNode *leftChild;
   HuffmanNode *rightChild;
-  int32 symbol;
+  uint32 symbol;
   uint32 freq;
-  int32 order;
+  uint32 order;
 };
 
 extern HuffmanNode *root;

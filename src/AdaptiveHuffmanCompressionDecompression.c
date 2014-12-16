@@ -19,8 +19,7 @@ void AdaptiveHuffmanCompressionDecompression(char *inFile, char *outFile){
   OutStream *out;
   InStream *tmpfileIn;
   OutStream *tmpfileOut;
-  long int position;
-  
+
   in = openFileInStream(inFile,"rb");
   tmpfileOut = openFileOutStream("test/bin/tmp.bin","wb");
   tmpfileIn = openFileInStream("test/bin/tmp.bin","rb");

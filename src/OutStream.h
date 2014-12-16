@@ -2,7 +2,7 @@
 #define OutStream_H
 
 #include <stdio.h>
-#include <Utils.h>
+#include "Utils.h"
 
 typedef struct OutStream OutStream;
 
@@ -16,6 +16,6 @@ struct OutStream{
 extern OutStream streamOut;
 
 OutStream *openFileOutStream(char *fileName, char *mode);
-void closeFileOutStream(OutStream *in);
+void closeFileOutStream(OutStream *out);
 
 #endif // OutStream_H

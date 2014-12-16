@@ -47,7 +47,7 @@ void test_openFileOutStream_should_throw_error_if_file_not_found(void){
 void test_openFileInStream_should_open_the_file_and_read_the_data(void){
 	CEXCEPTION_T err;
   OutStream *out;
-  char buffer[BUFFER_SIZE];
+  uint8 buffer[BUFFER_SIZE];
 
   Try{
     out = openFileOutStream("test/Data/testOpen.txt","rb");
@@ -65,7 +65,7 @@ void test_openFileInStream_should_open_the_file_and_read_the_data(void){
 void test_openFileInStream_should_open_the_file_and_read_the_string(void){
 	CEXCEPTION_T err;
   OutStream *out;
-  char buffer[BUFFER_SIZE];
+  uint8 buffer[BUFFER_SIZE];
 
   Try{
     out = openFileOutStream("test/Data/testOpen2.txt","rb");
@@ -102,7 +102,7 @@ void test_streamWriteBit_should_write_bit_by_bit_into_the_output_file_and_read_i
   OutStream *out;
   InStream *in;
   int32 result = 0;
-  char buffer[BUFFER_SIZE];
+  uint8 buffer[BUFFER_SIZE];
 
   out = openFileOutStream("test/Data/testWrite.txt","wb");
 
@@ -164,7 +164,7 @@ void test_streamWriteBits_should_write_the_character_byte_into_the_file_and_read
   OutStream *out;
   InStream *in;
   int32 result = 0;
-  char buffer[BUFFER_SIZE];
+  uint8 buffer[BUFFER_SIZE];
 
   out = openFileOutStream("test/Data/testWriteByte.txt","wb");
   streamWriteBits(out->file, 'A');
@@ -196,7 +196,7 @@ void test_streamWriteBit_should_write_multiple_char_bit_by_bit_into_the_output_f
   OutStream *out;
   InStream *in;
   int32 result = 0;
-  char buffer[BUFFER_SIZE];
+  uint8 buffer[BUFFER_SIZE];
 
   out = openFileOutStream("test/Data/testWrite2.txt","wb");
   //C = 0b01000011
@@ -248,7 +248,7 @@ void test_streamWriteBits_should_write_multiple_character_byte_into_the_file_and
   OutStream *out;
   InStream *in;
   int32 result = 0;
-  char buffer[BUFFER_SIZE];
+  uint8 buffer[BUFFER_SIZE];
 
   out = openFileOutStream("test/Data/testWriteByte2.txt","wb");
   streamWriteBits(out->file, 'S');
@@ -292,7 +292,7 @@ void test_streamWriteBits_should_write_a_symbol(void){
   OutStream *out;
   InStream *in;
   int32 result = 0;
-  char buffer[BUFFER_SIZE];
+  uint8 buffer[BUFFER_SIZE];
 
   out = openFileOutStream("test/Data/!testWriteByte.txt","wb");
   streamWriteBits(out->file, '&');
@@ -336,7 +336,6 @@ void test_streamWriteBitsNode(void){
   OutStream *out;
   InStream *in;
   int32 result = 0;
-  char buffer[BUFFER_SIZE];
 
   out = openFileOutStream("test/Data/testWriteByteTest.txt","wb");
   in = openFileInStream("test/Data/testWriteByteTest.txt","rb");

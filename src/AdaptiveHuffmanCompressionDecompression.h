@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include "ErrorCode.h"
 #include "CException.h"
+#include "Utils.h"
 
 void AdaptiveHuffmanCompressionDecompression(char *inFile, char *outFile);
 

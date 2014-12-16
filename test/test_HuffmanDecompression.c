@@ -19,11 +19,12 @@ void tearDown(void){}
 */
 
 void xtest_huffmanDecompress_for_text_AAAAAAAAA(void){
-  InStream *in, *ori, *decompress;
+  InStream *in,*inTest;
   OutStream *out;
-  int i, getOri, getDec;
-  char buffer[BUFFER_SIZE];
+  int32 i, getOri, getDec;
+  uint8 buffer[BUFFER_SIZE];
   CEXCEPTION_T err;
+  uint32 result;
   
   in = openFileInStream("test/Data/test_Compressed.txt","rb");
   out = openFileOutStream("test/Data/test_DeCompressed.txt","wb");
@@ -35,18 +36,37 @@ void xtest_huffmanDecompress_for_text_AAAAAAAAA(void){
   closeFileInStream(in);
   closeFileOutStream(out);
   
-  ori = openFileInStream("test/Data/test_Compress.txt","rb");
-  decompress = openFileInStream("test/Data/test_DeCompressed.txt","rb");
-
-  fflush(ori->file);
-  fflush(decompress->file);
-  closeFileInStream(ori);
-  closeFileInStream(decompress);
+  inTest = openFileInStream("test/Data/test_DeCompressed.txt","rb");
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL(-1,result);
+  
+  closeFileInStream(inTest);
 }
 
 void xtest_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){
-  InStream *in2;
+  InStream *in2,*inTest;
   OutStream *out2;
+  uint32 result;
 
   in2 = openFileInStream("test/Data/test_Compressed_short.txt","rb");
   out2 = openFileOutStream("test/Data/test_DeCompressed_short.txt","wb");
@@ -55,10 +75,37 @@ void xtest_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){
   
   closeFileInStream(in2);
   closeFileOutStream(out2);
+  
+  inTest = openFileInStream("test/Data/test_DeCompressed_short.txt","rb");
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('X',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('Y',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('Y',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('Y',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('Y',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('Y',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('Y',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('Y',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('Y',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('Y',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL(-1,result);
+  
+  closeFileInStream(inTest);
 }
 void xtest_huffmanDecompress_for_different_Symbol_with_different_tree_with_text_ABC(void){
-  InStream *in;
+  InStream *in,*inTest;
   OutStream *out;
+  uint32 result;
 
   in = openFileInStream("test/Data/test_Compressed2.txt","rb");
   out = openFileOutStream("test/Data/test_DeCompressed2.txt","wb");
@@ -67,10 +114,23 @@ void xtest_huffmanDecompress_for_different_Symbol_with_different_tree_with_text_
 
   closeFileInStream(in);
   closeFileOutStream(out);
+  
+  inTest = openFileInStream("test/Data/test_DeCompressed2.txt","rb");
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('B',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('C',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL(0,result);
+  
+  closeFileInStream(inTest);
 }
 void xtest_huffmanDecompress_for_different_Symbol_case_2_with_text_AABBCC(void){
-  InStream *in;
+  InStream *in,*inTest;
   OutStream *out;
+  uint32 result;
 
   in = openFileInStream("test/Data/test_Compressed3.txt","rb");
   out = openFileOutStream("test/Data/test_DeCompressed3.txt","wb");
@@ -82,10 +142,29 @@ void xtest_huffmanDecompress_for_different_Symbol_case_2_with_text_AABBCC(void){
   fflush(in->file);
   closeFileInStream(in);
   closeFileOutStream(out);
+  
+  inTest = openFileInStream("test/Data/test_DeCompressed3.txt","rb");
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('B',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('B',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('C',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('C',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL(0,result);
+  
+  closeFileInStream(inTest);
 }
 void xtest_huffmanDecompress_for_different_Symbol_case_3_with_text_AARD(void){
-  InStream *in;
+  InStream *in,*inTest;
   OutStream *out;
+  uint32 result;
 
   in = openFileInStream("test/Data/test_Compressed4.txt","rb");
   out = openFileOutStream("test/Data/test_DeCompressed4.txt","wb");
@@ -97,6 +176,20 @@ void xtest_huffmanDecompress_for_different_Symbol_case_3_with_text_AARD(void){
   fflush(in->file);
   closeFileInStream(in);
   closeFileOutStream(out);
+  
+  inTest = openFileInStream("test/Data/test_DeCompressed4.txt","rb");
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('R',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('D',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL(0,result);
+  
+  closeFileInStream(inTest);
 }
 void test_huffmanDecompress_for_long_text(void){
   InStream *in;
@@ -107,7 +200,13 @@ void test_huffmanDecompress_for_long_text(void){
 
   huffmanDecompress(in,out);
   
-  int i, getOri, getDec;
+  fflush(stdout);
+  fflush(out->file);
+  fflush(in->file);
+  closeFileInStream(in);
+  closeFileOutStream(out);
+  
+  int32 i, getOri, getDec;
   InStream *ori, *decompress;
   ori = openFileInStream("test/Data/test_Compress_long.txt","rb");
   decompress = openFileInStream("test/Data/test_DeCompressed_long.txt","rb");
@@ -122,10 +221,4 @@ void test_huffmanDecompress_for_long_text(void){
       break;
     }
   }
-  
-  fflush(stdout);
-  fflush(out->file);
-  fflush(in->file);
-  closeFileInStream(in);
-  closeFileOutStream(out);
 }

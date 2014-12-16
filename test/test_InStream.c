@@ -25,7 +25,7 @@ void test_openFileInStream_should_throw_error_if_file_not_found(void){
 void test_openFileInStream_should_open_the_file_and_read_the_data(void){
 	CEXCEPTION_T err;
   InStream *in;
-  char buffer[BUFFER_SIZE];
+  uint8 buffer[BUFFER_SIZE];
 
   Try{
     in = openFileInStream("test/Data/testOpen.txt","rb");
@@ -43,7 +43,7 @@ void test_openFileInStream_should_open_the_file_and_read_the_data(void){
 void test_openFileInStream_should_open_the_file_and_read_the_string(void){
 	CEXCEPTION_T err;
   InStream *in;
-  char buffer[BUFFER_SIZE];
+  uint8 buffer[BUFFER_SIZE];
 
   Try{
     in = openFileInStream("test/Data/testOpen2.txt","rb");
@@ -61,7 +61,7 @@ void test_openFileInStream_should_open_the_file_and_read_the_string(void){
 void test_openFileInStream_should_open_the_file_and_read_the_symbol_with_decimal_229(void){
 	CEXCEPTION_T err;
   InStream *in;
-  int result;
+  int32 result;
   Try{
     in = openFileInStream("test/Data/testOpenSym.txt","rb");
     result = fgetc(in->file);

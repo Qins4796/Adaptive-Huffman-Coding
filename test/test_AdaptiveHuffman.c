@@ -76,7 +76,7 @@ void test_adaptiveHuffmanTreeInit_to_create_an_empty_tree(void){
 void test_adaptiveHuffmanTreeBuild_should_build_a_tree_by_adding_1_symbol(void){
   setNode(&EmptyRoot,NULL,NULL,-1,256);
   HuffmanNode *root = &EmptyRoot , *returnedNode;
-  int A = 1;
+  int32 A = 1;
   returnedNode = adaptiveHuffmanTreeBuild(root,A);
   TEST_ASSERT_EQUAL_PTR(root->leftChild, returnedNode);
   TEST_ASSERT_EQUAL_PTR(&EmptyRoot, root);
