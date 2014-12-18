@@ -18,7 +18,7 @@ void tearDown(void){}
 *   ERROR due to extra space-bar carry from previous test
 */
 
-void xtest_adaptive_Huffman_Compression_Decompression(void){
+void test_adaptive_Huffman_Compression_Decompression(void){
   uint8 *InFile = "test/bin/FILEin.txt";
   uint8 *outFile = "test/bin/FILEout.txt";
   
@@ -62,7 +62,7 @@ void xtest_adaptive_Huffman_Compression_Decompression_Longtext(void){
     }
   }
 }
-void test_adaptive_Huffman_Compression_Decompression_for_README_txt(void){
+void xtest_adaptive_Huffman_Compression_Decompression_for_README_txt(void){
   uint8 *InFile = "test/bin/README.txt";
   uint8 *outFile = "test/bin/READMEout.txt";
   

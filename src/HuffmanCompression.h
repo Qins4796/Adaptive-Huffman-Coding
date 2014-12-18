@@ -7,6 +7,8 @@
 #include "Utils.h"
 
 extern HuffmanNode *arraySymbol[Symbol];
+extern uint32 codeSize;
+extern uint32 codeSizeCompress;
 
 void huffmanCompress(InStream *in, OutStream *out);
 

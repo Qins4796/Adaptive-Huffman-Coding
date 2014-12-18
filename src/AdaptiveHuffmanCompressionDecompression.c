@@ -9,6 +9,8 @@
 #include "ErrorCode.h"
 #include "CException.h"
 
+uint32 codeSize;
+uint32 codeSizeCompress;
 /** Name   :  Adaptive Huffman Compression and Decompression
  *  Input  :  File to be Compress
  *
@@ -19,13 +21,17 @@ void AdaptiveHuffmanCompressionDecompression(char *inFile, char *outFile){
   OutStream *out;
   InStream *tmpfileIn;
   OutStream *tmpfileOut;
+  int32 i;
 
   in = openFileInStream(inFile,"rb");
   tmpfileOut = openFileOutStream("test/bin/tmp.bin","wb");
   tmpfileIn = openFileInStream("test/bin/tmp.bin","rb");
   out = openFileOutStream(outFile,"wb");
-  
+
   huffmanCompress(in,tmpfileOut);
+  
+  printf("codeSize : %ld\n",codeSize);
+  printf("codeSizeCompress : %ld\n",codeSizeCompress);
   
   fflush(tmpfileOut->file);
   closeFileInStream(in);

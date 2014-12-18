@@ -1,5 +1,5 @@
-#include "HuffmanDecompression.h"
 #include "HuffmanCompression.h"
+#include "HuffmanDecompression.h"
 #include "AdaptiveHuffman.h"
 #include "InStream.h"
 #include "OutStream.h"
@@ -9,6 +9,8 @@
 #include <malloc.h>
 #include "Utils.h"
 
+uint32 codeSize;
+uint32 codeSizeCompress;
 /**
  *  
  *  START
@@ -31,10 +33,12 @@ void huffmanDecompress(InStream *in , OutStream *out){
   rootNode->order = Symbol;
   uint32 Symb = 0;
   int32 i,bit = 0,bits = 0;
-
+  codeSize = 0;
+  codeSizeCompress = 0;
+  
   Symb = streamReadBits(in->file);
   returnedNewNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
-  streamWriteBits(out->file,Symb);
+  codeSizeCompress+=streamWriteBits(out->file,Symb);
   leafNode = rootNode;
   Symb = 0;
 
@@ -52,7 +56,7 @@ void huffmanDecompress(InStream *in , OutStream *out){
     if(!leafNode->leftChild && !leafNode->rightChild){
       if(leafNode->freq == 0){
         Symb = streamReadBits(in->file);
-        streamWriteBits(out->file,Symb);
+        codeSizeCompress+=streamWriteBits(out->file,Symb);
         fflush(stdout);
         fflush(out->file);
         returnedNewNode = adaptiveHuffmanTreeBuild(returnedNewNode,Symb);
@@ -61,7 +65,7 @@ void huffmanDecompress(InStream *in , OutStream *out){
       }
       else if(leafNode->freq != 0 && leafNode->symbol !=-1){
         Symb = leafNode->symbol;
-        streamWriteBits(out->file,Symb);
+        codeSizeCompress+=streamWriteBits(out->file,Symb);
         fflush(stdout);
         fflush(out->file);
         huffmanUpdateAndRestructure(leafNode);
