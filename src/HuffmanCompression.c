@@ -45,7 +45,7 @@ void huffmanCompress(InStream *in, OutStream *out){
   HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
   returnedNewNode->order = Symbol;
   uint32 Symb = 0;
-  uint32 i,temp=0,temp2=0,temp3=0;
+  uint32 i=0,temp=0,temp2=0,temp3=0;
   codeSize = 0;
   codeSizeCompress = 0;
   
@@ -53,7 +53,9 @@ void huffmanCompress(InStream *in, OutStream *out){
     arraySymbol[i] = NULL;
   }
   while(!feof(in->file)){
-    if (!(Symb = streamReadBits(in->file))){break;}
+
+    Symb = streamReadBits(in->file);
+    // if (!Symb){break;}
     codeSize++;
     if(!arraySymbol[Symb]){
       temp2=streamWriteBitsNode(out->file,returnedNewNode);
