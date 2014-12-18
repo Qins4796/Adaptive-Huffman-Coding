@@ -45,9 +45,10 @@ void huffmanCompress(InStream *in, OutStream *out){
   HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
   returnedNewNode->order = Symbol;
   uint32 Symb = 0;
-  uint32 i;
+  uint32 i,temp=0,temp2=0,temp3=0;
   codeSize = 0;
   codeSizeCompress = 0;
+  
   for(i = 0 ; i < Symbol ; i++){
     arraySymbol[i] = NULL;
   }
@@ -55,24 +56,33 @@ void huffmanCompress(InStream *in, OutStream *out){
     if (!(Symb = streamReadBits(in->file))){break;}
     codeSize++;
     if(!arraySymbol[Symb]){
-      codeSizeCompress+=streamWriteBitsNode(out->file,returnedNewNode);
-      codeSizeCompress+=streamWriteBits(out->file,(unsigned char)Symb);
+      temp2=streamWriteBitsNode(out->file,returnedNewNode);
+      if((temp2/8)==1){
+        codeSizeCompress++;
+      }
+      codeSizeCompress += streamWriteBits(out->file,(unsigned char)Symb);
       returnedNewNode = adaptiveHuffmanTreeBuild(returnedNewNode,Symb);
       huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
     }
     else{
-      codeSizeCompress+=streamWriteBitsNode(out->file,arraySymbol[Symb]);
+      temp = streamWriteBitsNode(out->file,arraySymbol[Symb]);
       huffmanUpdateAndRestructure(arraySymbol[Symb]);
+      if((temp/8)==1){
+        codeSizeCompress++;
+      }
     }
   }
   while (streamOut.bitIndex != 7){ //fill remaining with 0
-    codeSizeCompress+=streamWriteBit(out->file , 0);
+    streamWriteBit(out->file , 0);
+    if(streamOut.bitIndex == 7){
+    codeSizeCompress++;}
     fflush(out->file);
   }
   for (i = 0 ; i < Symbol; i++){
     arraySymbol[i] = NULL;
   }
   freeNode(returnedNewNode);
+  returnedNewNode = NULL;
   fflush(out->file);
   fflush(in->file);
 }

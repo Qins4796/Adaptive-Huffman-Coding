@@ -63,6 +63,7 @@ uint32 streamWriteBit(OutStream *out, uint32 value){
     streamOut.byteIndex = 0; //reset to 0 for next byte
   }
 return (uint32)streamOut.byteIndex;
+// return (uint32)streamOut.bitIndex;
 }
 
 /** Name   :  stream Write Bits , 8bit, character
@@ -85,7 +86,7 @@ uint32 streamWriteBits(OutStream *out, uint8 character){
  **/
 uint32 streamWriteBitsNode(OutStream *out, HuffmanNode* node){
   uint32 writeBytes = 0;
-  int32 i = 0, path = 0;
+  int32 i = 0, path = 0 , j=1;
   uint32 bits[Symbol];
   
   while (node->parent != NULL){
@@ -96,9 +97,10 @@ uint32 streamWriteBitsNode(OutStream *out, HuffmanNode* node){
       bits[i++] = '1';
       }
     node = node->parent;
+    j++;
   }
   while (--i >= 0){ // pre decrement i 
     writeBytes+=streamWriteBit(out, bits[i] - '0');
   }
-  return writeBytes;
+  return j;
 }
