@@ -58,7 +58,7 @@ void huffmanCompress(InStream *in, OutStream *out){
     // if (!Symb){break;}
     codeSize++;
     if(!arraySymbol[Symb]){
-      temp2=streamWriteBitsNode(out,returnedNewNode);
+      temp2=emitPathCode(out,returnedNewNode);
       if((temp2/8)==1){
         codeSizeCompress++;
       }
@@ -67,7 +67,7 @@ void huffmanCompress(InStream *in, OutStream *out){
       huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
     }
     else{
-      temp = streamWriteBitsNode(out,arraySymbol[Symb]);
+      temp = emitPathCode(out,arraySymbol[Symb]);
       huffmanUpdateAndRestructure(arraySymbol[Symb]);
       if((temp/8)==1){
         codeSizeCompress++;

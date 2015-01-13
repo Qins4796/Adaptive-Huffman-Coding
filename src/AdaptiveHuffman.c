@@ -2,8 +2,8 @@
 #include "AdaptiveHuffman.h"
 #include <malloc.h>
 #include <stdlib.h>
-#include "InStream.h"
-#include "OutStream.h"
+// #include "InStream.h"
+// #include "OutStream.h"
 
 HuffmanNode *arraySymbol[Symbol];
 HuffmanNode *root;
@@ -187,3 +187,31 @@ void huffmanUpdateAndRestructure(HuffmanNode *node){
     node = node->parent; //go to parent
   }
 }
+
+/** Name   :  stream Write Bits Node
+ *  Input  :  Leaf of the Node, Symbol. From leaf To RootNode
+ *            1 = Go right, 0 = Go left
+ *
+ *  Output :  Output bit to the outputFile
+ **/
+// uint32 emitPathCode(OutStream *out, HuffmanNode* node){
+  // uint32 writeBytes = 0;
+  // int32 i = 0, path = 0 , j=1;
+  // uint32 bits[Symbol];
+  
+  // while (node->parent != NULL){
+    // if (node->parent->leftChild == node){
+      // bits[i++] = '0';
+      // }
+    // else if (node->parent->rightChild == node){
+      // bits[i++] = '1';
+      // }
+    // node = node->parent;
+    // j++;
+  // }
+  // while (--i >= 0){ // pre decrement i 
+    // writeBytes+=streamWriteBit(out, bits[i] - '0');
+  // }
+  // return j;
+// }
+

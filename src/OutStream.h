@@ -16,10 +16,10 @@ struct OutStream{
 
 extern OutStream streamOut;
 
-uint32 streamWriteBit(OutStream *out, uint32 value);
-uint32 streamWriteBits(OutStream *out, uint8 character);
 OutStream *openFileOutStream(char *fileName, char *mode);
 void closeFileOutStream(OutStream *out);
-uint32 streamWriteBitsNode(OutStream *out, HuffmanNode* node);
+uint32 streamWriteBit(OutStream *out, uint32 value);
+uint32 streamWriteBits(OutStream *out, uint8 character);
+uint32 emitPathCode(OutStream *out, HuffmanNode *node);
 
 #endif // OutStream_H

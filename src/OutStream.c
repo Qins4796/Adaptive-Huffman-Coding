@@ -83,7 +83,7 @@ uint32 streamWriteBits(OutStream *out, uint8 character){
  *
  *  Output :  Output bit to the outputFile
  **/
-uint32 streamWriteBitsNode(OutStream *out, HuffmanNode* node){
+uint32 emitPathCode(OutStream *out, HuffmanNode *node){
   uint32 writeBytes = 0;
   int32 i = 0, path = 0 , j=1;
   uint32 bits[Symbol];

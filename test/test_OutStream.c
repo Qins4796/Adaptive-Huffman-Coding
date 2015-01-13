@@ -333,7 +333,7 @@ void test_streamWriteBits_should_write_a_symbol(void){
  *      path C = 11 >>1001+11
  *      path D = 001 >>1001 11+00 '1' next byte
  */
-void test_streamWriteBitsNode(void){
+void test_emitPathCode(void){
   CEXCEPTION_T err;
   OutStream *out;
   InStream *in;
@@ -353,20 +353,20 @@ void test_streamWriteBitsNode(void){
   setHuffmanNode(&NewNode, &InterNode4, NULL, NULL,-1,0,248);
   root = &InterNode1;
 
-  // result = streamWriteBitsNode(out->file, root);
+  // result = emitPathCode(out->file, root);
   // TEST_ASSERT_EQUAL(0,result);
   
-  // result = streamWriteBitsNode(out->file, &SymbolA);
+  // result = emitPathCode(out->file, &SymbolA);
   // TEST_ASSERT_EQUAL(256,result); //0000000100000000
   // result = 0;
-  // result = streamWriteBitsNode(out->file, &SymbolB);
+  // result = emitPathCode(out->file, &SymbolB);
   // TEST_ASSERT_EQUAL(272,result); //0000000100010000
   // result = 0;
-  // result = streamWriteBitsNode(out->file, &SymbolC);
+  // result = emitPathCode(out->file, &SymbolC);
   // printf("result:%d\n",result);
   // TEST_ASSERT_EQUAL(308,result); //0000000100110100
   // result = 0;
-  // result = streamWriteBitsNode(out->file, &SymbolD);
+  // result = emitPathCode(out->file, &SymbolD);
   // TEST_ASSERT_EQUAL(284,result); //0000000100011100
   
   closeFileInStream(in);
