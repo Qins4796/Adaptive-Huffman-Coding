@@ -97,6 +97,7 @@ void test_openFileInStream_should_open_the_file_and_read_the_symbol_with_decimal
   }
     TEST_ASSERT_EQUAL(36,result);
 }
+
 void test_streamWriteBit_should_write_bit_by_bit_into_the_output_file_and_read_it_back_using_streamReadBit(void){
   CEXCEPTION_T err;
   OutStream *out;
@@ -106,41 +107,41 @@ void test_streamWriteBit_should_write_bit_by_bit_into_the_output_file_and_read_i
 
   out = openFileOutStream("test/Data/testWrite.txt","wb");
 
-  result = streamWriteBit(out->file, 0);
+  result = streamWriteBit(out, 0);
   TEST_ASSERT_EQUAL(0,result);
-  result = streamWriteBit(out->file, 1);
+  result = streamWriteBit(out, 1);
   TEST_ASSERT_EQUAL(64,result);
-  result = streamWriteBit(out->file, 0);
+  result = streamWriteBit(out, 0);
   TEST_ASSERT_EQUAL(64,result);
-  result = streamWriteBit(out->file, 0);
+  result = streamWriteBit(out, 0);
   TEST_ASSERT_EQUAL(64,result);
-  result = streamWriteBit(out->file, 0);
+  result = streamWriteBit(out, 0);
   TEST_ASSERT_EQUAL(64,result);
-  result = streamWriteBit(out->file, 1);
+  result = streamWriteBit(out, 1);
   TEST_ASSERT_EQUAL(68,result);
-  result = streamWriteBit(out->file, 0);
+  result = streamWriteBit(out, 0);
   TEST_ASSERT_EQUAL(68,result);
-  result = streamWriteBit(out->file, 1);
+  result = streamWriteBit(out, 1);
   TEST_ASSERT_EQUAL(0,result); //should be 'E' 69, cleared to 0 for next byte
   closeFileOutStream(out);
 
   in = openFileInStream("test/Data/testWrite.txt","rb");
 
-  result = streamReadBit(in->file);
+  result = streamReadBit(in);
   TEST_ASSERT_EQUAL(0,result);
-  result = streamReadBit(in->file);
+  result = streamReadBit(in);
   TEST_ASSERT_EQUAL(1,result);
-  result = streamReadBit(in->file);
+  result = streamReadBit(in);
   TEST_ASSERT_EQUAL(0,result);
-  result = streamReadBit(in->file);
+  result = streamReadBit(in);
   TEST_ASSERT_EQUAL(0,result);
-  result = streamReadBit(in->file);
+  result = streamReadBit(in);
   TEST_ASSERT_EQUAL(0,result);
-  result = streamReadBit(in->file);
+  result = streamReadBit(in);
   TEST_ASSERT_EQUAL(1,result);
-  result = streamReadBit(in->file);
+  result = streamReadBit(in);
   TEST_ASSERT_EQUAL(0,result);
-  result = streamReadBit(in->file);
+  result = streamReadBit(in);
   TEST_ASSERT_EQUAL(1,result);
 
   closeFileInStream(in);
@@ -167,12 +168,12 @@ void test_streamWriteBits_should_write_the_character_byte_into_the_file_and_read
   uint8 buffer[BUFFER_SIZE];
 
   out = openFileOutStream("test/Data/testWriteByte.txt","wb");
-  streamWriteBits(out->file, 'A');
+  streamWriteBits(out, 'A');
 
   closeFileOutStream(out);
 
   in = openFileInStream("test/Data/testWriteByte.txt","rb");
-  result = streamReadBits(in->file);
+  result = streamReadBits(in);
   TEST_ASSERT_EQUAL(65,result);
 
   closeFileInStream(in);
@@ -200,32 +201,32 @@ void test_streamWriteBit_should_write_multiple_char_bit_by_bit_into_the_output_f
 
   out = openFileOutStream("test/Data/testWrite2.txt","wb");
   //C = 0b01000011
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 1);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 1);
-  streamWriteBit(out->file, 1);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 1);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 1);
+  streamWriteBit(out, 1);
   //A = 0b01000001
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 1);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 1);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 1);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 1);
   //D = 0b01000100
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 1);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 1);
-  streamWriteBit(out->file, 0);
-  streamWriteBit(out->file, 0);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 1);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 1);
+  streamWriteBit(out, 0);
+  streamWriteBit(out, 0);
 
   closeFileOutStream(out);
 
@@ -251,24 +252,24 @@ void test_streamWriteBits_should_write_multiple_character_byte_into_the_file_and
   uint8 buffer[BUFFER_SIZE];
 
   out = openFileOutStream("test/Data/testWriteByte2.txt","wb");
-  streamWriteBits(out->file, 'S');
-  streamWriteBits(out->file, 'T');
-  streamWriteBits(out->file, 'R');
-  streamWriteBits(out->file, 'A');
-  streamWriteBits(out->file, 'K');
+  streamWriteBits(out, 'S');
+  streamWriteBits(out, 'T');
+  streamWriteBits(out, 'R');
+  streamWriteBits(out, 'A');
+  streamWriteBits(out, 'K');
 
   closeFileOutStream(out);
 
   in = openFileInStream("test/Data/testWriteByte2.txt","rb");
-  result = streamReadBits(in->file);
+  result = streamReadBits(in);
   TEST_ASSERT_EQUAL('S',result);
-  result = streamReadBits(in->file);
+  result = streamReadBits(in);
   TEST_ASSERT_EQUAL('T',result);
-  result = streamReadBits(in->file);
+  result = streamReadBits(in);
   TEST_ASSERT_EQUAL('R',result);
-  result = streamReadBits(in->file);
+  result = streamReadBits(in);
   TEST_ASSERT_EQUAL('A',result);
-  result = streamReadBits(in->file);
+  result = streamReadBits(in);
   TEST_ASSERT_EQUAL('K',result);
 
   closeFileInStream(in);
@@ -295,7 +296,7 @@ void test_streamWriteBits_should_write_a_symbol(void){
   uint8 buffer[BUFFER_SIZE];
 
   out = openFileOutStream("test/Data/!testWriteByte.txt","wb");
-  streamWriteBits(out->file, '&');
+  streamWriteBits(out, '&');
 
   closeFileOutStream(out);
 
@@ -312,6 +313,7 @@ void test_streamWriteBits_should_write_a_symbol(void){
   }
     TEST_ASSERT_EQUAL_STRING("&",buffer);
 }
+
 /**
  *                root
  *                 |

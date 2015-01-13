@@ -46,7 +46,6 @@ void closeFileOutStream(OutStream *out){
  **/
 uint32 streamWriteBit(OutStream *out, uint32 value){
   
-  FILE *fileOut = (FILE *)out;
   if(!value){
     streamOut.byteIndex = streamOut.byteIndex & (~(1 << streamOut.bitIndex));
   }
@@ -57,13 +56,12 @@ uint32 streamWriteBit(OutStream *out, uint32 value){
   streamOut.bitIndex--; //decrement for 7 to 0 to put into byteIndexOut
 
   if (streamOut.bitIndex == -1){
-    fwrite(&streamOut.byteIndex, sizeof(streamOut.byteIndex), 1, fileOut);
+    fwrite(&streamOut.byteIndex, sizeof(streamOut.byteIndex), 1, out->file);
 
     streamOut.bitIndex = 7; //reset to 7 for next 8 bit
     streamOut.byteIndex = 0; //reset to 0 for next byte
   }
 return (uint32)streamOut.byteIndex;
-// return (uint32)streamOut.bitIndex;
 }
 
 /** Name   :  stream Write Bits , 8bit, character
@@ -78,6 +76,7 @@ uint32 streamWriteBits(OutStream *out, uint8 character){
   }
   return 1;
 }
+
 /** Name   :  stream Write Bits Node
  *  Input  :  Leaf of the Node, Symbol. From leaf To RootNode
  *            1 = Go right, 0 = Go left

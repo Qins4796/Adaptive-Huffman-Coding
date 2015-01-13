@@ -1,8 +1,10 @@
 #ifndef AdaptiveHuffman_H
 #define AdaptiveHuffman_H
 
-#include <stdio.h>
 #include "Utils.h"
+#include <stdio.h>
+// #include "OutStream.h"
+// #include "InStream.h"
 
 #define Symbol 256
 
@@ -24,6 +26,6 @@ HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , uint32 inSymbol);
 HuffmanNode *swapNode(HuffmanNode *node, HuffmanNode *nodeToSwap);
 HuffmanNode *findMaxOrder(HuffmanNode *node, uint32 freq);
 void huffmanUpdateAndRestructure(HuffmanNode *node);
-void freeNode(HuffmanNode *node);
+void freeNodes(HuffmanNode *node);
 
 #endif // AdaptiveHuffman_H

@@ -36,14 +36,14 @@ void huffmanDecompress(InStream *in , OutStream *out){
   codeSize = 0;
   codeSizeCompress = 0;
   
-  Symb = streamReadBits(in->file);
+  Symb = streamReadBits(in);
   returnedNewNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
-  streamWriteBits(out->file,Symb);
+  streamWriteBits(out,Symb);
   leafNode = rootNode;
   Symb = 0;
 
   while(!feof(in->file)){
-    bit = streamReadBit(in->file);
+    bit = streamReadBit(in);
     if(bit){
       leafNode = leafNode->rightChild;
       bits +=1;
@@ -55,8 +55,8 @@ void huffmanDecompress(InStream *in , OutStream *out){
     
     if(!leafNode->leftChild && !leafNode->rightChild){
       if(leafNode->freq == 0){
-        Symb = streamReadBits(in->file);
-        streamWriteBits(out->file,Symb);
+        Symb = streamReadBits(in);
+        streamWriteBits(out,Symb);
         fflush(stdout);
         fflush(out->file);
         returnedNewNode = adaptiveHuffmanTreeBuild(returnedNewNode,Symb);
@@ -65,7 +65,7 @@ void huffmanDecompress(InStream *in , OutStream *out){
       }
       else if(leafNode->freq != 0 && leafNode->symbol !=-1){
         Symb = leafNode->symbol;
-        streamWriteBits(out->file,Symb);
+        streamWriteBits(out,Symb);
         fflush(stdout);
         fflush(out->file);
         huffmanUpdateAndRestructure(leafNode);
@@ -74,9 +74,9 @@ void huffmanDecompress(InStream *in , OutStream *out){
     }
   }
 
-  freeNode(rootNode);
-  freeNode(returnedNewNode);
-  freeNode(leafNode);
+  freeNodes(rootNode);
+  freeNodes(returnedNewNode);
+  freeNodes(leafNode);
   fflush(in->file);
   fflush(out->file);
 }

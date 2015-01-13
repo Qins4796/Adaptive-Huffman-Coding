@@ -15,5 +15,7 @@ struct InStream{
 
 InStream *openFileInStream(char *fileName, char *mode);
 void closeFileInStream(InStream *in);
+uint32 streamReadBit(InStream* in);
+uint32 streamReadBits(InStream *in);
 
 #endif // InStream_H

@@ -16,7 +16,7 @@ int findReadBitbyBit(InStream *in){
   int32 i = 0, result = 0;
   for(i = 0;i<8;i++){
     result <<= 1;
-    result |= streamReadBit(in->file);
+    result |= streamReadBit(in);
   }
   return result;
 }
@@ -104,7 +104,7 @@ void test_huffmanCompress_for_shorter_text(void){
 
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b00101100,result);    // Compressed node '0' + 0101 100 --1
-                                          //  Y  = 0101 1001 , the last 1bit shifted to next byte
+                                           // Y  = 0101 1001 , the last 1bit shifted to next byte
   result = findReadBitbyBit(Compressed);
   TEST_ASSERT_EQUAL(0b10101010,result);    // Compressed 1 + 01 01 01 0
 

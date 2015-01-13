@@ -47,10 +47,10 @@ uint32 streamReadBit(InStream* in){
 
   uint8 charRead; 
   uint32 bitToReturn;
-  FILE *fileIn = (FILE *)in;
+  // FILE *fileIn = (FILE *)in;
   if (streamIn.bitIndex == -1){ // -1 for enter case for first time
-    if(!feof(fileIn)){ // if not EOF
-      fread(&charRead, sizeof(charRead), 1, fileIn);
+    if(!feof(in->file)){ // if not EOF
+      fread(&charRead, sizeof(charRead), 1, in->file);
     }
     streamIn.byteIndex = (unsigned char )charRead;
     streamIn.bitIndex = 7;

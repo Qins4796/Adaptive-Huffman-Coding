@@ -2,6 +2,8 @@
 #include "AdaptiveHuffman.h"
 #include <malloc.h>
 #include <stdlib.h>
+#include "InStream.h"
+#include "OutStream.h"
 
 HuffmanNode *arraySymbol[Symbol];
 HuffmanNode *root;
@@ -67,11 +69,11 @@ HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , uint32 inSymbol){
  *
  *  Output :  cleared and free all the data and tree property to default value
  **/
-void freeNode(HuffmanNode *node){
+void freeNodes(HuffmanNode *node){
   if(node){
 
-    freeNode(node->leftChild);
-    freeNode(node->rightChild);
+    freeNodes(node->leftChild);
+    freeNodes(node->rightChild);
 
     if(node->parent){
       node->parent = NULL;

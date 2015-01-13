@@ -65,7 +65,7 @@ void test_adaptiveHuffmanTreeInit_to_create_an_empty_tree(void){
 
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,-1,node);
   TEST_ASSERT_EQUAL_PARENT(NULL,NULL,NULL,node);
-  freeNode(node);
+  freeNodes(node);
 }
 /**
  *          root
@@ -105,7 +105,7 @@ void test_adaptiveHuffmanTreeBuild_should_build_a_tree_by_adding_1_symbol(void){
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,256,root);
   TEST_ASSERT_EQUAL_SYMBOL(1,1,255,root->rightChild);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
-  freeNode(root);
+  freeNodes(root);
 }
 
 /**
@@ -142,7 +142,7 @@ void test_adaptiveHuffmanTreeBuild_should_build_a_new_nodeA_exist_on_the_rightCh
   TEST_ASSERT_EQUAL_SYMBOL('A',1,253,leftRightNode(root)); // A exist
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,leftLeftNode(root));
 
-  freeNode(root);
+  freeNodes(root);
 }
 
 /**
@@ -201,7 +201,7 @@ void test_adaptiveHuffmanTreeBuild_after_add_symbol_A_and_add_another_symbol_B_s
   TEST_ASSERT_EQUAL_PARENT(rightNode(root),NULL,NULL,rightRightNode(root));
   TEST_ASSERT_EQUAL_PARENT(rightNode(root),rightLeftNode(root)->leftChild,rightLeftNode(root)->rightChild,rightLeftNode(root));
   
-  freeNode(root);
+  freeNodes(root);
 }
 
 /**                      ADD V (AARD+V)
@@ -297,7 +297,7 @@ void test_adaptiveHuffmanTreeBuild_add_another_V_should_swap_the_tree_twice(void
  *                          /   \                   /   \                /   \
  *                   NewNode    V/1           NewNode    V/1       NewNode    V/1
  */
-  freeNode(root);
+  freeNodes(root);
 }
 
 /**
@@ -337,7 +337,7 @@ void test_adaptiveHuffmanTreeBuild_add_for_2same_duplicate_symbol_of_C(void){
   TEST_ASSERT_EQUAL_SYMBOL('A',1,253,leftRightNode(root)); // symbol A
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,leftLeftNode(root));
 
-  freeNode(root);
+  freeNodes(root);
 }
 
 /**                       ADD 1 more A then swap
@@ -373,7 +373,7 @@ void test_adaptiveHuffmanTreeBuild_add_another_A_should_swap_it(void){
   TEST_ASSERT_EQUAL_SYMBOL('C',2,253,&SymbolC);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,&NewNode);
   
-  freeNode(root);
+  freeNodes(root);
 }
 
 /**
@@ -413,7 +413,7 @@ void test_swapNode_for_just_swapping_between_2_node(void){
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,256,root);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,255,root->rightChild); //swapped
   TEST_ASSERT_EQUAL_SYMBOL(1,1,254,root->leftChild);   //swapped
-  freeNode(root);
+  freeNodes(root);
 }
 
 /**
@@ -445,7 +445,7 @@ void test_swapNode_to_swap_the_node_in_tree_with_the_frequency_of_2(void){
   TEST_ASSERT_EQUAL_SYMBOL(-1,2,256,&EmptyRoot);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,255,&NewNode); //swapped
   TEST_ASSERT_EQUAL_SYMBOL(10,2,254,&SymbolNode);   //swapped
-  freeNode(root);
+  freeNodes(root);
 }
 
 /**
@@ -489,8 +489,8 @@ void test_swapNode_to_swap_only_the_node_in_tree_with_the_leaf_node(void){
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,&EmptyRoot2);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,253,&NewNode);
   TEST_ASSERT_EQUAL_SYMBOL(15,1,252,&SymbolB);
-  freeNode(&NewNode);
-  freeNode(&SymbolB);
+  freeNodes(&NewNode);
+  freeNodes(&SymbolB);
 }
 /**
  *                  root                          root
@@ -533,7 +533,7 @@ void test_swapNode_to_swap_only_the_node_in_tree_with_the_middle_node(void){
   TEST_ASSERT_EQUAL_SYMBOL(10,2,254,&SymbolA);
   TEST_ASSERT_EQUAL_SYMBOL(15,1,253,&SymbolB);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,&NewNode);
-  freeNode(root);
+  freeNodes(root);
 }
 /**
  *                  root                          root
@@ -576,7 +576,7 @@ void test_swapNode_to_swap_only_the_nodeA_and_the_nodeB_no_balancing_just_swap(v
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,&EmptyRoot2);
   TEST_ASSERT_EQUAL_SYMBOL(10,2,253,&SymbolA);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,&NewNode);
-  freeNode(root);
+  freeNodes(root);
 }
 /**
  *                  root
@@ -619,7 +619,7 @@ void test_swapNode_should_swap_the_node_between_C_and_A(void){
   TEST_ASSERT_EQUAL_SYMBOL(-1,2,252,&InterNode3);
   TEST_ASSERT_EQUAL_SYMBOL(10,2,251,&SymbolA);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,&NewNode);
-  freeNode(root);
+  freeNodes(root);
 }
 /**
  *          root
@@ -636,8 +636,8 @@ void test_findMaxOrder_should_return_null_if_the_tree_is_empty(void){
 
   TEST_ASSERT_NULL(returnedNode);
   TEST_ASSERT_EQUAL_PTR(NULL,returnedNode);
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 
 /**
@@ -661,8 +661,8 @@ void test_findMaxOrder_should_return_it_self_if_there_are_no_other_max_order_nod
   returnedNode = findMaxOrder(root,root->leftChild->freq);
 
   TEST_ASSERT_EQUAL_PTR(&NewNode,returnedNode);
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 /**
  *          root
@@ -687,8 +687,8 @@ void test_findMaxOrder_should_return_the_max_order_node_in_the_same_frequency_no
   returnedNode = findMaxOrder(root,root->leftChild->freq);
 
   TEST_ASSERT_EQUAL_PTR(&SymbolNode,returnedNode);
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 /**
  *                  root
@@ -730,8 +730,8 @@ void test_findMaxOrder_to_find_the_same_freq_node_with_max_order_node_in_the_tre
   returnedNode = findMaxOrder(root,root->leftChild->freq);
 
   TEST_ASSERT_EQUAL_PTR(&SymbolA,returnedNode);
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 /**
  *                  root
@@ -767,8 +767,8 @@ void test_findMaxOrder_to_find_the_same_freq_node_with_max_order_node_in_the_tre
   returnedNode = findMaxOrder(root,root->leftChild->rightChild->freq);
 
   TEST_ASSERT_EQUAL_PTR(&SymbolA,returnedNode);
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 /**
  *                  root
@@ -798,8 +798,8 @@ void test_findMaxOrder_should_return_the_max_order_of_SymbolB_with_the_same_freq
 
   TEST_ASSERT_EQUAL_PTR(&SymbolB,returnedNode);
 
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 /**
  *                  root
@@ -829,8 +829,8 @@ void test_findMaxOrder_should_return_the_max_order_of_InterNode2_with_the_same_f
 
   TEST_ASSERT_EQUAL_PTR(&SymbolA,returnedNode);
 
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 /**
  *                  root
@@ -861,8 +861,8 @@ void test_findMaxOrder_should_return_SymbolA_with_the_search_node_of_SymbolB_bet
 
   TEST_ASSERT_EQUAL_PTR(&SymbolA,returnedNode);
 
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 /**
  *                  root
@@ -893,8 +893,8 @@ void test_findMaxOrder_should_also_return_SymbolA_with_the_search_node_of_Symbol
 
   TEST_ASSERT_EQUAL_PTR(&SymbolA,returnedNode);
 
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 /**
  *                  root
@@ -929,8 +929,8 @@ void test_findMaxOrder_should_also_return_SymbolC_with_the_same_frequency_node_o
 
   TEST_ASSERT_EQUAL_PTR(&SymbolC,returnedNode);
 
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 /**
  *                  root
@@ -965,8 +965,8 @@ void test_findMaxOrder_should_return_the_largest_order_of_symbolB(void){
 
   TEST_ASSERT_EQUAL_PTR(&SymbolB,returnedNode);
 
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 /**
  *                  root
@@ -1001,8 +1001,8 @@ void test_findMaxOrder_should_return_it_self_if_the_order_of_symbolB_is_the_larg
 
   TEST_ASSERT_EQUAL_PTR(&SymbolB,returnedNode);
 
-  freeNode(root);
-  freeNode(returnedNode);
+  freeNodes(root);
+  freeNodes(returnedNode);
 }
 /**                         Increment C
  *                  root                    root
@@ -1048,7 +1048,7 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
   TEST_ASSERT_EQUAL_SYMBOL(20,2,251,&SymbolC);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,&NewNode);
 
-  freeNode(root);
+  freeNodes(root);
 }
 
 /**                       Increment C
@@ -1095,7 +1095,7 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
   TEST_ASSERT_EQUAL_SYMBOL(15,3,251,&SymbolB);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,&NewNode);
 
-  freeNode(root);
+  freeNodes(root);
 }
 /**                         Increment C
  *                root                    root
@@ -1141,7 +1141,7 @@ void test_huffmanUpdateAndRestructures_should_update_and_Restructure_the_tree_by
   TEST_ASSERT_EQUAL_SYMBOL(20,3,251,&SymbolB);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,&NewNode);
 
-  freeNode(root);
+  freeNodes(root);
 }
 
 /**                             Increment D
@@ -1206,7 +1206,7 @@ void test_huffmanUpdateAndRestructure_should_update_and_resturcture_the_tree(voi
   TEST_ASSERT_EQUAL_SYMBOL(20,2,249,&SymbolC);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,&NewNode);
 
-  freeNode(root);
+  freeNodes(root);
 }
 /**                             Increment C
  *                  root                                root
@@ -1259,7 +1259,7 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_with_the
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,&InterNode4);
   TEST_ASSERT_EQUAL_SYMBOL(30,1,249,&SymbolD);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,&NewNode);
-  freeNode(root);
+  freeNodes(root);
 }
 /**                         Increment C
  *                root                            root                       root
@@ -1311,7 +1311,7 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_and_incr
   TEST_ASSERT_EQUAL_SYMBOL(30,1,249,&SymbolD);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,&NewNode);
 
-  freeNode(root);
+  freeNodes(root);
 }
 /**                         Increment C
  *                root                        root
@@ -1366,5 +1366,5 @@ void test_huffmanUpdateAndRestructure_special_case_swapping_should_swap_back_wit
   TEST_ASSERT_EQUAL_SYMBOL(30,1,249,&SymbolD);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,&NewNode);
 
-  freeNode(root);
+  freeNodes(root);
 }
