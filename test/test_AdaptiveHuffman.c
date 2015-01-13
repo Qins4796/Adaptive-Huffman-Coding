@@ -13,7 +13,7 @@
 */
 
 HuffmanNode nodeA, EmptyRoot, SymbolNode ,NewNode, EmptyRoot1, EmptyRoot2;
-HuffmanNode SymbolA, SymbolB, SymbolC, SymbolD, SymbolE;
+HuffmanNode SymbolA, SymbolB, SymbolC, SymbolD, SymbolE, SymbolR, SymbolV;
 HuffmanNode InterNode1, InterNode2, InterNode3, InterNode4, InterNode5;
 
 #define leftNode(x) (x)->leftChild
@@ -38,6 +38,8 @@ void setUp(void){
   resetNode(&SymbolC, -1);
   resetNode(&SymbolD, -1);
   resetNode(&SymbolE, -1);
+  resetNode(&SymbolR, -1);
+  resetNode(&SymbolV, -1);
   resetNode(&InterNode1, -1);
   resetNode(&InterNode2, -1);
   resetNode(&InterNode3, -1);
@@ -199,6 +201,102 @@ void test_adaptiveHuffmanTreeBuild_after_add_symbol_A_and_add_another_symbol_B_s
   TEST_ASSERT_EQUAL_PARENT(rightNode(root),NULL,NULL,rightRightNode(root));
   TEST_ASSERT_EQUAL_PARENT(rightNode(root),rightLeftNode(root)->leftChild,rightLeftNode(root)->rightChild,rightLeftNode(root));
   
+  freeNode(root);
+}
+
+/**                      ADD V (AARD+V)
+ *                 root               root              root           root
+ *                  |                  |                 |              |
+ *                  V                  V                 V              V
+ *                (4)                 (4)               (4)            (5) 
+ *              /     \              /   \             /   \          /   \
+ *            (2)     A/2    =>    (2)   A/2   =>    (2)   A/2  =>  A/2   (3)
+ *          /    \                /   \             /   \                /   \
+ *        (1)    R/1            (1)   R/1         R/1   (2)            R/1   (2)
+ *       /   \                 /   \                   /   \                /   \
+ * NewNode   D/1             (1)   D/1               (1)   D/1            (1)   D/1
+ *                          /   \                   /   \                /   \
+ *                   NewNode    V/1           NewNode    V/1       NewNode    V/1
+ */
+void test_adaptiveHuffmanTreeBuild_add_another_V_should_swap_the_tree_twice(void){
+  setHuffmanNode(&InterNode1, NULL, &InterNode2, &SymbolA,-1,4,256);
+  setHuffmanNode(&SymbolA, &InterNode1, NULL, NULL,'A',2,255);
+  setHuffmanNode(&InterNode2, &InterNode1, &InterNode3, &SymbolR,-1,2,254);
+  setHuffmanNode(&SymbolR, &InterNode2, NULL, NULL,'R',1,253);
+  setHuffmanNode(&InterNode3, &InterNode2, &NewNode, &SymbolD,-1,1,252);
+  setHuffmanNode(&SymbolD, &InterNode3, NULL, NULL,'D',1,251);
+  setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
+  root = &InterNode1;
+  HuffmanNode *returnedNode;
+  
+  //Symbol Checking
+  //Before Adding 'V'
+  TEST_ASSERT_EQUAL_SYMBOL(-1,4,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,rightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,254,leftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,leftLeftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('D',1,251,leftLeftNode(root)->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,leftLeftNode(root)->leftChild);
+  
+  returnedNode = adaptiveHuffmanTreeBuild(&NewNode,'V'); // Symbol 'A' added
+  // After Adding 'V', Before Update Tree
+  
+  TEST_ASSERT_EQUAL_SYMBOL(-1,4,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,rightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,254,leftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,leftLeftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('D',1,251,leftLeftNode(root)->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,leftLeftNode(root)->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('V',1,249,leftLeftNode(root)->leftChild->rightChild);  //'V' exist
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,leftLeftNode(root)->leftChild->leftChild);
+  
+  huffmanUpdateAndRestructure(returnedNode->parent->parent); // Update NewNode->parent
+   // After Adding 'B' and updated the Tree by swapping twice
+   
+  TEST_ASSERT_EQUAL_SYMBOL(-1,5,256,root);  // lvl1
+  TEST_ASSERT_EQUAL_SYMBOL(-1,3,255,rightNode(root)); //lvl2 (swapped: 2nd swapping)
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,254,leftNode(root));
+  
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,253,rightRightNode(root));  //lvl3 (swapped: 1st swapping)
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,252,rightLeftNode(root));
+
+  TEST_ASSERT_EQUAL_SYMBOL('D',1,251,rightRightNode(root)->rightChild); //lvl4
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,rightRightNode(root)->leftChild);
+  
+  TEST_ASSERT_EQUAL_SYMBOL('V',1,249,rightRightNode(root)->leftChild->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,rightRightNode(root)->leftChild->leftChild);
+  
+  //define Node4 SymV NewSym. Not exist in declaration, cause direct adding 'V' newNode and interNode recreated
+  #define Node4 rightRightNode(root)->leftChild
+  #define SymV rightRightNode(root)->leftChild->rightChild
+  #define NewSym rightRightNode(root)->leftChild->leftChild
+  
+  //Node Checking
+  TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolA,&InterNode2,&InterNode1);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolA);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode1,&SymbolR,&InterNode3,&InterNode2);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,NULL,NULL,&SymbolR);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode2,Node4,&SymbolD,&InterNode3);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode3,NULL,NULL,&SymbolD);
+  TEST_ASSERT_EQUAL_PARENT(&InterNode3,NewSym,SymV,Node4);
+  TEST_ASSERT_EQUAL_PARENT(Node4,NULL,NULL,SymV);
+
+  /**                  ADD V (AARD+V) Bottom view for checking node
+ *                 root               root              root           root
+ *                  |                  |                 |              |
+ *                  V                  V                 V              V
+ *                (4)                 (4)               (4)            (5) 
+ *              /     \              /   \             /   \          /   \
+ *            (2)     A/2    =>    (2)   A/2   =>    (2)   A/2  =>  A/2   (3)
+ *          /    \                /   \             /   \                /   \
+ *        (1)    R/1            (1)   R/1         R/1   (2)            R/1   (2)
+ *       /   \                 /   \                   /   \                /   \
+ * NewNode   D/1             (1)   D/1               (1)   D/1            (1)   D/1
+ *                          /   \                   /   \                /   \
+ *                   NewNode    V/1           NewNode    V/1       NewNode    V/1
+ */
   freeNode(root);
 }
 

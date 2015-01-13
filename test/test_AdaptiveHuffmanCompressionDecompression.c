@@ -63,7 +63,7 @@ void xtest_adaptive_Huffman_Compression_Decompression_Longtext(void){
     }
   }
 }
-void test_adaptive_Huffman_Compression_Decompression_for_README_txt(void){
+void xtest_adaptive_Huffman_Compression_Decompression_for_README_txt(void){
   uint8 *InFile = "test/bin/README.txt";
   uint8 *outFile = "test/bin/READMEout.txt";
   
@@ -205,6 +205,36 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_mov_file_should_fail(v
   InStream *ori, *decompress;
   ori = openFileInStream("test/bin/sample_video.mov","rb");
   decompress = openFileInStream("test/bin/sample_videoTest.mov","rb");
+  
+  for(i=0 ; ;i++){
+  getOri = fgetc(ori->file);
+  getDec = fgetc(decompress->file);
+  
+  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
+  
+    if(feof(ori->file) && feof(decompress->file)){
+      break;
+    }
+  }
+}
+/*
+* AARDV
+* A = 0100 0001
+  R = 0101 0010
+  D = 0100 0100
+  V = 01010110
+* 0100 0001 1'0+01 0100 10'00+ 0100 0100' 000+0 1010 110 '0
+*/
+void test_adaptive_Huffman_Compression_Decompression_for_tree_swapping(void){
+  uint8 *InFile = "test/bin/AARDV.txt";
+  uint8 *outFile = "test/bin/AARDVtest.txt";
+  
+	AdaptiveHuffmanCompressionDecompression(InFile,outFile);
+  
+  int32 i, getOri, getDec;
+  InStream *ori, *decompress;
+  ori = openFileInStream("test/bin/AARDV.txt","rb");
+  decompress = openFileInStream("test/bin/AARDVtest.txt","rb");
   
   for(i=0 ; ;i++){
   getOri = fgetc(ori->file);
