@@ -41,15 +41,18 @@ uint32 codeSizeCompress;
  *
  *  Output :  File Compressed
  **/
-void huffmanCompress(InStream *in, OutStream *out){
+HuffmanNode *huffmanCompress(InStream *in, OutStream *out){
   HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
-  HuffmanNode *AHuffmanTreeRoot = adaptiveHuffmanTreeInit();
+  // HuffmanNode *returnedNewNode;
+  // HuffmanNode *AHuffmanTreeRoot = adaptiveHuffmanTreeInit();
   returnedNewNode->order = Symbol;
+  // AHuffmanTreeRoot->order = Symbol;
+  HuffmanNode *NodeForSwapping = NULL;
+  
   uint32 Symb = 0;
   uint32 i=0,temp=0,temp2=0,temp3=0;
   codeSize = 0;
   codeSizeCompress = 0;
-  
   for(i = 0 ; i < Symbol ; i++){
     arraySymbol[i] = NULL;
   }
@@ -66,9 +69,10 @@ void huffmanCompress(InStream *in, OutStream *out){
       codeSizeCompress += streamWriteBits(out,(unsigned char)Symb);
       returnedNewNode = adaptiveHuffmanTreeBuild(returnedNewNode,Symb);
       // printf("returnedNewNode BEFORE: %p \n",returnedNewNode);
-      huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
+      NodeForSwapping = returnedNewNode->parent->parent;
+      huffmanUpdateAndRestructure(NodeForSwapping);
       // printf("returnedNewNode AFTER : %p \n",returnedNewNode);
-    }
+      }
     else{
       temp = emitPathCode(out,arraySymbol[Symb]);
       huffmanUpdateAndRestructure(arraySymbol[Symb]);
@@ -86,10 +90,11 @@ void huffmanCompress(InStream *in, OutStream *out){
   for (i = 0 ; i < Symbol; i++){
     arraySymbol[i] = NULL;
   }
-  freeNodes(returnedNewNode);
-  returnedNewNode = NULL;
-  fflush(out->file);
-  fflush(in->file);
+  return returnedNewNode;
+  // freeNodes(returnedNewNode);
+  // returnedNewNode = NULL;
+  // fflush(out->file);
+  // fflush(in->file);
 }
 
 
