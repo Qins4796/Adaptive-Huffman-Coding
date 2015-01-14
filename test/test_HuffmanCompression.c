@@ -278,6 +278,134 @@ void test_huffmanCompress_for_different_Symbol_case_3(void){
 
   closeFileInStream(Compressed);
 }
+
+/**                      ADD V (AARD+V)
+ *                 root               root              root           root
+ *                  |                  |                 |              |
+ *                  V                  V                 V              V
+ *                (4)                 (4)               (4)            (5) 
+ *              /     \              /   \             /   \          /   \
+ *            (2)     A/2    =>    (2)   A/2   =>    (2)   A/2  =>  A/2   (3)
+ *          /    \                /   \             /   \                /   \
+ *        (1)    R/1            (1)   R/1         R/1   (2)            R/1   (2)
+ *       /   \                 /   \                   /   \                /   \
+ * NewNode   D/1             (1)   D/1               (1)   D/1            (1)   D/1
+ *                          /   \                   /   \                /   \
+ *                   NewNode    V/1           NewNode    V/1       NewNode    V/1
+ *
+ *  AARDV
+ *  A = 0100 0001
+ *  R = 0101 0010
+ *  D = 0100 0100
+ *  V = 0101 0110
+ *
+ *  0100 0001 1001 0100 1000 0100 0100 0000 1010 1100
+ *  [0100 0001] 1'0+ [01 0100 10]'00+ [0100 0100] ' 000+ [0 1010 110] '0
+ *      A       A         R                 D                   V
+ *  Send path of OLD NEWnode first, followed by the symbol in binary
+ *  if Symbol seen before, straight send the path of the symbol
+ */
+void test_huffmanCompress_add_another_V_to_AARD_should_swap_the_tree_twice(void){
+  CEXCEPTION_T err;
+  InStream *in2,*Ori, *Compressed;
+  OutStream *out2;
+  uint32 result = 0, i=0;
+
+  in2 = openFileInStream("test/Data/test_CompressX5.txt","rb");
+  out2 = openFileOutStream("test/Data/test_CompressedX5.txt","wb");
+
+  huffmanCompress(in2,out2);
+
+  closeFileInStream(in2);
+  closeFileOutStream(out2);
+
+  Compressed = openFileInStream("test/Data/test_CompressedX5.txt","rb");
+
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b01000001,result);    // 1st A
+
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b10010100,result);    // A + 0(NewNode) +R (01 0100 --10)
+
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b10000100,result);    // 00(NewNode) + D (0100 -- 0100)
+
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b01000000,result);    // 0100 000 V(0...
+  
+  result = findReadBitbyBit(Compressed);   // 1010 110) V + 0
+  TEST_ASSERT_EQUAL(0b10101100,result);
+  
+  closeFileInStream(Compressed);
+}
+/**              ADD B (AARDV+B)
+ *       root                   root                  root
+ *        |                      |                     |
+ *        V                      V                     V
+ *       (5)                    (5)                   (6) 
+ *      /   \                  /   \                 /   \
+ *     A/2   (3)             A/2   (3)             A/2   (4)
+ *          /   \      =>         /   \       =>        /   \ 
+ *        R/1   (2)             R/1   (2)             R/1   (3)
+ *             /   \                 /   \                 /   \
+ *           (1)   D/1             (1)   D/1             D/1   (2)
+ *          /   \                 /   \                       /   \
+ *   NewNode    V/1            (1)    V/1                  (1)    V/1
+ *                            /   \                       /   \
+ *                      NewNode   B/1                NewNode   B/1
+ *  AARDV
+ *  A = 0100 0001
+ *  R = 0101 0010
+ *  D = 0100 0100
+ *  V = 0101 0110
+ *  B = 0100 0010
+ *
+ *  0100 0001 1001 0100 1000 0100 0100 0000 1010 1100 0000 1000 0100 0000
+ *  [0100 0001] 1'0+ [01 0100 10] '00+ [0100 0100] ' 000+ [0 1010 110] '1100+[0 1000 010] '0 0000
+ *      A       A         R                 D                   V                 B
+ *  Send path of OLD NEWnode first, followed by the symbol in binary
+ *  if Symbol seen before, straight send the path of the symbol
+ */
+void test_huffmanCompress_add_another_B_to_AARDV_should_swap_the_tree_once(void){
+  CEXCEPTION_T err;
+  InStream *in2,*Ori, *Compressed;
+  OutStream *out2;
+  uint32 result = 0, i=0;
+
+  in2 = openFileInStream("test/Data/test_Compress6.txt","rb");
+  out2 = openFileOutStream("test/Data/test_Compressed6.txt","wb");
+
+  huffmanCompress(in2,out2);
+
+  closeFileInStream(in2);
+  closeFileOutStream(out2);
+
+  Compressed = openFileInStream("test/Data/test_Compressed6.txt","rb");
+
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b01000001,result);    // 1st A
+
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b10010100,result);    // A + 0(OldNewNode) +R (01 0100 --10)
+
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b10000100,result);    // 00(OldNewNode) + D (0100 -- 0100)
+
+  result = findReadBitbyBit(Compressed);
+  TEST_ASSERT_EQUAL(0b01000000,result);    // 0100 000(OldNewNode)  V( 0...
+  
+  result = findReadBitbyBit(Compressed);   // 1010 110)V + 1
+  // TEST_ASSERT_EQUAL(0b10101101,result);
+  
+  result = findReadBitbyBit(Compressed);   // 100(OldNewNode) + B(0 1000...
+  // TEST_ASSERT_EQUAL(0b10001000,result);
+  
+  result = findReadBitbyBit(Compressed);   // 010)B 0 0000 remain zero
+  TEST_ASSERT_EQUAL(0b01000000,result);
+  
+  closeFileInStream(Compressed);
+}
+
 void test_huffmanCompress_for_longer_text(void){
   CEXCEPTION_T err;
   InStream *in2;

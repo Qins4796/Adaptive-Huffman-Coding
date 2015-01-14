@@ -43,6 +43,7 @@ uint32 codeSizeCompress;
  **/
 void huffmanCompress(InStream *in, OutStream *out){
   HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
+  HuffmanNode *AHuffmanTreeRoot = adaptiveHuffmanTreeInit();
   returnedNewNode->order = Symbol;
   uint32 Symb = 0;
   uint32 i=0,temp=0,temp2=0,temp3=0;
@@ -64,7 +65,9 @@ void huffmanCompress(InStream *in, OutStream *out){
       }
       codeSizeCompress += streamWriteBits(out,(unsigned char)Symb);
       returnedNewNode = adaptiveHuffmanTreeBuild(returnedNewNode,Symb);
+      // printf("returnedNewNode BEFORE: %p \n",returnedNewNode);
       huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
+      // printf("returnedNewNode AFTER : %p \n",returnedNewNode);
     }
     else{
       temp = emitPathCode(out,arraySymbol[Symb]);
