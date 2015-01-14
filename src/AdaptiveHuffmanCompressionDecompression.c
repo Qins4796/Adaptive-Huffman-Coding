@@ -30,10 +30,6 @@ void AdaptiveHuffmanCompressionDecompression(char *inFile, char *outFile){
 
   huffmanCompress(in,tmpfileOut);
   
-  printf("codeSize : %d\n",codeSize);
-  printf("compressedCode : %d\n",codeSizeCompress);
-  printf("compressedSize : %d\n",codeSize-codeSizeCompress);
-  
   fflush(tmpfileOut->file);
   closeFileInStream(in);
   closeFileOutStream(tmpfileOut);

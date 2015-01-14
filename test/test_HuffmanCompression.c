@@ -53,6 +53,11 @@ void test_huffmanCompress_for_same_symbol(void){
 
   returnedNewNode = huffmanCompress(in,out);
   
+  //Should pass
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,9,256,returnedNewNode->parent);
+  // TEST_ASSERT_EQUAL_SYMBOL('A',9,255,parent2->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,returnedNewNode);
+  
   //should fail 
   // TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,returnedNewNode);
   // TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,returnedNewNode->parent);
@@ -272,7 +277,16 @@ void test_huffmanCompress_for_different_Symbol_case_3(void){
   out2 = openFileOutStream("test/Data/test_Compressed4.txt","wb");
 
   returnedNewNode = huffmanCompress(in2,out2);
-
+  
+  //Should pass
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,4,256,parent3);
+  // TEST_ASSERT_EQUAL_SYMBOL('A',2,255,parent3->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,2,254,parent2);
+  // TEST_ASSERT_EQUAL_SYMBOL('R',1,253,parent2->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,returnedNewNode->parent);
+  // TEST_ASSERT_EQUAL_SYMBOL('D',1,251,returnedNewNode->parent->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,returnedNewNode);
+  
   //Should fail
   // TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,returnedNewNode);
   // TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,returnedNewNode->parent);
@@ -319,9 +333,6 @@ void test_huffmanCompress_for_different_Symbol_case_3(void){
  *  A = 01000001
  *  R = 01010010
  *  D = 01000100
- *  0100 0001 1001 0100 1000 0100 0100 0000
- *  0100 0001 1 + '0' 01010010 '00' 01000100  = Compressed code
- *      A     A   new     R     new    D      = Code in Tree
  */
 void test_huffmanCompress_for_different_Symbol_case_test_Compress4case2(void){
   CEXCEPTION_T err;
@@ -334,8 +345,17 @@ void test_huffmanCompress_for_different_Symbol_case_test_Compress4case2(void){
   out2 = openFileOutStream("test/Data/test_Compressed4case2.txt","wb");
 
   returnedNewNode = huffmanCompress(in2,out2);
-
-  //Should fail
+  
+  //Should pass
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,5,256,parent3);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,3,255,parent2);
+  // TEST_ASSERT_EQUAL_SYMBOL('A',2,254,parent3->leftChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,2,253,returnedNewNode->parent);
+  // TEST_ASSERT_EQUAL_SYMBOL('R',1,252,parent2->leftChild);
+  // TEST_ASSERT_EQUAL_SYMBOL('D',2,251,returnedNewNode->parent->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,returnedNewNode);
+  
+  //Should fail(doesn't swap)
   // TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,returnedNewNode);
   // TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,returnedNewNode->parent);
   // TEST_ASSERT_EQUAL_SYMBOL(0,1,249,returnedNewNode->parent->rightChild);
@@ -387,8 +407,19 @@ void test_huffmanCompress_add_another_V_to_AARD_should_swap_the_tree_twice(void)
   out2 = openFileOutStream("test/Data/test_CompressedX5.txt","wb");
 
   returnedNewNode = huffmanCompress(in2,out2);
-
-  //Should fail
+  
+  //Should pass
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,5,256,parent4);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,3,255,parent3);
+  // TEST_ASSERT_EQUAL_SYMBOL('A',2,254,parent4->leftChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,2,253,parent2);
+  // TEST_ASSERT_EQUAL_SYMBOL('R',1,252,parent3->leftChild);
+  // TEST_ASSERT_EQUAL_SYMBOL('D',1,251,parent2->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,returnedNewNode->parent);
+  // TEST_ASSERT_EQUAL_SYMBOL('V',1,249,returnedNewNode->parent->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,returnedNewNode);
+  
+  //Should fail(doesn't swap)
   // TEST_ASSERT_EQUAL_SYMBOL(-1,0,246,returnedNewNode);
   // TEST_ASSERT_EQUAL_SYMBOL(-1,1,248,returnedNewNode->parent);
   // TEST_ASSERT_EQUAL_SYMBOL(0,1,247,returnedNewNode->parent->rightChild);
@@ -462,9 +493,21 @@ void test_huffmanCompress_add_another_B_to_AARDV_should_swap_the_tree_once(void)
   out2 = openFileOutStream("test/Data/test_Compressed6.txt","wb");
 
   returnedNewNode = (HuffmanNode*)huffmanCompress(in2,out2);
-
-  TEST_ASSERT_EQUAL_PARENT(returnedNewNode->parent,NULL,NULL,returnedNewNode);
-  // Should fail
+  
+  //Should pass
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,6,256,parent5);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,4,255,parent4);
+  // TEST_ASSERT_EQUAL_SYMBOL('A',2,254,parent5->leftChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,3,253,parent3);
+  // TEST_ASSERT_EQUAL_SYMBOL('R',1,252,parent4->leftChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,2,251,parent2);
+  // TEST_ASSERT_EQUAL_SYMBOL('D',1,250,parent3->leftChild);
+  // TEST_ASSERT_EQUAL_SYMBOL('V',1,249,parent2->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,1,248,returnedNewNode->parent);
+  // TEST_ASSERT_EQUAL_SYMBOL('B',1,247,returnedNewNode->parent->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,0,246,returnedNewNode);
+  
+  // Should fail(doesn't swap)
   // TEST_ASSERT_EQUAL_SYMBOL(-1,0,244,returnedNewNode);
   // TEST_ASSERT_EQUAL_SYMBOL(-1,1,246,returnedNewNode->parent);
   // TEST_ASSERT_EQUAL_SYMBOL(0,1,245,returnedNewNode->parent->rightChild);
