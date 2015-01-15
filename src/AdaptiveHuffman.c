@@ -2,6 +2,8 @@
 #include "AdaptiveHuffman.h"
 #include <malloc.h>
 #include <stdlib.h>
+// #include "InStream.h"
+// #include "OutStream.h"
 
 HuffmanNode *root;
 
@@ -172,11 +174,13 @@ HuffmanNode *findMaxOrder(HuffmanNode *node, uint32 freq){
  **/
 void huffmanUpdateAndRestructure(HuffmanNode *node){
   HuffmanNode *maxOrderNode;
+  // HuffmanNode *OldNewNode = node->parent;;
+  // HuffmanNode *parentOfOldNewNode = OldNewNode->parent;
   while(node != NULL){
     maxOrderNode = findMaxOrder(root,node->freq); //find the max order with same freq node
 
-    if(maxOrderNode!= NULL && maxOrderNode != node && maxOrderNode != node->parent && maxOrderNode != root){
-      swapNode(maxOrderNode,node);  //swap the 2 node for max order
+    if(maxOrderNode && maxOrderNode != node && maxOrderNode != node->parent && maxOrderNode != root){
+      swapNode(node,maxOrderNode);  //swap the 2 node for max order
     }
     node->freq +=1; //increment node frequency
     node = node->parent; //go to parent
@@ -189,7 +193,7 @@ void huffmanUpdateAndRestructure(HuffmanNode *node){
  *
  *  Output :  Output bit to the outputFile
  **/
-// uint32 emitPathCode(OutStream *out, HuffmanNode* node){
+// uint32 emitPathCode(OutStream *out, HuffmanNode *node){
   // uint32 writeBytes = 0;
   // int32 i = 0, path = 0 , j=1;
   // uint32 bits[Symbol];

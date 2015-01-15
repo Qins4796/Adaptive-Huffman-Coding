@@ -3,6 +3,7 @@
 
 #include "Utils.h"
 #include <stdio.h>
+// #include "InStream.h"
 // #include "OutStream.h"
 
 #define Symbol 256
@@ -26,6 +27,6 @@ HuffmanNode *swapNode(HuffmanNode *node, HuffmanNode *nodeToSwap);
 HuffmanNode *findMaxOrder(HuffmanNode *node, uint32 freq);
 void huffmanUpdateAndRestructure(HuffmanNode *node);
 void freeNodes(HuffmanNode *node);
-// uint32 emitPathCode(OutStream *out, HuffmanNode* node);
+// uint32 emitPathCode(OutStream *out, HuffmanNode *node);
 
 #endif // AdaptiveHuffman_H

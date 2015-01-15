@@ -20,6 +20,8 @@ HuffmanNode InterNode1, InterNode2, InterNode3, InterNode4, InterNode5;
 #define rightNode(x) (x)->rightChild
 #define leftLeftNode(x) (x)->leftChild->leftChild
 #define leftRightNode(x) (x)->leftChild->rightChild
+#define leftLeftRightNode(x) (x)->leftChild->leftChild->rightChild
+#define leftLeftLeftNode(x) (x)->leftChild->leftChild->leftChild
 #define rightLeftNode(x) (x)->rightChild->leftChild
 #define rightRightNode(x) (x)->rightChild->rightChild
 #define rightLeftLeftNode(x) (x)->rightChild->leftChild->leftChild
@@ -129,7 +131,7 @@ void test_adaptiveHuffmanTreeBuild_should_build_a_new_nodeA_exist_on_the_rightCh
   returnedNode = adaptiveHuffmanTreeBuild(&NewNode,0b01000001); // Symbol 'A' in binary
   huffmanUpdateAndRestructure(returnedNode->parent->parent); // Update NewNode->parent  (which is the Root)
   TEST_ASSERT_EQUAL_PTR(root->leftChild->leftChild, returnedNode);
-  
+
   TEST_ASSERT_EQUAL_PARENT(NULL,leftNode(root),&SymbolC,&InterNode1);
   TEST_ASSERT_EQUAL_PARENT(root,leftLeftNode(root),leftRightNode(root),leftNode(root));
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolC);
@@ -200,15 +202,262 @@ void test_adaptiveHuffmanTreeBuild_after_add_symbol_A_and_add_another_symbol_B_s
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,rightLeftNode(root),rightRightNode(root),rightNode(root));
   TEST_ASSERT_EQUAL_PARENT(rightNode(root),NULL,NULL,rightRightNode(root));
   TEST_ASSERT_EQUAL_PARENT(rightNode(root),rightLeftNode(root)->leftChild,rightLeftNode(root)->rightChild,rightLeftNode(root));
+
+  freeNodes(root);
+}
+/**   CurrentSymbol : A    
+ *         root
+ *          |
+ *          V
+ *         (1)
+ *        /   \
+ *  NewNode   A/1
+ */
+void test_adaptiveHuffmanTreeBuild_build_AARDV_from_empty_root_start_with_A_current_symbol_A(void){
+  HuffmanNode *root = adaptiveHuffmanTreeInit();
+  root->order = Symbol;
+  HuffmanNode *returnedNode;
+  returnedNode = adaptiveHuffmanTreeBuild(root,'A');            // Add A
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',1,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
+  freeNodes(root);
+}
+/**   CurrentSymbol : AA
+ *         root
+ *          |
+ *          V
+ *         (1)
+ *        /   \
+ *  NewNode   A/2
+ */
+void test_adaptiveHuffmanTreeBuild_build_AARDV_from_empty_root_add_another_A_current_symbol_AA(void){
+  HuffmanNode *root = adaptiveHuffmanTreeInit();
+  root->order = Symbol;
+  HuffmanNode *returnedNode;
+  returnedNode = adaptiveHuffmanTreeBuild(root,'A');            // Add A
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',1,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
+
+  huffmanUpdateAndRestructure(root->rightChild);                // direct Add A (Symbol SEEN before)
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
+
+  freeNodes(root);
+}
+/**   CurrentSymbol : AAR
+ *                 root                      root
+ *                  |                         |
+ *                  V                         V
+ *                 (2)                       (3)
+ *               /    \                     /   \
+ *            (1)     A/2    =>           (1)   A/2
+ *          /    \         update        /   \
+ *     NewNode   R/1                NewNode   R/1
+ */
+void test_adaptiveHuffmanTreeBuild_build_AARDV_from_empty_root_add_another_R_current_symbol_AAR(void){
+  HuffmanNode *root = adaptiveHuffmanTreeInit();
+  root->order = Symbol;
+  HuffmanNode *returnedNode;
+  returnedNode = adaptiveHuffmanTreeBuild(root,'A');            // Add A
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',1,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
+
+  huffmanUpdateAndRestructure(root->rightChild);                // direct Add A (Symbol SEEN before)
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
+
+  returnedNode = adaptiveHuffmanTreeBuild(returnedNode,'R');    // Add R
+  // Before update, Just Adding R
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,root->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,leftLeftNode(root));
+
+  huffmanUpdateAndRestructure(returnedNode->parent->parent);    // Tree Update
+  // After update, Previous NewNode's parent update
+  TEST_ASSERT_EQUAL_SYMBOL(-1,3,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,root->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,leftLeftNode(root));
+
+  freeNodes(root);
+}
+/**   CurrentSymbol : AARD
+ *                 root                      root
+ *                  |                         |
+ *                  V                         V
+ *                 (3)                       (4)
+ *               /    \                     /   \
+ *            (1)     A/2     =>          (2)   A/2
+ *          /    \          update       /   \
+ *        (1)    R/1                   (1)   R/1
+ *      /   \                        /   \
+ * NewNode   D/1               NewNode   D/1
+ */
+void test_adaptiveHuffmanTreeBuild_build_AARDV_from_empty_root_add_another_D_current_symbol_AARD(void){
+  HuffmanNode *root = adaptiveHuffmanTreeInit();
+  root->order = Symbol;
+  HuffmanNode *returnedNode;
+  returnedNode = adaptiveHuffmanTreeBuild(root,'A');            // Add A
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',1,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
+
+  huffmanUpdateAndRestructure(root->rightChild);                // direct Add A (Symbol SEEN before)
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
+
+  returnedNode = adaptiveHuffmanTreeBuild(returnedNode,'R');    // Add R
+  // Before update, Just Adding R
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,root->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,leftLeftNode(root));
+
+  huffmanUpdateAndRestructure(returnedNode->parent->parent);    // Tree Update
+  // After update, Previous NewNode's parent update
+  TEST_ASSERT_EQUAL_SYMBOL(-1,3,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,root->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,leftLeftNode(root));
+  
+  returnedNode = adaptiveHuffmanTreeBuild(returnedNode,'D');    // Add D
+  // Before update, Just Adding D
+  TEST_ASSERT_EQUAL_SYMBOL(-1,3,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,root->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,leftLeftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('D',1,251,leftLeftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,leftLeftLeftNode(root));
+
+  huffmanUpdateAndRestructure(returnedNode->parent->parent);    // Tree Update
+  // After update, Previous NewNode's parent update
+  TEST_ASSERT_EQUAL_SYMBOL(-1,4,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,254,root->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,leftLeftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('D',1,251,leftLeftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,leftLeftLeftNode(root));
+  freeNodes(root);
+}
+/**   CurrentSymbol : AARDV
+ *                 root               root              root           root
+ *                  |                  |                 |              |
+ *                  V                  V                 V              V
+ *                (4)                 (4)               (4)            (5)
+ *              /     \              /   \             /   \          /   \
+ *            (2)     A/2    =>    (2)   A/2   =>    (2)   A/2  =>  A/2   (3)
+ *          /    \                /   \             /   \                /   \
+ *        (1)    R/1            (1)   R/1         R/1   (2)            R/1   (2)
+ *       /   \                 /   \                   /   \                /   \
+ * NewNode   D/1             (1)   D/1               (1)   D/1            (1)   D/1
+ *                          /   \                   /   \                /   \
+ *                   NewNode    V/1           NewNode    V/1       NewNode    V/1
+ */
+void test_adaptiveHuffmanTreeBuild_build_AARDV_from_empty_root_add_another_V_current_symbol_AARDV(void){
+  HuffmanNode *root = adaptiveHuffmanTreeInit();
+  root->order = Symbol;
+  HuffmanNode *returnedNode;
+  returnedNode = adaptiveHuffmanTreeBuild(root,'A');            // Add A
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',1,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
+
+  huffmanUpdateAndRestructure(root->rightChild);                // direct Add A (Symbol SEEN before)
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,254,root->leftChild);
+
+  returnedNode = adaptiveHuffmanTreeBuild(returnedNode,'R');    // Add R
+  // Before update, Just Adding R
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,root->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,leftLeftNode(root));
+
+  huffmanUpdateAndRestructure(returnedNode->parent->parent);    // Tree Update
+  // After update, Previous NewNode's parent update
+  TEST_ASSERT_EQUAL_SYMBOL(-1,3,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,root->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,leftLeftNode(root));
+  
+  returnedNode = adaptiveHuffmanTreeBuild(returnedNode,'D');    // Add D
+  // Before update, Just Adding D
+  TEST_ASSERT_EQUAL_SYMBOL(-1,3,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,254,root->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,leftLeftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('D',1,251,leftLeftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,leftLeftLeftNode(root));
+
+  huffmanUpdateAndRestructure(returnedNode->parent->parent);    // Tree Update
+  // After update, Previous NewNode's parent update
+  TEST_ASSERT_EQUAL_SYMBOL(-1,4,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,254,root->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,leftLeftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('D',1,251,leftLeftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,leftLeftLeftNode(root));
+  
+  returnedNode = adaptiveHuffmanTreeBuild(returnedNode,'V');    // Add D
+  // Before update, Just Adding V
+  TEST_ASSERT_EQUAL_SYMBOL(-1,4,256,root);
+  TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,2,254,root->leftChild);
+  TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,leftLeftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('D',1,251,leftLeftRightNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,leftLeftLeftNode(root));
+  TEST_ASSERT_EQUAL_SYMBOL('V',1,249,leftLeftLeftNode(root)->rightChild);
+  TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,leftLeftLeftNode(root)->leftChild);
+
+  huffmanUpdateAndRestructure(returnedNode->parent->parent);    // Tree Update
+  // After update, Previous NewNode's parent update
+  // Should FAIL
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,5,256,root);
+  // TEST_ASSERT_EQUAL_SYMBOL('A',2,255,root->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,3,254,root->leftChild);
+  // TEST_ASSERT_EQUAL_SYMBOL('R',1,253,leftRightNode(root));
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,2,252,leftLeftNode(root));
+  // TEST_ASSERT_EQUAL_SYMBOL('D',1,251,leftLeftRightNode(root));
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,leftLeftLeftNode(root));
+  // TEST_ASSERT_EQUAL_SYMBOL('V',1,249,leftLeftLeftNode(root)->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,leftLeftLeftNode(root)->leftChild);
+  // Should Pass
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,5,256,root);          // lvl1
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,3,255,rightNode(root));           //lvl2 (swapped: 2nd swapping)
+  // TEST_ASSERT_EQUAL_SYMBOL('A',2,254,leftNode(root));
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,2,253,rightRightNode(root));      //lvl3 (swapped: 1st swapping)
+  // TEST_ASSERT_EQUAL_SYMBOL('R',1,252,rightLeftNode(root));
+  // TEST_ASSERT_EQUAL_SYMBOL('D',1,251,rightRightNode(root)->rightChild); //lvl4
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,rightRightNode(root)->leftChild);
+  // TEST_ASSERT_EQUAL_SYMBOL('V',1,249,rightRightNode(root)->leftChild->rightChild);
+  // TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,rightRightNode(root)->leftChild->leftChild);
   
   freeNodes(root);
 }
-
 /**                      ADD V (AARD+V)
  *                 root               root              root           root
  *                  |                  |                 |              |
  *                  V                  V                 V              V
- *                (4)                 (4)               (4)            (5) 
+ *                (4)                 (4)               (4)            (5)
  *              /     \              /   \             /   \          /   \
  *            (2)     A/2    =>    (2)   A/2   =>    (2)   A/2  =>  A/2   (3)
  *          /    \                /   \             /   \                /   \
@@ -228,7 +477,7 @@ void test_adaptiveHuffmanTreeBuild_add_another_V_should_swap_the_tree_twice(void
   setHuffmanNode(&NewNode, &InterNode3, NULL, NULL,-1,0,250);
   root = &InterNode1;
   HuffmanNode *returnedNode;
-  
+
   //Symbol Checking
   //Before Adding 'V'
   TEST_ASSERT_EQUAL_SYMBOL(-1,4,256,root);
@@ -238,10 +487,10 @@ void test_adaptiveHuffmanTreeBuild_add_another_V_should_swap_the_tree_twice(void
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,252,leftLeftNode(root));
   TEST_ASSERT_EQUAL_SYMBOL('D',1,251,leftLeftNode(root)->rightChild);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,250,leftLeftNode(root)->leftChild);
-  
+
   returnedNode = adaptiveHuffmanTreeBuild(&NewNode,'V'); // Symbol 'A' added
   // After Adding 'V', Before Update Tree
-  
+
   TEST_ASSERT_EQUAL_SYMBOL(-1,4,256,root);
   TEST_ASSERT_EQUAL_SYMBOL('A',2,255,rightNode(root));
   TEST_ASSERT_EQUAL_SYMBOL(-1,2,254,leftNode(root));
@@ -251,28 +500,28 @@ void test_adaptiveHuffmanTreeBuild_add_another_V_should_swap_the_tree_twice(void
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,leftLeftNode(root)->leftChild);
   TEST_ASSERT_EQUAL_SYMBOL('V',1,249,leftLeftNode(root)->leftChild->rightChild);  //'V' exist
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,leftLeftNode(root)->leftChild->leftChild);
-  
+
   huffmanUpdateAndRestructure(returnedNode->parent->parent); // Update NewNode->parent
    // After Adding 'B' and updated the Tree by swapping twice
-   
+
   TEST_ASSERT_EQUAL_SYMBOL(-1,5,256,root);  // lvl1
   TEST_ASSERT_EQUAL_SYMBOL(-1,3,255,rightNode(root)); //lvl2 (swapped: 2nd swapping)
   TEST_ASSERT_EQUAL_SYMBOL('A',2,254,leftNode(root));
-  
+
   TEST_ASSERT_EQUAL_SYMBOL(-1,2,253,rightRightNode(root));  //lvl3 (swapped: 1st swapping)
   TEST_ASSERT_EQUAL_SYMBOL('R',1,252,rightLeftNode(root));
 
   TEST_ASSERT_EQUAL_SYMBOL('D',1,251,rightRightNode(root)->rightChild); //lvl4
   TEST_ASSERT_EQUAL_SYMBOL(-1,1,250,rightRightNode(root)->leftChild);
-  
+
   TEST_ASSERT_EQUAL_SYMBOL('V',1,249,rightRightNode(root)->leftChild->rightChild);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,248,rightRightNode(root)->leftChild->leftChild);
-  
+
   //define Node4 SymV NewSym. Not exist in declaration, cause direct adding 'V' newNode and interNode recreated
   #define Node4 rightRightNode(root)->leftChild
   #define SymV rightRightNode(root)->leftChild->rightChild
   #define NewSym rightRightNode(root)->leftChild->leftChild
-  
+
   //Node Checking
   TEST_ASSERT_EQUAL_PARENT(NULL,&SymbolA,&InterNode2,&InterNode1);
   TEST_ASSERT_EQUAL_PARENT(&InterNode1,NULL,NULL,&SymbolA);
@@ -287,7 +536,7 @@ void test_adaptiveHuffmanTreeBuild_add_another_V_should_swap_the_tree_twice(void
  *                 root               root              root           root
  *                  |                  |                 |              |
  *                  V                  V                 V              V
- *                (4)                 (4)               (4)            (5) 
+ *                (4)                 (4)               (4)            (5)
  *              /     \              /   \             /   \          /   \
  *            (2)     A/2    =>    (2)   A/2   =>    (2)   A/2  =>  A/2   (3)
  *          /    \                /   \             /   \                /   \
@@ -358,21 +607,21 @@ void test_adaptiveHuffmanTreeBuild_add_another_A_should_swap_it(void){
   setHuffmanNode(&SymbolA, &InterNode2, NULL, NULL,'A',2,253);
   setHuffmanNode(&NewNode, &InterNode2, NULL, NULL,-1,0,252);
   root = &InterNode1;
-  
+
   TEST_ASSERT_EQUAL_SYMBOL(-1,4,256,&InterNode1);
   TEST_ASSERT_EQUAL_SYMBOL('C',2,255,&SymbolC);
   TEST_ASSERT_EQUAL_SYMBOL(-1,2,254,&InterNode2);
   TEST_ASSERT_EQUAL_SYMBOL('A',2,253,&SymbolA);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,&NewNode);
-  
+
   huffmanUpdateAndRestructure(&SymbolA); // Update NewNode->parent
-  
+
   TEST_ASSERT_EQUAL_SYMBOL(-1,5,256,&InterNode1);
   TEST_ASSERT_EQUAL_SYMBOL('A',3,255,&SymbolA);
   TEST_ASSERT_EQUAL_SYMBOL(-1,2,254,&InterNode2);
   TEST_ASSERT_EQUAL_SYMBOL('C',2,253,&SymbolC);
   TEST_ASSERT_EQUAL_SYMBOL(-1,0,252,&NewNode);
-  
+
   freeNodes(root);
 }
 
