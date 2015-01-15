@@ -9,8 +9,6 @@
 #include <malloc.h>
 #include "Utils.h"
 
-uint32 codeSize;
-uint32 codeSizeCompress;
 /**
  *  
  *  START
@@ -33,9 +31,7 @@ void huffmanDecompress(InStream *in , OutStream *out){
   rootNode->order = Symbol;
   uint32 Symb = 0;
   int32 i,bit = 0,bits = 0;
-  codeSize = 0;
-  codeSizeCompress = 0;
-  
+
   Symb = streamReadBits(in);
   returnedNewNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
   streamWriteBits(out,Symb);

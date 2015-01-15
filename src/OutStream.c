@@ -45,7 +45,7 @@ void closeFileOutStream(OutStream *out){
  *  Output :  the output bit of 1 or 0
  **/
 uint32 streamWriteBit(OutStream *out, uint32 value){
-  
+
   if(!value){
     streamOut.byteIndex = streamOut.byteIndex & (~(1 << streamOut.bitIndex));
   }

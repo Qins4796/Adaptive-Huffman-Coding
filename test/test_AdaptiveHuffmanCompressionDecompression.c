@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "ErrorCode.h"
 #include "CException.h"
-
+HuffmanNode *root;
 void setUp(void){}
 void tearDown(void){}
 

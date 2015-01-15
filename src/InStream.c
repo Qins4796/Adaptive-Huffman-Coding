@@ -44,7 +44,7 @@ void closeFileInStream(InStream *in){
  *  Output :  the output bit of 1 or 0
  **/
 uint32 streamReadBit(InStream* in){
-
+  
   uint8 charRead; 
   uint32 bitToReturn;
   // FILE *fileIn = (FILE *)in;

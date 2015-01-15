@@ -2,10 +2,9 @@
 #include "AdaptiveHuffman.h"
 #include <malloc.h>
 #include <stdlib.h>
+#include "ErrorCode.h"
 // #include "InStream.h"
 // #include "OutStream.h"
-
-HuffmanNode *root;
 
 /** Name   :  Initialization of a Huffman tree with empty tree
  *  Input  :  None
@@ -15,7 +14,10 @@ HuffmanNode *root;
 HuffmanNode *adaptiveHuffmanTreeInit(){
 
   HuffmanNode *node = (HuffmanNode *)malloc(sizeof(HuffmanNode));
-
+  if (node == NULL) {
+    Throw(ERROR_NO_NODE);
+    exit(1);
+  }
   node->parent = NULL;
   node->leftChild = NULL;
   node->rightChild = NULL;
