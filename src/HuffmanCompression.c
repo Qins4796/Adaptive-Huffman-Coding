@@ -39,6 +39,13 @@ OutStream streamOut;
  *
  *  Output :  File Compressed
  **/
+ 
+void clearArraySymbol(HuffmanNode *arrayToDelete[]){
+  uint32 i;
+  for(i = 0 ; i < Symbol ; i++){
+    arrayToDelete[i] = NULL;
+  }
+}
 HuffmanNode *buildAndAddNewHuffmanTree(OutStream *out, HuffmanNode *node, HuffmanNode *arraySymbol[], uint32 symb){
   HuffmanNode *NewNode = node;
   emitPathCode(out,NewNode);
@@ -52,12 +59,6 @@ HuffmanNode *buildAndAddNewHuffmanTree(OutStream *out, HuffmanNode *node, Huffma
 HuffmanNode *updateCurrentTreeFrequency(OutStream *out, HuffmanNode *arraySymbol[], uint32 symb){
   emitPathCode(out,arraySymbol[symb]);
   huffmanUpdateAndRestructure(arraySymbol[symb]);
-}
-void clearArraySymbol(HuffmanNode *arrayToDelete[]){
-  uint32 i;
-  for(i = 0 ; i < Symbol ; i++){
-    arrayToDelete[i] = NULL;
-  }
 }
 
 HuffmanNode *huffmanCompress(InStream *in, OutStream *out){
@@ -75,6 +76,7 @@ HuffmanNode *huffmanCompress(InStream *in, OutStream *out){
         break;
       }
       // printf("FIRST Symb: %c\n",Symb);
+      // HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
       returnedNewNode = buildAndAddNewHuffmanTree(out,returnedNewNode,arraySymbol,Symb);
     }
     else{
