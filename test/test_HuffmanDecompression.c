@@ -8,7 +8,7 @@
 #include "CException.h"
 
 #define BUFFER_SIZE 128
-HuffmanNode *root;
+
 void setUp(void){}
 void tearDown(void){}
 

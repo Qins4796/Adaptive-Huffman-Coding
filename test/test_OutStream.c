@@ -11,7 +11,7 @@
 HuffmanNode nodeA, EmptyRoot, SymbolNode ,NewNode, EmptyRoot1, EmptyRoot2;
 HuffmanNode SymbolA, SymbolB, SymbolC, SymbolD, SymbolE;
 HuffmanNode InterNode1, InterNode2, InterNode3, InterNode4, InterNode5;
-HuffmanNode *root;
+
 void setUp(void){
   resetNode(&nodeA, -1);
   resetNode(&EmptyRoot, -1);

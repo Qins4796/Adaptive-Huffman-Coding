@@ -5,7 +5,7 @@
 #include "ErrorCode.h"
 // #include "InStream.h"
 // #include "OutStream.h"
-
+HuffmanNode *root;
 /** Name   :  Initialization of a Huffman tree with empty tree
  *  Input  :  None
  *

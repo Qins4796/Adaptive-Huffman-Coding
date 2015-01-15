@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "ErrorCode.h"
 #include "CException.h"
-HuffmanNode *root;
+
 void setUp(void){}
 void tearDown(void){}
 
@@ -225,7 +225,7 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_mov_file_should_fail(v
   V = 01010110
 * 0100 0001 1'0+01 0100 10'00+ 0100 0100' 000+0 1010 110 '0
 */
-void test_adaptive_Huffman_Compression_Decompression_for_tree_swapping(void){
+void xtest_adaptive_Huffman_Compression_Decompression_for_tree_swapping(void){
   uint8 *InFile = "test/bin/AARDV.txt";
   uint8 *outFile = "test/bin/AARDVtest.txt";
   

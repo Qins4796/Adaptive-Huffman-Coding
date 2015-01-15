@@ -33,8 +33,9 @@ void huffmanDecompress(InStream *in , OutStream *out){
   int32 i,bit = 0,bits = 0;
 
   Symb = streamReadBits(in);
-  returnedNewNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
   streamWriteBits(out,Symb);
+  returnedNewNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
+  huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
   leafNode = rootNode;
   Symb = 0;
 

@@ -29,7 +29,7 @@
          : --> Update Current node of symbol frequency
  *   YES : 1st time, Send NEWnode path followed by the symbol byte
  *       : Build the NEWnode and symbol with the OldNEWnode is their parent
- *   
+ *
  *   EOF? if not keep writing till EOF
 */
 /** Name   :  Adaptive Huffman Compression
@@ -37,7 +37,7 @@
  *
  *  Output :  File Compressed
  **/
- 
+
 void clearArraySymbol(HuffmanNode *arrayToDelete[]){
   uint32 i;
   for(i = 0 ; i < Symbol ; i++){
@@ -51,20 +51,21 @@ HuffmanNode *buildAndAddNewHuffmanTree(OutStream *out, HuffmanNode *node, Huffma
   NewNode = adaptiveHuffmanTreeBuild(NewNode,symb);
   huffmanUpdateAndRestructure(NewNode->parent->parent);
   arraySymbol[symb] = NewNode->parent->rightChild;
-  
+
   return NewNode;
 }
-HuffmanNode *updateCurrentTreeFrequency(OutStream *out, HuffmanNode *arraySymbol[], uint32 symb){
+void updateCurrentTreeFrequency(OutStream *out, HuffmanNode *arraySymbol[], uint32 symb){
   emitPathCode(out,arraySymbol[symb]);
   huffmanUpdateAndRestructure(arraySymbol[symb]);
 }
 
 HuffmanNode *huffmanCompress(InStream *in, OutStream *out){
+  HuffmanNode *returnedNewNode;
+  HuffmanNode *NodeForCase = NULL;
   root = adaptiveHuffmanTreeInit();
   root->order = Symbol;
   uint32 Symb = 0;
   HuffmanNode *arraySymbol[Symbol];
-  
   clearArraySymbol(arraySymbol);
   while(!feof(in->file)){
     Symb = streamReadBits(in);
@@ -72,24 +73,28 @@ HuffmanNode *huffmanCompress(InStream *in, OutStream *out){
       if (Symb == 0){
         break;
       }
-      root = buildAndAddNewHuffmanTree(out,root,arraySymbol,Symb);
+      if(!NodeForCase){ // First Unseen Symbol
+        returnedNewNode = buildAndAddNewHuffmanTree(out,root,arraySymbol,Symb);
+        NodeForCase = returnedNewNode;
+      }
+      else{ // Following Unseen Symbol
+        returnedNewNode = buildAndAddNewHuffmanTree(out,returnedNewNode,arraySymbol,Symb);
+      }
     }
-    else{
+    else{ // Symbol Seen before
       emitPathCode(out,arraySymbol[Symb]);
       huffmanUpdateAndRestructure(arraySymbol[Symb]);
-      // updateCurrentTreeFrequency(out,arraySymbol,Symb);
     }
-    
   }
   while (streamOut.bitIndex != 7){ //fill remaining with 0
     streamWriteBit(out , 0);
     fflush(out->file);
   }
   clearArraySymbol(arraySymbol);
-  
+
   fflush(out->file);
   fflush(in->file);
-  return root;
+  return returnedNewNode;
   freeNodes(root);
   root = NULL;
 }

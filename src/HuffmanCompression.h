@@ -7,7 +7,7 @@
 #include "Utils.h"
 
 HuffmanNode *buildAndAddNewHuffmanTree(OutStream *out, HuffmanNode *node, HuffmanNode *arraySymbol[], uint32 symb);
-HuffmanNode *updateCurrentTreeFrequency(OutStream *out, HuffmanNode *arraySymbol[], uint32 symb);
+void updateCurrentTreeFrequency(OutStream *out, HuffmanNode *arraySymbol[], uint32 symb);
 void clearArraySymbol(HuffmanNode *arrayToDelete[]);
 HuffmanNode *huffmanCompress(InStream *in, OutStream *out);
 
