@@ -6,10 +6,9 @@
 #include "AdaptiveHuffman.h"
 #include "Utils.h"
 
-extern HuffmanNode *arraySymbol[Symbol];
-extern uint32 codeSize;
-extern uint32 codeSizeCompress;
-
+HuffmanNode *buildAndAddNewHuffmanTree(OutStream *out, HuffmanNode *node, HuffmanNode *arraySymbol[], uint32 symb);
+HuffmanNode *updateCurrentTreeFrequency(OutStream *out, HuffmanNode *arraySymbol[], uint32 symb);
+void clearArraySymbol(HuffmanNode *arrayToDelete[]);
 HuffmanNode *huffmanCompress(InStream *in, OutStream *out);
 
 #endif // HuffmanCompression_H

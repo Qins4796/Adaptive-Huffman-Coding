@@ -8,10 +8,8 @@
 #include <malloc.h>
 #include "Utils.h"
 
-HuffmanNode *arraySymbol[Symbol];
 OutStream streamOut;
-uint32 codeSize;
-uint32 codeSizeCompress;
+
 /**
  *  Coding flow
  *  START
@@ -41,49 +39,72 @@ uint32 codeSizeCompress;
  *
  *  Output :  File Compressed
  **/
-HuffmanNode *huffmanCompress(InStream *in, OutStream *out){
-  // HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
-  HuffmanNode *returnedNewNode = NULL;
-  // returnedNewNode->order = Symbol;
-  uint32 Symb = 0;
-  uint32 i=0;
-
+HuffmanNode *buildAndAddNewHuffmanTree(OutStream *out, HuffmanNode *node, HuffmanNode *arraySymbol[], uint32 symb){
+  HuffmanNode *NewNode = node;
+  emitPathCode(out,NewNode);
+  streamWriteBits(out,(unsigned char)symb);
+  NewNode = adaptiveHuffmanTreeBuild(NewNode,symb);
+  huffmanUpdateAndRestructure(NewNode->parent->parent);
+  arraySymbol[symb] = NewNode->parent->rightChild;
+  
+  return NewNode;
+}
+HuffmanNode *updateCurrentTreeFrequency(OutStream *out, HuffmanNode *arraySymbol[], uint32 symb){
+  emitPathCode(out,arraySymbol[symb]);
+  huffmanUpdateAndRestructure(arraySymbol[symb]);
+}
+void clearArraySymbol(HuffmanNode *arrayToDelete[]){
+  uint32 i;
   for(i = 0 ; i < Symbol ; i++){
-    arraySymbol[i] = NULL;
+    arrayToDelete[i] = NULL;
   }
+}
+
+HuffmanNode *huffmanCompress(InStream *in, OutStream *out){
+  HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
+  returnedNewNode->order = Symbol;
+  uint32 Symb = 0;
+  HuffmanNode *arraySymbol[Symbol];
+  
+  clearArraySymbol(arraySymbol);
   while(!feof(in->file)){
     Symb = streamReadBits(in);
     if(!arraySymbol[Symb]){
-      if(!returnedNewNode){
-        // printf("first input\n");
-        returnedNewNode = adaptiveHuffmanTreeInit();
-        returnedNewNode->order = Symbol;
-        returnedNewNode = adaptiveHuffmanTreeBuild(returnedNewNode,Symb);
-        streamWriteBits(out,(unsigned char)Symb);
+      if (Symb == 0){
+        // printf("\n");
+        break;
       }
-      else{
-        // printf("then\n");
-        emitPathCode(out,returnedNewNode);
-        streamWriteBits(out,(unsigned char)Symb);
-        returnedNewNode = adaptiveHuffmanTreeBuild(returnedNewNode,Symb);
-        huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
-      }
+      // printf("FIRST Symb: %c\n",Symb);
+      returnedNewNode = buildAndAddNewHuffmanTree(out,returnedNewNode,arraySymbol,Symb);
     }
     else{
+      // printf("SEEN  Symb: %c\n",Symb);
       emitPathCode(out,arraySymbol[Symb]);
       huffmanUpdateAndRestructure(arraySymbol[Symb]);
+      // updateCurrentTreeFrequency(out,arraySymbol,Symb);
     }
   }
   while (streamOut.bitIndex != 7){ //fill remaining with 0
     streamWriteBit(out , 0);
     fflush(out->file);
   }
-  for (i = 0 ; i < Symbol; i++){
-    arraySymbol[i] = NULL;
-  }
+  clearArraySymbol(arraySymbol);
+  
+  fflush(out->file);
+  fflush(in->file);
   return returnedNewNode;
   freeNodes(returnedNewNode);
   returnedNewNode = NULL;
-  fflush(out->file);
-  fflush(in->file);
 }
+
+
+
+
+
+
+
+
+
+
+
+

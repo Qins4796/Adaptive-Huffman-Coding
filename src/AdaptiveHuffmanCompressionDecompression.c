@@ -9,8 +9,6 @@
 #include "ErrorCode.h"
 #include "CException.h"
 
-uint32 codeSize;
-uint32 codeSizeCompress;
 /** Name   :  Adaptive Huffman Compression and Decompression
  *  Input  :  File to be Compress
  *

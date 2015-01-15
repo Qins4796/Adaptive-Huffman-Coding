@@ -2,10 +2,7 @@
 #include "AdaptiveHuffman.h"
 #include <malloc.h>
 #include <stdlib.h>
-// #include "InStream.h"
-// #include "OutStream.h"
 
-HuffmanNode *arraySymbol[Symbol];
 HuffmanNode *root;
 
 /** Name   :  Initialization of a Huffman tree with empty tree
@@ -57,8 +54,6 @@ HuffmanNode *adaptiveHuffmanTreeBuild(HuffmanNode *ParentNEW , uint32 inSymbol){
   ParentNEW->leftChild = NEWnode;
   ParentNEW->rightChild = symbolNodeAdd;
   ParentNEW->freq = 1;
-  
-  arraySymbol[inSymbol] = ParentNEW->rightChild;
 
   NEWnode = ParentNEW->leftChild;
 
