@@ -435,8 +435,8 @@ void test_huffmanCompress_add_another_V_to_AARD_should_swap_the_tree_twice(void)
  *  D = 0100 0100
  *  V = 0101 0110
  *  B = 0100 0010
- *
- *  0100 0001 1001 0100 1000 0100 0100 0000 1010 1100 0000 1000 0100 0000
+ *  
+ *  0100 0001 1001 0100 1000 0100 0100 0000 1010 1100 1000 1000 0100 0000
  *  [0100 0001] 1'0+ [01 0100 10] '00+ [0100 0100] ' 000+ [0 1010 110] '1100+[0 1000 010] '0 0000
  *      A       A         R                 D                   V                 B
  *  Send path of OLD NEWnode first, followed by the symbol in binary

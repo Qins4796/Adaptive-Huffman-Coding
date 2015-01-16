@@ -24,54 +24,62 @@
  *
  *  Output :  File DeCompressed 
  **/
-void huffmanDecompress(InStream *in , OutStream *out){
-  HuffmanNode *rootNode = adaptiveHuffmanTreeInit();
-  HuffmanNode *leafNode = adaptiveHuffmanTreeInit();
-  HuffmanNode *returnedNewNode = adaptiveHuffmanTreeInit();
-  rootNode->order = Symbol;
-  uint32 Symb = 0;
-  int32 i,bit = 0,bits = 0;
+HuffmanNode *rebuildAndAddNewHuffmanTree(OutStream *out, HuffmanNode *node, uint32 symb){
+  HuffmanNode *NewNode = node;
+  streamWriteBits(out,(unsigned char)symb);
+  NewNode = adaptiveHuffmanTreeBuild(NewNode,symb);
+  huffmanUpdateAndRestructure(NewNode->parent->parent);
 
-  Symb = streamReadBits(in);
-  streamWriteBits(out,Symb);
-  returnedNewNode = adaptiveHuffmanTreeBuild(rootNode,Symb);
-  huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
-  leafNode = rootNode;
+  return NewNode;
+}
+void reupdateCurrentTreeFrequency(OutStream *out, HuffmanNode *node){
+  streamWriteBits(out,node->symbol);
+  huffmanUpdateAndRestructure(node);
+}
+void huffmanDecompress(InStream *in , OutStream *out){
+  HuffmanNode *leafNode = adaptiveHuffmanTreeInit();
+  HuffmanNode *returnedNewNode;
+  root = adaptiveHuffmanTreeInit();
+  root->order = Symbol;
+  uint32 Symb = 0;
+  int32 i,bit = 0;
+  
+  Symb = streamReadBits(in);  //for first symbol no compress
+  returnedNewNode = rebuildAndAddNewHuffmanTree(out,root,Symb);
+  leafNode = root;
   Symb = 0;
 
   while(!feof(in->file)){
     bit = streamReadBit(in);
     if(bit){
       leafNode = leafNode->rightChild;
-      bits +=1;
     }
     else if(!bit){
       leafNode = leafNode->leftChild;
-      bits +=1;
     }
-    
-    if(!leafNode->leftChild && !leafNode->rightChild){
-      if(leafNode->freq == 0){
+    if(!leafNode->leftChild && !leafNode->rightChild){ 
+      if(leafNode->freq == 0){  //NewNode
+        // printf("FIRST TIME  : %c\n",Symb);
+        // printf("%c",Symb);
         Symb = streamReadBits(in);
-        streamWriteBits(out,Symb);
+        returnedNewNode = rebuildAndAddNewHuffmanTree(out,returnedNewNode,Symb);
         fflush(stdout);
         fflush(out->file);
-        returnedNewNode = adaptiveHuffmanTreeBuild(returnedNewNode,Symb);
-        huffmanUpdateAndRestructure(returnedNewNode->parent->parent);
-        leafNode = rootNode;
+        leafNode = root;
       }
-      else if(leafNode->freq != 0 && leafNode->symbol !=-1){
+      else if(leafNode->freq != 0 && leafNode->symbol !=-1){ //Symbol
         Symb = leafNode->symbol;
-        streamWriteBits(out,Symb);
+        // printf("SEEN BEFORE : %c\n",Symb);
+        // printf("%c",Symb);
         fflush(stdout);
         fflush(out->file);
-        huffmanUpdateAndRestructure(leafNode);
-        leafNode = rootNode;
+        reupdateCurrentTreeFrequency(out,leafNode);
+        leafNode = root;
       }
     }
   }
 
-  freeNodes(rootNode);
+  freeNodes(root);
   freeNodes(returnedNewNode);
   freeNodes(leafNode);
   fflush(in->file);

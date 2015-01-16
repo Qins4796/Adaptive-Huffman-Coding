@@ -16,10 +16,27 @@ void tearDown(void){}
 *   close other file for testing -- xtest 
 *   open test file by deleting 'x' in xtest
 *   ERROR due to extra space-bar carry from previous test
-*   NULL at last line ERROR
+*   NULL at last line ERROR , EOF problem
+*   Object file failed, due to extra if case condition
+*   if The if case condition removed the,there will be an extra symbol behind
+*   The tree will not be perfect due to the last unknown symbol
 */
 
-void xtest_adaptive_Huffman_Compression_Decompression(void){
+void RunTest(InStream *UnCoded, InStream *Coded){
+  int32 i, getOri, getDec;
+  for(i=0 ; ;i++){
+  getOri = fgetc(UnCoded->file);
+  getDec = fgetc(Coded->file);
+  
+  TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
+  
+    if(feof(UnCoded->file) && feof(Coded->file)){
+      break;
+    }
+  }
+}
+
+void xtest_adaptive_Huffman_Compression_Decompression(void){ // PASS
   uint8 *InFile = "test/bin/FILEin.txt";
   uint8 *outFile = "test/bin/FILEout.txt";
   
@@ -30,16 +47,10 @@ void xtest_adaptive_Huffman_Compression_Decompression(void){
   ori = openFileInStream("test/bin/FILEin.txt","rb");
   decompress = openFileInStream("test/bin/FILEout.txt","rb");
   
-  for(i=0 ; ;i++){
-  getOri = fgetc(ori->file);
-  getDec = fgetc(decompress->file);
+  RunTest(ori,decompress);
   
-  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(ori->file) && feof(decompress->file)){
-      break;
-    }
-  }
+  closeFileInStream(ori);
+  closeFileInStream(decompress);
 }
 void xtest_adaptive_Huffman_Compression_Decompression_Longtext(void){
   uint8 *InFile = "test/bin/TextFile.txt";
@@ -52,18 +63,12 @@ void xtest_adaptive_Huffman_Compression_Decompression_Longtext(void){
   ori = openFileInStream("test/bin/TextFile.txt","rb");
   decompress = openFileInStream("test/bin/TextFileOut.txt","rb");
   
-  for(i=0 ; ;i++){
-  getOri = fgetc(ori->file);
-  getDec = fgetc(decompress->file);
+  // RunTest(ori,decompress);
   
-  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(ori->file) && feof(decompress->file)){
-      break;
-    }
-  }
+  closeFileInStream(ori);
+  closeFileInStream(decompress);
 }
-void xtest_adaptive_Huffman_Compression_Decompression_for_README_txt(void){
+void xtest_adaptive_Huffman_Compression_Decompression_for_README_txt(void){ // PASS
   uint8 *InFile = "test/bin/README.txt";
   uint8 *outFile = "test/bin/READMEout.txt";
   
@@ -74,18 +79,12 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_README_txt(void){
   ori = openFileInStream("test/bin/README.txt","rb");
   decompress = openFileInStream("test/bin/READMEout.txt","rb");
   
-  for(i=0 ; ;i++){
-  getOri = fgetc(ori->file);
-  getDec = fgetc(decompress->file);
-
-  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
+  RunTest(ori,decompress);
   
-    if(feof(ori->file) && feof(decompress->file)){
-      break;
-    }
-  }
+  closeFileInStream(ori);
+  closeFileInStream(decompress);
 }
-void xtest_adaptive_Huffman_Compression_Decompression_for_dat_file(void){
+void xtest_adaptive_Huffman_Compression_Decompression_for_dat_file(void){ // PASS
   uint8 *InFile = "test/bin/media.dat";
   uint8 *outFile = "test/bin/mediaOut.dat";
   
@@ -96,16 +95,10 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_dat_file(void){
   ori = openFileInStream("test/bin/media.dat","rb");
   decompress = openFileInStream("test/bin/mediaOut.dat","rb");
   
-  for(i=0 ; ;i++){
-  getOri = fgetc(ori->file);
-  getDec = fgetc(decompress->file);
+  RunTest(ori,decompress);
   
-  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(ori->file) && feof(decompress->file)){
-      break;
-    }
-  }
+  closeFileInStream(ori);
+  closeFileInStream(decompress);
 }
 void xtest_adaptive_Huffman_Compression_Decompression_for_object_file_should_fail(void){
   uint8 *InFile = "test/bin/StringObject.o";
@@ -118,16 +111,10 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_object_file_should_fai
   ori = openFileInStream("test/bin/StringObject.o","rb");
   decompress = openFileInStream("test/bin/StringObjectOut.o","rb");
   
-  for(i=0 ; ;i++){
-  getOri = fgetc(ori->file);
-  getDec = fgetc(decompress->file);
+  // RunTest(ori,decompress);
   
-  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(ori->file) && feof(decompress->file)){
-      break;
-    }
-  }
+  closeFileInStream(ori);
+  closeFileInStream(decompress);
 }
 void xtest_adaptive_Huffman_Compression_Decompression_for_MIDI_file_should_fail(void){
   uint8 *InFile = "test/bin/MIDI.mid";
@@ -140,16 +127,10 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_MIDI_file_should_fail(
   ori = openFileInStream("test/bin/MIDI.mid","rb");
   decompress = openFileInStream("test/bin/MIDIout.mid","rb");
   
-  for(i=0 ; ;i++){
-  getOri = fgetc(ori->file);
-  getDec = fgetc(decompress->file);
+  // RunTest(ori,decompress);
   
-  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(ori->file) && feof(decompress->file)){
-      break;
-    }
-  }
+  closeFileInStream(ori);
+  closeFileInStream(decompress);
 }
 void xtest_adaptive_Huffman_Compression_Decompression_for_png_file_should_fail(void){
   uint8 *InFile = "test/bin/screenshot.png";
@@ -162,16 +143,10 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_png_file_should_fail(v
   ori = openFileInStream("test/bin/screenshot.png","rb");
   decompress = openFileInStream("test/bin/screenshotOut.png","rb");
   
-  for(i=0 ; ;i++){
-  getOri = fgetc(ori->file);
-  getDec = fgetc(decompress->file);
+  // RunTest(ori,decompress);
   
-  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(ori->file) && feof(decompress->file)){
-      break;
-    }
-  }
+  closeFileInStream(ori);
+  closeFileInStream(decompress);
 }
 void xtest_adaptive_Huffman_Compression_Decompression_for_mp3_file_should_fail(void){
   uint8 *InFile = "test/bin/moonlight_sonata.mp3";
@@ -184,16 +159,10 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_mp3_file_should_fail(v
   ori = openFileInStream("test/bin/moonlight_sonata.mp3","rb");
   decompress = openFileInStream("test/bin/moonlight_sonatina.mp3","rb");
   
-  for(i=0 ; ;i++){
-  getOri = fgetc(ori->file);
-  getDec = fgetc(decompress->file);
+  // RunTest(ori,decompress);
   
-  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(ori->file) && feof(decompress->file)){
-      break;
-    }
-  }
+  closeFileInStream(ori);
+  closeFileInStream(decompress);
 }
 void xtest_adaptive_Huffman_Compression_Decompression_for_mov_file_should_fail(void){
   uint8 *InFile = "test/bin/sample_video.mov";
@@ -206,44 +175,25 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_mov_file_should_fail(v
   ori = openFileInStream("test/bin/sample_video.mov","rb");
   decompress = openFileInStream("test/bin/sample_videoTest.mov","rb");
   
-  for(i=0 ; ;i++){
-  getOri = fgetc(ori->file);
-  getDec = fgetc(decompress->file);
+  // RunTest(ori,decompress);
   
-  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(ori->file) && feof(decompress->file)){
-      break;
-    }
-  }
+  closeFileInStream(ori);
+  closeFileInStream(decompress);
 }
-/*
-* AARDV
-* A = 0100 0001
-  R = 0101 0010
-  D = 0100 0100
-  V = 01010110
-* 0100 0001 1'0+01 0100 10'00+ 0100 0100' 000+0 1010 110 '0
-*/
-void xtest_adaptive_Huffman_Compression_Decompression_for_tree_swapping(void){
-  uint8 *InFile = "test/bin/AARDV.txt";
-  uint8 *outFile = "test/bin/AARDVtest.txt";
+
+void test_adaptive_Huffman_Compression_Decompression_for_the_code(void){ // PASS
+  uint8 *InFile = "test/bin/ACompression.txt";
+  uint8 *outFile = "test/bin/ACompressionTest.txt";
   
 	AdaptiveHuffmanCompressionDecompression(InFile,outFile);
   
   int32 i, getOri, getDec;
   InStream *ori, *decompress;
-  ori = openFileInStream("test/bin/AARDV.txt","rb");
-  decompress = openFileInStream("test/bin/AARDVtest.txt","rb");
+  ori = openFileInStream("test/bin/ACompression.txt","rb");
+  decompress = openFileInStream("test/bin/ACompressionTest.txt","rb");
   
-  for(i=0 ; ;i++){
-  getOri = fgetc(ori->file);
-  getDec = fgetc(decompress->file);
+  RunTest(ori,decompress);
   
-  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(ori->file) && feof(decompress->file)){
-      break;
-    }
-  }
+  closeFileInStream(ori);
+  closeFileInStream(decompress);
 }

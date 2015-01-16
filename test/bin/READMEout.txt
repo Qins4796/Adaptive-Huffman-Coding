@@ -412,4 +412,4 @@ happy to make corrections or additions upon request.
 
 If you have a problem, or have found a bug, please send a note to the
 author at green@moxielogic.com, or the project mailing list at
-libffi-discuss@sourceware.org. 
+libffi-discuss@sourceware.org.

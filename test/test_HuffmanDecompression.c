@@ -17,8 +17,20 @@ void tearDown(void){}
 *   open test file by deleting 'x' in xtest
 *   ERROR due to extra space-bar carry from previous test
 */
-
-void xtest_huffmanDecompress_for_text_AAAAAAAAA(void){
+void RunTest(InStream *UnCoded, InStream *Coded){
+  int32 i, getOri, getDec;
+  for(i=0 ; ;i++){
+  getOri = fgetc(UnCoded->file);
+  getDec = fgetc(Coded->file);
+  
+  TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
+  
+    if(feof(UnCoded->file) && feof(Coded->file)){
+      break;
+    }
+  }
+}
+void xtest_huffmanDecompress_for_text_AAAAAAAAA(void){ // PASS
   InStream *in,*inTest;
   OutStream *out;
   int32 i, getOri, getDec;
@@ -55,13 +67,11 @@ void xtest_huffmanDecompress_for_text_AAAAAAAAA(void){
   TEST_ASSERT_EQUAL('A',result);
   result = fgetc(inTest->file);
   TEST_ASSERT_EQUAL('A',result);
-  result = fgetc(inTest->file);
-  TEST_ASSERT_EQUAL(' ',result);
-  
+
   closeFileInStream(inTest);
 }
 
-void xtest_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){
+void xtest_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){ // PASS
   InStream *in2,*inTest;
   OutStream *out2;
   uint32 result;
@@ -96,7 +106,7 @@ void xtest_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){
   
   closeFileInStream(inTest);
 }
-void xtest_huffmanDecompress_for_different_Symbol_with_different_tree_with_text_ABC(void){
+void xtest_huffmanDecompress_for_different_Symbol_with_different_tree_with_text_ABC(void){ // PASS
   InStream *in,*inTest;
   OutStream *out;
   uint32 result;
@@ -116,12 +126,10 @@ void xtest_huffmanDecompress_for_different_Symbol_with_different_tree_with_text_
   TEST_ASSERT_EQUAL('B',result);
   result = fgetc(inTest->file);
   TEST_ASSERT_EQUAL('C',result);
-  result = fgetc(inTest->file);
-  TEST_ASSERT_EQUAL(0,result);
   
   closeFileInStream(inTest);
 }
-void xtest_huffmanDecompress_for_different_Symbol_case_2_with_text_AABBCC(void){
+void xtest_huffmanDecompress_for_different_Symbol_case_2_with_text_AABBCC(void){ // PASS
   InStream *in,*inTest;
   OutStream *out;
   uint32 result;
@@ -150,12 +158,11 @@ void xtest_huffmanDecompress_for_different_Symbol_case_2_with_text_AABBCC(void){
   TEST_ASSERT_EQUAL('C',result);
   result = fgetc(inTest->file);
   TEST_ASSERT_EQUAL('C',result);
-  result = fgetc(inTest->file);
-  TEST_ASSERT_EQUAL(0,result);
-  
+
   closeFileInStream(inTest);
 }
-void xtest_huffmanDecompress_for_different_Symbol_case_3_with_text_AARD(void){
+
+void xtest_huffmanDecompress_for_different_Symbol_case_3_with_text_AARD(void){ // PASS
   InStream *in,*inTest;
   OutStream *out;
   uint32 result;
@@ -180,12 +187,10 @@ void xtest_huffmanDecompress_for_different_Symbol_case_3_with_text_AARD(void){
   TEST_ASSERT_EQUAL('R',result);
   result = fgetc(inTest->file);
   TEST_ASSERT_EQUAL('D',result);
-  result = fgetc(inTest->file);
-  TEST_ASSERT_EQUAL(0,result);
   
   closeFileInStream(inTest);
 }
-void xtest_huffmanDecompress_for_different_Symbol_case_3_with_text_AARDD(void){
+void xtest_huffmanDecompress_for_different_Symbol_case_4_with_text_AARDD(void){ // PASS
   InStream *in,*inTest;
   OutStream *out;
   uint32 result;
@@ -215,7 +220,69 @@ void xtest_huffmanDecompress_for_different_Symbol_case_3_with_text_AARDD(void){
   
   closeFileInStream(inTest);
 }
-void test_huffmanDecompress_for_long_text(void){
+void xtest_huffmanDecompress_Symbol_with_text_AARDV_twice_swapping(void){ // PASS
+  InStream *in,*inTest;
+  OutStream *out;
+  uint32 result;
+
+  in = openFileInStream("test/Data/test_CompressedX5.txt","rb");
+  out = openFileOutStream("test/Data/test_DeCompressedX5.txt","wb");
+
+  huffmanDecompress(in,out);
+  
+  fflush(stdout);
+  fflush(out->file);
+  fflush(in->file);
+  closeFileInStream(in);
+  closeFileOutStream(out);
+  
+  inTest = openFileInStream("test/Data/test_DeCompressedX5.txt","rb");
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('R',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('D',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('V',result);
+  
+  closeFileInStream(inTest);
+}
+void xtest_huffmanDecompress_Symbol_with_text_AARDVB_special_case_swapping(void){ // PASS
+  InStream *in,*inTest;
+  OutStream *out;
+  uint32 result;
+
+  in = openFileInStream("test/Data/test_Compressed6.txt","rb");
+  out = openFileOutStream("test/Data/test_DeCompressed6.txt","wb");
+
+  huffmanDecompress(in,out);
+  
+  fflush(stdout);
+  fflush(out->file);
+  fflush(in->file);
+  closeFileInStream(in);
+  closeFileOutStream(out);
+  
+  inTest = openFileInStream("test/Data/test_DeCompressed6.txt","rb");
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('R',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('D',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('V',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('B',result);
+  
+  closeFileInStream(inTest);
+}
+void test_huffmanDecompress_for_long_text(void){ // PASS
   InStream *in;
   OutStream *out;
 
@@ -235,14 +302,8 @@ void test_huffmanDecompress_for_long_text(void){
   ori = openFileInStream("test/Data/test_Compress_long.txt","rb");
   decompress = openFileInStream("test/Data/test_DeCompressed_long.txt","rb");
   
-  for(i=0 ; ;i++){
-  getOri = fgetc(ori->file);
-  getDec = fgetc(decompress->file);
+  RunTest(ori,decompress);
   
-  // TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(ori->file) && feof(decompress->file)){
-      break;
-    }
-  }
+  closeFileInStream(ori);
+  closeFileInStream(decompress);
 }
