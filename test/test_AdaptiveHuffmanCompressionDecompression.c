@@ -22,20 +22,6 @@ void tearDown(void){}
 *   The tree will not be perfect due to the last unknown symbol
 */
 
-void RunTest(InStream *UnCoded, InStream *Coded){
-  int32 i, getOri, getDec;
-  for(i=0 ; ;i++){
-  getOri = fgetc(UnCoded->file);
-  getDec = fgetc(Coded->file);
-  
-  TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(UnCoded->file) && feof(Coded->file)){
-      break;
-    }
-  }
-}
-
 void xtest_adaptive_Huffman_Compression_Decompression(void){ // PASS
   uint8 *InFile = "test/bin/FILEin.txt";
   uint8 *outFile = "test/bin/FILEout.txt";
@@ -71,8 +57,6 @@ void xtest_adaptive_Huffman_Compression_Decompression_Longtext(void){
   InStream *ori, *decompress;
   ori = openFileInStream("test/bin/TextFile.txt","rb");
   decompress = openFileInStream("test/bin/TextFileOut.txt","rb");
-  
-  // RunTest(ori,decompress);
   
   closeFileInStream(ori);
   closeFileInStream(decompress);
@@ -137,9 +121,7 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_object_file_should_fai
   InStream *ori, *decompress;
   ori = openFileInStream("test/bin/StringObject.o","rb");
   decompress = openFileInStream("test/bin/StringObjectOut.o","rb");
-  
-  // RunTest(ori,decompress);
-  
+
   closeFileInStream(ori);
   closeFileInStream(decompress);
 }
@@ -153,9 +135,7 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_MIDI_file_should_fail(
   InStream *ori, *decompress;
   ori = openFileInStream("test/bin/MIDI.mid","rb");
   decompress = openFileInStream("test/bin/MIDIout.mid","rb");
-  
-  // RunTest(ori,decompress);
-  
+
   closeFileInStream(ori);
   closeFileInStream(decompress);
 }
@@ -169,8 +149,6 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_png_file_should_fail(v
   InStream *ori, *decompress;
   ori = openFileInStream("test/bin/screenshot.png","rb");
   decompress = openFileInStream("test/bin/screenshotOut.png","rb");
-  
-  // RunTest(ori,decompress);
   
   closeFileInStream(ori);
   closeFileInStream(decompress);
@@ -186,8 +164,6 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_mp3_file_should_fail(v
   ori = openFileInStream("test/bin/moonlight_sonata.mp3","rb");
   decompress = openFileInStream("test/bin/moonlight_sonatina.mp3","rb");
   
-  // RunTest(ori,decompress);
-  
   closeFileInStream(ori);
   closeFileInStream(decompress);
 }
@@ -201,8 +177,6 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_mov_file_should_fail(v
   InStream *ori, *decompress;
   ori = openFileInStream("test/bin/sample_video.mov","rb");
   decompress = openFileInStream("test/bin/sample_videoTest.mov","rb");
-  
-  // RunTest(ori,decompress);
   
   closeFileInStream(ori);
   closeFileInStream(decompress);
