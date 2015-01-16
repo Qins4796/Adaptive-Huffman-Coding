@@ -67,6 +67,7 @@ HuffmanNode *huffmanCompress(InStream *in, OutStream *out){
   uint32 Symb = 0;
   HuffmanNode *arraySymbol[Symbol];
   clearArraySymbol(arraySymbol);
+  fflush(stdout);
   while(!feof(in->file)){
     Symb = streamReadBits(in);
     if(!arraySymbol[Symb]){
@@ -75,15 +76,18 @@ HuffmanNode *huffmanCompress(InStream *in, OutStream *out){
       }
       if(!NodeForCase){ // First Unseen Symbol
         returnedNewNode = buildAndAddNewHuffmanTree(out,root,arraySymbol,Symb);
+        fflush(out->file);
         NodeForCase = returnedNewNode;
       }
       else{ // Following Unseen Symbol
         returnedNewNode = buildAndAddNewHuffmanTree(out,returnedNewNode,arraySymbol,Symb);
+        fflush(out->file);
       }
     }
     else{ // Symbol Seen before
       emitPathCode(out,arraySymbol[Symb]);
       huffmanUpdateAndRestructure(arraySymbol[Symb]);
+      fflush(out->file);
     }
   }
   while (streamOut.bitIndex != 7){ //fill remaining with 0
@@ -91,7 +95,7 @@ HuffmanNode *huffmanCompress(InStream *in, OutStream *out){
     fflush(out->file);
   }
   clearArraySymbol(arraySymbol);
-
+  fflush(stdout);
   fflush(out->file);
   fflush(in->file);
   return returnedNewNode;

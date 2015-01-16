@@ -17,19 +17,6 @@ void tearDown(void){}
 *   open test file by deleting 'x' in xtest
 *   ERROR due to extra space-bar carry from previous test
 */
-void RunTest(InStream *UnCoded, InStream *Coded){
-  int32 i, getOri, getDec;
-  for(i=0 ; ;i++){
-  getOri = fgetc(UnCoded->file);
-  getDec = fgetc(Coded->file);
-  
-  TEST_ASSERT_EQUAL(getOri,getDec); //for testing between original file and decoded file
-  
-    if(feof(UnCoded->file) && feof(Coded->file)){
-      break;
-    }
-  }
-}
 void xtest_huffmanDecompress_for_text_AAAAAAAAA(void){ // PASS
   InStream *in,*inTest;
   OutStream *out;
@@ -302,7 +289,16 @@ void test_huffmanDecompress_for_long_text(void){ // PASS
   ori = openFileInStream("test/Data/test_Compress_long.txt","rb");
   decompress = openFileInStream("test/Data/test_DeCompressed_long.txt","rb");
   
-  RunTest(ori,decompress);
+  for(i=0 ; ;i++){
+  getOri = fgetc(ori->file);
+  getDec = fgetc(decompress->file);
+  
+  TEST_ASSERT_EQUAL(getOri,getDec);
+  
+    if(feof(ori->file) && feof(decompress->file)){
+      break;
+    }
+  }
   
   closeFileInStream(ori);
   closeFileInStream(decompress);

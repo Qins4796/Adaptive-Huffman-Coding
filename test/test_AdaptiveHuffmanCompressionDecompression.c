@@ -47,7 +47,16 @@ void xtest_adaptive_Huffman_Compression_Decompression(void){ // PASS
   ori = openFileInStream("test/bin/FILEin.txt","rb");
   decompress = openFileInStream("test/bin/FILEout.txt","rb");
   
-  RunTest(ori,decompress);
+  for(i=0 ; ;i++){
+  getOri = fgetc(ori->file);
+  getDec = fgetc(decompress->file);
+  
+  TEST_ASSERT_EQUAL(getOri,getDec);
+  
+    if(feof(ori->file) && feof(decompress->file)){
+      break;
+    }
+  }
   
   closeFileInStream(ori);
   closeFileInStream(decompress);
@@ -79,7 +88,16 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_README_txt(void){ // P
   ori = openFileInStream("test/bin/README.txt","rb");
   decompress = openFileInStream("test/bin/READMEout.txt","rb");
   
-  RunTest(ori,decompress);
+  for(i=0 ; ;i++){
+  getOri = fgetc(ori->file);
+  getDec = fgetc(decompress->file);
+  
+  TEST_ASSERT_EQUAL(getOri,getDec);
+  
+    if(feof(ori->file) && feof(decompress->file)){
+      break;
+    }
+  }
   
   closeFileInStream(ori);
   closeFileInStream(decompress);
@@ -95,7 +113,16 @@ void xtest_adaptive_Huffman_Compression_Decompression_for_dat_file(void){ // PAS
   ori = openFileInStream("test/bin/media.dat","rb");
   decompress = openFileInStream("test/bin/mediaOut.dat","rb");
   
-  RunTest(ori,decompress);
+  for(i=0 ; ;i++){
+  getOri = fgetc(ori->file);
+  getDec = fgetc(decompress->file);
+  
+  TEST_ASSERT_EQUAL(getOri,getDec);
+  
+    if(feof(ori->file) && feof(decompress->file)){
+      break;
+    }
+  }
   
   closeFileInStream(ori);
   closeFileInStream(decompress);
@@ -192,7 +219,16 @@ void test_adaptive_Huffman_Compression_Decompression_for_the_code(void){ // PASS
   ori = openFileInStream("test/bin/ACompression.txt","rb");
   decompress = openFileInStream("test/bin/ACompressionTest.txt","rb");
   
-  RunTest(ori,decompress);
+  for(i=0 ; ;i++){
+  getOri = fgetc(ori->file);
+  getDec = fgetc(decompress->file);
+  
+  TEST_ASSERT_EQUAL(getOri,getDec);
+  
+    if(feof(ori->file) && feof(decompress->file)){
+      break;
+    }
+  }
   
   closeFileInStream(ori);
   closeFileInStream(decompress);
