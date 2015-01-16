@@ -500,7 +500,7 @@ void test_huffmanCompress_for_longer_text(void){
   CEXCEPTION_T err;
   InStream *in2,*Compressed,*ori;
   OutStream *out2;
-  int i,j;
+  int i=0,j=0;
 
   in2 = openFileInStream("test/Data/test_Compress_long.txt","rb");
   out2 = openFileOutStream("test/Data/test_Compressed_long.txt","wb");
@@ -521,8 +521,72 @@ void test_huffmanCompress_for_longer_text(void){
     streamReadBit(Compressed);
     j++;
   }
-  // printf("Uncoded : %d\n",i);
-  // printf("Coded : %d\n",j);
+  // printf("Uncoded : %d\n",i/8-1);
+  // printf("Coded : %d\n\n",j/8-1);
+  
+  closeFileInStream(ori);
+  closeFileInStream(Compressed);
+}
+
+void test_huffmanCompress_for_README_text_file(void){
+  CEXCEPTION_T err;
+  InStream *in2,*Compressed,*ori;
+  OutStream *out2;
+  int i=0,j=0;
+
+  in2 = openFileInStream("test/bin/README.txt","rb");
+  out2 = openFileOutStream("test/Data/READMECompress.txt","wb");
+
+  huffmanCompress(in2,out2);
+  
+  closeFileInStream(in2);
+  closeFileOutStream(out2);
+  
+  ori = openFileInStream("test/bin/README.txt","rb");
+  Compressed = openFileInStream("test/Data/READMECompress.txt","rb");
+  
+  while(!feof(ori->file)){
+    streamReadBit(ori);
+    i++;
+  }
+  while(!feof(Compressed->file)){
+    streamReadBit(Compressed);
+    j++;
+  }
+  // printf("Uncoded : %d\n",i/8-1);
+  // printf("Coded : %d\n\n",j/8-1); //Compression ratio : 60.7%
+
+  closeFileInStream(ori);
+  closeFileInStream(Compressed);
+}
+
+void xtest_huffmanCompress_for_StringObject_object_file(void){
+  CEXCEPTION_T err;
+  InStream *in2,*Compressed,*ori;
+  OutStream *out2;
+  int i=0,j=0;
+
+  in2 = openFileInStream("test/bin/StringObject.o","rb");
+  out2 = openFileOutStream("test/Data/StringObjectCompress.o","wb");
+
+  huffmanCompress(in2,out2);
+  
+  closeFileInStream(in2);
+  closeFileOutStream(out2);
+  
+  ori = openFileInStream("test/bin/StringObject.o","rb");
+  Compressed = openFileInStream("test/Data/StringObjectCompress.o","rb");
+  
+  while(!feof(ori->file)){
+    streamReadBit(ori);
+    i++;
+  }
+  while(!feof(Compressed->file)){
+    streamReadBit(Compressed);
+    j++;
+  }
+  // printf("Uncoded : %d\n",i/8-1);
+  // printf("Coded : %d\n\n",j/8-1);
   
   closeFileInStream(ori);
   closeFileInStream(Compressed);

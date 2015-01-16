@@ -56,9 +56,7 @@ void xtest_huffmanDecompress_for_text_AAAAAAAAA(void){
   result = fgetc(inTest->file);
   TEST_ASSERT_EQUAL('A',result);
   result = fgetc(inTest->file);
-  TEST_ASSERT_EQUAL('A',result);
-  result = fgetc(inTest->file);
-  TEST_ASSERT_EQUAL(-1,result);
+  TEST_ASSERT_EQUAL(' ',result);
   
   closeFileInStream(inTest);
 }
@@ -95,10 +93,6 @@ void xtest_huffmanDecompress_for_shorter_text_with_XYYYYYYYY(void){
   TEST_ASSERT_EQUAL('Y',result);
   result = fgetc(inTest->file);
   TEST_ASSERT_EQUAL('Y',result);
-  result = fgetc(inTest->file);
-  TEST_ASSERT_EQUAL('Y',result);
-  result = fgetc(inTest->file);
-  TEST_ASSERT_EQUAL(-1,result);
   
   closeFileInStream(inTest);
 }
@@ -188,6 +182,36 @@ void xtest_huffmanDecompress_for_different_Symbol_case_3_with_text_AARD(void){
   TEST_ASSERT_EQUAL('D',result);
   result = fgetc(inTest->file);
   TEST_ASSERT_EQUAL(0,result);
+  
+  closeFileInStream(inTest);
+}
+void xtest_huffmanDecompress_for_different_Symbol_case_3_with_text_AARDD(void){
+  InStream *in,*inTest;
+  OutStream *out;
+  uint32 result;
+
+  in = openFileInStream("test/Data/test_Compressed4case2.txt","rb");
+  out = openFileOutStream("test/Data/test_DeCompressed4case2.txt","wb");
+
+  huffmanDecompress(in,out);
+  
+  fflush(stdout);
+  fflush(out->file);
+  fflush(in->file);
+  closeFileInStream(in);
+  closeFileOutStream(out);
+  
+  inTest = openFileInStream("test/Data/test_DeCompressed4case2.txt","rb");
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('A',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('R',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('D',result);
+  result = fgetc(inTest->file);
+  TEST_ASSERT_EQUAL('D',result);
   
   closeFileInStream(inTest);
 }

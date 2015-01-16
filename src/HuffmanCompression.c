@@ -70,7 +70,7 @@ HuffmanNode *huffmanCompress(InStream *in, OutStream *out){
   while(!feof(in->file)){
     Symb = streamReadBits(in);
     if(!arraySymbol[Symb]){
-      if (Symb == 0){
+      if (!Symb){ //EOF, object file
         break;
       }
       if(!NodeForCase){ // First Unseen Symbol
